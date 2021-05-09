@@ -9,6 +9,19 @@ from .forms import *
 def homepage(request):
     return render(request, 'tasks/index.html')
 
+def test_list(request):
+    tasks = Task.objects.all()
+    form = TaskForm()
+
+    if request.method == 'POST':
+        form = TaskForm(request.POST)
+        if form.is_valid():
+            form.save()
+        return redirect('/')
+
+    context = {"tasks": tasks, 'form': form}
+    return render(request, 'tasks/task-list.html', context)
+
 def index(request):
     tasks = Task.objects.all()
     form = TaskForm()
