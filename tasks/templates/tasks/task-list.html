@@ -1,0 +1,82 @@
+{% load static %}
+<html>
+<head>
+    <title>vToDo - zadania</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" media="(min-width: 901px)" href="{% static 'css/v-to-do-app.css' %}"/>
+    <link rel="stylesheet" type="text/css" media="(max-width: 900px)" href="{% static 'css/v-to-do-app-mobile.css' %}" />
+</head>
+<body>
+    
+
+<div class="menu">
+    <div class="main-menu">
+        <div class="home">
+            <a href=#><img src="{% static 'image/icons/home-icon.svg' %}" alt="HOME"></a>
+            <h1 class="menu-title">STRONA GŁÓWNA</h1>
+        </div>
+        <div class="calendar">
+            <a href=#><img src="{% static 'image/icons/calendar-icon.svg' %}" alt="CALENDAR"></a>
+            <h1 class="menu-title">KALENDARZ</h1>       
+        </div>
+        <div class="todo" id="active">
+            <a href=#><img src="{% static 'image/icons/todolist-icon.svg' %}" alt="CALENDAR"></a>
+            <div class="menu-title" id="active-title">
+                <h1>LISTA TO-DO</h1>
+                <div class="option-button" id="active-option"><a href=#>OPCJA</a></div>
+                <div class="option-button"><a href=#>OPCJA</a></div>
+                <div class="option-button"><a href=#>OPCJA</a></div>
+                <div class="option-button"><a href=#>OPCJA</a></div>
+                <div class="option-button"><a href=#>OPCJA</a></div>
+            </div>      
+        </div>
+        <div class="settings">
+            <a href=#><img src="{% static 'image/icons/settings-icon.svg' %}" alt="SETTINGS"></a>
+            <h1 class="menu-title">USTAWIENIA</h1>       
+        </div>
+    </div>
+</div>
+
+<div class="header">
+    <div class="hamburger"><img src="{% static 'image/icons/hamburger.svg' %}" alt="MENU"></div>  
+    <div class="close"><img src="{% static 'image/icons/close.svg' %}" alt="X"></div>  
+    <h1 class="text">WSZYSTKIE</h1>
+    <img class="avatar" src="{% static 'image/avatar-test.png' %}">
+
+</div>
+    
+<div class="container">
+    <div class="add-task"><a href="{% url 'list' %}">DODAJ ZADANIE</a></div>
+    <div class="search-task"><input type="text"></div>
+    <div class="sort-task"><input type="text"></div>
+</div>
+    
+<div class="tasks-container">
+    {% for task in tasks %}
+        <div class="task" id="undone-def">
+             <div id="header"> 
+                  {% if task.complete == True %} 
+                     <input type="checkbox" checked="checked">
+                 {% else %}
+                    <input type="checkbox">
+                  {% endif %}
+              </div>
+               <div id="divider-gradient"></div>
+               <div id="textholder">
+                    <h1 id="task-title">{{task}}</h1>
+                    <p id="task-info"> XX days left ∙ localisation ∙ contacts</p>
+                </div>
+                <div id="date-holder">
+                    <div id="divider-gradient"></div>
+                    <a class="edit-task" href="{% url 'update_task' task.id %}">EDYTUJ</a>
+                </div>
+            {% if task.complete == True %} 
+                <div class="overlay"></div>
+            {% endif %}
+    </div>
+        {% endfor %}
+</div>
+
+</body>
+</html>
