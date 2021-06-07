@@ -12,6 +12,12 @@ body{
     height: 95vh;
 }
 
+.content
+{
+    width: 100vw;
+    margin-left: 310px;
+}
+
 .log-in-banner {
     top: 0;
     background: rgba(32, 32, 39, 0.8);
