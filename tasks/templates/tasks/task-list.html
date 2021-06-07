@@ -93,6 +93,15 @@
     <div class="tasks-container">
         {% for task in tasks %}
             <div class="task" id="undone-def">
+                <div id="header"> 
+                    {% if task.priority == "H" %} 
+                        <img src="{%static "image/icons/fire_H.svg"%}" width="25" height="25">
+                    {% elif task.priority == "M" %} 
+                        <img src="{%static "image/icons/fire_M.svg"%}" width="20" height="20">
+                    {% else %}
+                        <img src="{%static "image/icons/fire_L.svg"%}" width="15" height="15">
+                    {% endif %}
+                </div>
                  <div id="header"> 
                       {% if task.complete == True %} 
                          <input type="checkbox" checked="checked">
