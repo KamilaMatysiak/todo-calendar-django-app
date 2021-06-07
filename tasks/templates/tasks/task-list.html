@@ -4,79 +4,118 @@
     <title>vToDo - zadania</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" media="(min-width: 901px)" href="{% static 'css/v-to-do-app.css' %}"/>
-    <link rel="stylesheet" type="text/css" media="(max-width: 900px)" href="{% static 'css/v-to-do-app-mobile.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/>
 </head>
 <body>
-    
+    <div class="bar">
+        <button class="hamburger" onclick="openMenu()"><img src="{% static 'image/icons/hamburger.svg' %}"></button>
+        <h1 class="text">WSZYSTKIE</h1>
+        <img class="avatar" src="{% static 'image/avatar-test.png' %}" alt="avatar">
+    </div>
+    <div class="menu" id="menu"> 
+        <div class="main-menu">
+            <div class="main-menu-btn" id="home">
+                <a href=#><div class="mn-btn"><img src="{% static 'image/icons/home-icon.svg' %}" alt="STRONA GŁÓWNA"></div></a>
+            </div>
+            <div class="main-menu-btn">
+                <a href=#><div class="mn-btn"><img src="{% static 'image/icons/calendar-icon.svg' %}" alt="KALENDARZ"><h1>KALENDARZ</h1></div></a>
+                <ul class="option-dropdown-menu">
+                    <li class="header">KALENDARZ</li>
+                    <li class="option-dropdown">
+                        <div class="mini-calendar-module"><span>Mini Kalendarz</span></div>
+                    </li>
+                    <li class="option-dropdown"><span><img width="25px" src="{% static 'image/avatar-test.png' %}"> Połącz z Kalendarzem Google</span></li>
+                </ul>
+            </div>
+            <div class="main-menu-btn" id="active">
+                <a href=#><div class="mn-btn"><img src="{% static 'image/icons/todolist-icon.svg' %}" alt="LISTA ZADAŃ"><h1>LISTA ZADAŃ</h1></div></a>
 
-<div class="menu">
-    <div class="main-menu">
-        <div class="home">
-            <a href=#><img src="{% static 'image/icons/home-icon.svg' %}" alt="HOME"></a>
-            <h1 class="menu-title">STRONA GŁÓWNA</h1>
-        </div>
-        <div class="calendar">
-            <a href=#><img src="{% static 'image/icons/calendar-icon.svg' %}" alt="CALENDAR"></a>
-            <h1 class="menu-title">KALENDARZ</h1>       
-        </div>
-        <div class="todo" id="active">
-            <a href=#><img src="{% static 'image/icons/todolist-icon.svg' %}" alt="CALENDAR"></a>
-            <div class="menu-title" id="active-title">
-                <h1>LISTA TO-DO</h1>
-                <div class="option-button" id="active-option"><a href=#>OPCJA</a></div>
-                <div class="option-button"><a href=#>OPCJA</a></div>
-                <div class="option-button"><a href=#>OPCJA</a></div>
-                <div class="option-button"><a href=#>OPCJA</a></div>
-                <div class="option-button"><a href=#>OPCJA</a></div>
-            </div>      
-        </div>
-        <div class="settings">
-            <a href=#><img src="{% static 'image/icons/settings-icon.svg' %}" alt="SETTINGS"></a>
-            <h1 class="menu-title">USTAWIENIA</h1>       
+                <ul class="option-dropdown-menu" id="active-option">
+                    <li class="header">LISTA TO-DO</li>
+                    <li class="option-dropdown" id="active-btn"><a href=#>Wszystkie</a></li>
+                    <li class="option-dropdown"><a href=#>Lokalizacje</a>
+                        <ul class="category-dropdown">
+                            <li class="cat-drop-btn"><a href=#>MS TEAMS</a></li>
+                        </ul>
+                    </li>
+                    <li class="option-dropdown"><a>Postęp</a>
+                        <ul class="category-dropdown">
+                            <li class="cat-drop-btn"><a>Do zrobienia</a></li>
+                            <li class="cat-drop-btn"><a>W trakcie</a></li>
+                            <li class="cat-drop-btn"><a>Zrobione</a></li>
+                        </ul>
+                    </li>
+                    <li class="option-dropdown"><a>Dodaj kategorię</a></li>
+                </ul>
+            </div>
+            <div class="main-menu-btn">
+                <a href=#><div class="mn-btn"><img src="{% static 'image/icons/settings-icon.svg' %}" alt="USTAWIENIA"><h1>USTAWIENIA</h1></div></a>
+                <ul class="option-dropdown-menu">
+                    <li class="header">USTAWIENIA</li>
+                    <li class="option-dropdown"><span>Profil</span></li>
+                    <li class="option-dropdown"><span>Zmiana hasła</span></li>
+                    <li class="option-dropdown"><span>Język i region</span></li>
+                    <li class="option-dropdown"><span>Inne</span>
+                        <ul class="category-dropdown">
+                            <li class="cat-drop-btn"><span>Dunno</span></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
-</div>
+        <script>
+            
+        window.onresize = function(){
+            var x = document.getElementById("menu");
+            
+            if(window.innerWidth >= 900) x.style.display='';
+        }
+            
 
-<div class="header">
-    <div class="hamburger"><img src="{% static 'image/icons/hamburger.svg' %}" alt="MENU"></div>  
-    <div class="close"><img src="{% static 'image/icons/close.svg' %}" alt="X"></div>  
-    <h1 class="text">WSZYSTKIE</h1>
-    <img class="avatar" src="{% static 'image/avatar-test.png' %}">
+        function openMenu() {
+          var x = document.getElementById("menu");
+          if (x.style.display == "block") {
+            x.style.display = "none";
+          } else {
+            x.style.display = "block";  
+          }
+        }
 
-</div>
+        </script>
     
-<div class="container">
-    <div class="add-task"><a href="{% url 'list' %}">DODAJ ZADANIE</a></div>
-    <div class="search-task"><input type="text"></div>
-    <div class="sort-task"><input type="text"></div>
-</div>
-    
-<div class="tasks-container">
-    {% for task in tasks %}
-        <div class="task" id="undone-def">
-             <div id="header"> 
-                  {% if task.complete == True %} 
-                     <input type="checkbox" checked="checked">
-                 {% else %}
-                    <input type="checkbox">
-                  {% endif %}
-              </div>
-               <div id="divider-gradient"></div>
-               <div id="textholder">
-                    <h1 id="task-title">{{task}}</h1>
-                    <p id="task-info"> XX days left ∙ localisation ∙ contacts</p>
-                </div>
-                <div id="date-holder">
-                    <div id="divider-gradient"></div>
-                    <a class="edit-task" href="{% url 'update_task' task.id %}">EDYTUJ</a>
-                </div>
-            {% if task.complete == True %} 
-                <div class="overlay"></div>
-            {% endif %}
+    <div class="container">
+        <div class="add-task"><a href="{% url 'list' %}">DODAJ ZADANIE</a></div>
+        <div class="search-task"><input type="text"></div>
+        <div class="sort-task"><input type="text"></div>
     </div>
-        {% endfor %}
-</div>
+
+    <div class="tasks-container">
+        {% for task in tasks %}
+            <div class="task" id="undone-def">
+                 <div id="header"> 
+                      {% if task.complete == True %} 
+                         <input type="checkbox" checked="checked">
+                     {% else %}
+                        <input type="checkbox">
+                      {% endif %}
+                  </div>
+                   <div id="divider-gradient"></div>
+                   <div id="textholder">
+                        <h1 id="task-title">{{task}}</h1>
+                        <p id="task-info"> XX days left ∙ localisation ∙ contacts</p>
+                    </div>
+                    <div id="date-holder">
+                        <div id="divider-gradient"></div>
+                        <a class="edit-task" href="{% url 'update_task' task.id %}">EDYTUJ</a>
+                    </div>
+                {% if task.complete == True %} 
+                    <div class="overlay"></div>
+                {% endif %}
+        </div>
+            {% endfor %}
+    </div>
+    
 
 </body>
 </html>

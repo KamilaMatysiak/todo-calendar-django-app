@@ -22,6 +22,7 @@ def test_list(request):
     context = {"tasks": tasks, 'form': form}
     return render(request, 'tasks/task-list.html', context)
 
+
 def index(request):
     tasks = Task.objects.all()
     form = TaskForm()
