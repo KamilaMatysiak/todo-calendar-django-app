@@ -267,12 +267,21 @@ input
 
 .task .task-content
 {
+    position: relative;
     width: 75%;
     height: 75px;
     display: flex;
     justify-items: center;
     justify-content: space-between;
     flex-grow: 1; 
+}
+
+.overlay
+{
+    position: absolute;
+    height: 75px;
+    width: 100%;
+    background: rgb(0,0,0,0.25);
 }
 
 
@@ -331,12 +340,7 @@ input
     transform: translate(0, -50%) 
 }
 
-.overlay
-{
-    height: 75px;
-    width: 100%;
-    background: rgb(0,0,0,0.25);
-}
+
 
 
 .container
@@ -573,10 +577,8 @@ input
     .overlay
     {
         position: absolute;
-        width: 70%;
+        width: 100%;
         top: 0;
-        left: 75px;
-        z-index: 20;
         height: 75px;
         background: rgb(0,0,0,0.25);
     }
@@ -641,11 +643,6 @@ input
     .task #task-info
     {
         font-size: 10px;
-    }
-    
-    .overlay
-    {
-        width: 65%;
     }
     
     .task #date-holder a

@@ -117,16 +117,18 @@
                             <img src="{%static "image/icons/fire_L.svg"%}" width="15" height="15">
                         {% endif %}
                     </div>
+                {% if task.complete == True %} 
+                    <div class="overlay"></div>
+                {% endif %}
                 </div>
+  
                 <div id="date-holder">
-        
+
                         <div id="divider-gradient"></div>
                         <a class="edit-task" href="{% url 'update_task' task.id %}">EDYTUJ</a>
                     </div>
 
-               {% if task.complete == True %} 
-                    <div class="overlay"></div>
-                {% endif %}
+
         </div>
 
             {% endfor %}
