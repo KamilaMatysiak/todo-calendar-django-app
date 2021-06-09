@@ -18,12 +18,13 @@ months = {
     12: "Dec"
 }
 
-def home(request, year, month):
+def home(request, year, month, day):
     name = "usernaame"
     cal = calendar.Calendar(firstweekday=0)
     month_name = months[month]
     days = cal.itermonthdays2(year, month)
     now = datetime.now()
+    current_day = now.day
     current_month = now.month
     current_year = now.year
     time = now.strftime('%H:%M:%S %p')
@@ -33,8 +34,10 @@ def home(request, year, month):
                       "name": name,
                       "year": year,
                       "month": month,
+                      "day": day,
                       "month_name": month_name,
                       "days": days,
+                      "current_day": current_day,
                       "current_month": current_month,
                       "current_year": current_year,
                       "time": time,
@@ -42,4 +45,4 @@ def home(request, year, month):
 
 def current_date(request):
     now = datetime.now()
-    return redirect('home', now.year, now.month)
+    return redirect('home', now.year, now.month, now.day)
