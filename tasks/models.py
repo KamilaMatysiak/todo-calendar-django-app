@@ -16,8 +16,9 @@ class Task(models.Model):
     priority = models.CharField(
         max_length=10,
         choices=Priorities,
-        default="Low"
+        default=Low_priority
     )
+
     complete = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
 
