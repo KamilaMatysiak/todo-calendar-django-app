@@ -1,3 +1,5 @@
+<a class="btn btn-sm btn-return" href="{% url 'test' %}">Return</a>
+<br><br><br>
 <h3>Update Task</h3>
 
 <form method="POST" action="">
@@ -5,3 +7,5 @@
     {{form}}
     <input type="submit" name="Update Task">
 </form>
+
+<a class="btn btn-sm btn-danger" href="{% url 'delete' id %}">Delete</a>
