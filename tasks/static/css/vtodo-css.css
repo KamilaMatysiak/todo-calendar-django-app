@@ -206,6 +206,8 @@ li:hover{background: #2B2E45;}
 
 .task
 {
+    display: flex;
+    justify-content: space-between;    
     margin-top: 5px;
     float: left;
     width: 100%;
@@ -215,9 +217,32 @@ li:hover{background: #2B2E45;}
     box-shadow: 2px 4px 4px rgba(0,0,0,0.2);
 }
 
-.task #header
+.task .header
+{
+    padding: 0;
+    width: 79px;
+    height: 75px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.task #checkbox-box
 {
     background-color: #2B2E45;
+    width: 75px;
+    height: 100%;
+    float: left;
+    top: 0;
+    left: 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.task #priority
+{
     width: 75px;
     height: 100%;
     float: left;
@@ -240,13 +265,23 @@ input
     background-color: #eee;
 }
 
+.task .task-content
+{
+    width: 75%;
+    height: 75px;
+    display: flex;
+    justify-items: center;
+    justify-content: space-between;
+    flex-grow: 1; 
+}
+
+
 .task #textholder
 {
-    float: left;
     margin-left: 15px;
-    height: 100px;
-    width: 50%;
-    min-width: 200px;
+    height: 75px;
+    width: 70%;
+    min-width: 100px;
 }
 
 .task #divider-gradient
@@ -276,10 +311,9 @@ input
 
 .task #date-holder
 {
-    background: white;
+    top: 0;
     width: 100px;
-    height: 100%;
-    float: right;
+    height: 75px;
     position: relative;
 }
 
@@ -455,7 +489,7 @@ input
         box-shadow: 2px 4px 4px rgba(0,0,0,0.2);
     }
 
-    .task #header
+    .task #checkbox-box
     {
         background-color: #2B2E45;
         width: 75px;
@@ -479,14 +513,14 @@ input
         width: 35px;
         background-color: #eee;
     }
+    
 
     .task #textholder
     {
-        float: left;
         margin-left: 15px;
         height: 100px;
-        width: 50%;
-        min-width: 200px;
+        width: 60%;
+        min-width: 100px;
     }
 
     .task #divider-gradient
@@ -519,7 +553,6 @@ input
         background: white;
         width: 100px;
         height: 100%;
-        float: right;
         position: relative;
     }
 
@@ -539,12 +572,16 @@ input
 
     .overlay
     {
+        position: absolute;
+        width: 70%;
+        top: 0;
+        left: 75px;
+        z-index: 20;
         height: 75px;
-        width: 100%;
         background: rgb(0,0,0,0.25);
     }
 
-        .container
+    .container
     {
         margin: 0;
         width: 95vw;
@@ -591,5 +628,28 @@ input
         background: #FFFFFF;
         border: 1px solid #79797C;
         border-radius: 5px;
+    }
+}
+
+@media (max-width: 600px)
+{
+    .task #task-title
+    {
+        font-size: 16px;
+    }
+    
+    .task #task-info
+    {
+        font-size: 10px;
+    }
+    
+    .overlay
+    {
+        width: 65%;
+    }
+    
+    .task #date-holder a
+    {
+        font-size: 10px;
     }
 }

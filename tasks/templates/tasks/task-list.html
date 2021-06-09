@@ -93,37 +93,46 @@
     <div class="tasks-container">
         {% for task in tasks %}
             <div class="task" id="undone-def">
-                <div id="header"> 
-                    {% if task.priority == "H" %} 
-                        <img src="{%static "image/icons/fire_H.svg"%}" width="25" height="25">
-                    {% elif task.priority == "M" %} 
-                        <img src="{%static "image/icons/fire_M.svg"%}" width="20" height="20">
-                    {% else %}
-                        <img src="{%static "image/icons/fire_L.svg"%}" width="15" height="15">
-                    {% endif %}
-                </div>
-                 <div id="header"> 
+                <div class="header">
+                    <div id="checkbox-box"> 
                       {% if task.complete == True %} 
                          <input type="checkbox" checked="checked">
                      {% else %}
                         <input type="checkbox">
                       {% endif %}
-                  </div>
+                    </div>
                    <div id="divider-gradient"></div>
+                </div>
+                <div class="task-content">
                    <div id="textholder">
                         <h1 id="task-title">{{task}}</h1>
                         <p id="task-info"> XX days left ∙ localisation ∙ contacts</p>
                     </div>
-                    <div id="date-holder">
+                    <div id="priority"> 
+                        {% if task.priority == "H" %} 
+                            <img src="{%static "image/icons/fire_H.svg"%}" width="25" height="25">
+                        {% elif task.priority == "M" %} 
+                            <img src="{%static "image/icons/fire_M.svg"%}" width="20" height="20">
+                        {% else %}
+                            <img src="{%static "image/icons/fire_L.svg"%}" width="15" height="15">
+                        {% endif %}
+                    </div>
+                </div>
+                <div id="date-holder">
+        
                         <div id="divider-gradient"></div>
                         <a class="edit-task" href="{% url 'update_task' task.id %}">EDYTUJ</a>
                     </div>
-                {% if task.complete == True %} 
+
+               {% if task.complete == True %} 
                     <div class="overlay"></div>
                 {% endif %}
         </div>
+
             {% endfor %}
+
     </div>
+
     
 
 </body>
