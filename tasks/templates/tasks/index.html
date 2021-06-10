@@ -8,7 +8,17 @@
 </head>
 <body>
     <div class="background" style="background-image: url({% static 'image/backgr.jpg' %})">
-        <div class="log-in-banner">Masz konto? <a id="log" href="login.html">ZALOGUJ SIĘ</a></div>
+
+        <div class="log-in-banner">
+            {% if user.is_authenticated %}
+                <a id="profile" href="{% url 'profile' %}">Profil</a>
+                <a id="logout" href="{% url 'logout' %}">Wyloguj się</a>
+            {% else %}
+                Masz konto? <a id="log" href="{% url 'login' %}">ZALOGUJ SIĘ</a>
+                Nie masz? <a id="reg" href="{% url 'register' %}">ZAREJESTRUJ SIĘ</a>
+            {% endif %}
+        </div>
+
         <div class="welcome-page">
             <div class="blurred-container">
                 <div class="banners"><div class="banners" id="top"></div>
