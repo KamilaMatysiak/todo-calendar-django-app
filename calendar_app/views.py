@@ -2,7 +2,6 @@ from django.shortcuts import redirect, render
 import calendar
 from calendar import HTMLCalendar
 from datetime import datetime
-import dateutil.relativedelta
 from .models import *
 from .forms import *
 
