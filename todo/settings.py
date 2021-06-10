@@ -40,8 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'tasks',
+
     'users.apps.UsersConfig',
     'crispy_forms',
+
+    'calendar_app',
 ]
 
 MIDDLEWARE = [
