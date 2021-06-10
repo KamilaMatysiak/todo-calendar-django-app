@@ -57,6 +57,8 @@
     <form method="POST" action="/">
         {% csrf_token %}
         {{form.title}}
+        {{form.localization}}
+        {{form.with_who}}
         <input class="btn btn-info" type="submit" name="CreateTask">
     </form>
     <div class="todo-list">
