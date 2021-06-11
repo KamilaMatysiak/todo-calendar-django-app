@@ -1,8 +1,7 @@
 from django.db import models
-import datetime
 
 # Create your models here.
-from isort.profiles import django
+
 
 
 class Task(models.Model):
