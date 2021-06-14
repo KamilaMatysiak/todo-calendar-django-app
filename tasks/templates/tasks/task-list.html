@@ -12,7 +12,7 @@
         <h1 class="text">WSZYSTKIE</h1>
         <img class="avatar" src="{% static 'image/avatar-test.png' %}" alt="avatar">
     </div>
-    <div class="menu" id="menu"> 
+    <div class="menu" id="menu">
         <div class="main-menu">
             <div class="main-menu-btn" id="home">
                 <a href=#><div class="mn-btn"><img src="{% static 'image/icons/home-icon.svg' %}" alt="STRONA GŁÓWNA"></div></a>
@@ -65,25 +65,25 @@
         </div>
     </div>
         <script>
-            
+
         window.onresize = function(){
             var x = document.getElementById("menu");
-            
+
             if(window.innerWidth >= 900) x.style.display='';
         }
-            
+
 
         function openMenu() {
           var x = document.getElementById("menu");
           if (x.style.display == "block") {
             x.style.display = "none";
           } else {
-            x.style.display = "block";  
+            x.style.display = "block";
           }
         }
 
         </script>
-    
+
     <div class="container">
         <div class="add-task"><a href="{% url 'list' %}">DODAJ ZADANIE</a></div>
         <div class="search-task"><input type="text"></div>
@@ -93,46 +93,48 @@
     <div class="tasks-container">
         {% for task in tasks %}
             <div class="task" id="undone-def">
-<<<<<<< HEAD
-                 <div id="header"> 
-                      {% if task.complete == True %} 
-                         <input type="checkbox" checked="checked">
-=======
                 <div class="header">
-                    <div id="checkbox-box"> 
-                      {% if task.complete == True %} 
+                    <div id="checkbox-box">
+                      {% if task.complete %}
                          <input id="checkbox" type="checkbox" checked="checked">
->>>>>>> parent of d271595 (Changes)
                      {% else %}
-                        <input type="checkbox">
+                        <input id="checkbox" type="checkbox">
                       {% endif %}
-                  </div>
+                    </div>
                    <div id="divider-gradient"></div>
+                </div>
+                <div class="task-content">
                    <div id="textholder">
                         <h1 id="task-title">{{task}}</h1>
-                        <p id="task-info"> {{task.date |timeuntil }} ∙ {{task.localization}} ∙ {{task.with_who}}</p>
+                        <p id="task-info"> XX days left ∙ {{task.localisation}} ∙ {{task.with_who}}</p>
                     </div>
-<<<<<<< HEAD
-                    <div id="date-holder">
-                        <div id="divider-gradient"></div>
-                        <a class="edit-task" href="{% url 'update_task' task.id %}">EDYTUJ</a>
-=======
-                    <div id="priority"> 
-                        {% if task.priority == "H" %} 
-                            <img src="{%static "image/icons/fire_H.svg"%}" width="25" height="25">
-                        {% elif task.priority == "M" %} 
-                            <img src="{%static "image/icons/fire_M.svg"%}" width="20" height="20">
+                    <div id="priority">
+                        {% if task.priority == "H" %}
+                            <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
+                        {% elif task.priority == "M" %}
+                            <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
                         {% else %}
-                            <img src="{%static "image/icons/fire_L.svg"%}" width="15" height="15">
+                            <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
                         {% endif %}
->>>>>>> parent of d271595 (Changes)
                     </div>
-                {% if task.complete == True %} 
+                {% if task.complete == True %}
                     <div class="overlay"></div>
                 {% endif %}
+                </div>
+
+                <div id="date-holder">
+
+                        <div id="divider-gradient"></div>
+                        <a class="edit-task" href="{% url 'update_task' task.id %}">EDYTUJ</a>
+                    </div>
+
+
         </div>
+
             {% endfor %}
+
     </div>
+
     
 
 </body>
