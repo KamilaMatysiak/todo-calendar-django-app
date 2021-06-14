@@ -10,6 +10,7 @@ import datetime
 def homepage(request):
     return render(request, 'tasks/index.html')
 
+
 def test_list(request):
     tasks = Task.objects.all()
     form = TaskForm()
@@ -47,7 +48,6 @@ def updateTask(request, pk):
         if form.is_valid():
             form.save()
 
-
             return redirect(test_list)
 
     context = {'form': form, 'id': pk}
@@ -60,8 +60,6 @@ def deleteTask(request, pk):
     if request.method == 'POST':
         item.delete()
         return redirect(test_list)
-
-
 
     context = {'item': item, 'id': pk}
     return render(request, 'tasks/delet.html', context)
