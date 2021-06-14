@@ -103,7 +103,7 @@
                    <div id="divider-gradient"></div>
                    <div id="textholder">
                         <h1 id="task-title">{{task}}</h1>
-                        <p id="task-info"> XX days left ∙ localisation ∙ contacts</p>
+                        <p id="task-info"> {{task.date |timeuntil }} ∙ {{task.localization}} ∙ {{task.with_who}}</p>
                     </div>
                     <div id="date-holder">
                         <div id="divider-gradient"></div>
