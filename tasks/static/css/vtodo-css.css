@@ -449,7 +449,7 @@ li:hover{background: #2B2E45;}
 
 #edit-form
 {
-    width: 50vw;
+    width: 40vw;
     margin: auto;
     margin-top: 15px;
     background: white;
@@ -459,13 +459,25 @@ li:hover{background: #2B2E45;}
 #edit-form .form-input
 {
     padding: 2px 15px;
-
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #edit-form .form-label
 {
-    margin: 5px;
+    margin: 5px 25px;
+    width: 40%;
+    text-align: left;
+
 }
+
+.form-input .input
+{
+    width: 80%;
+    display: flex;
+}
+
 
 .btn-cnt
 {
