@@ -56,7 +56,7 @@
 <div class="center-column">
     <form method="POST" action="/">
         {% csrf_token %}
-        {{form.title}}
+        {{form.title}}{{form.priority}}
         {{form.localization}}
         {{form.with_who}}
         {{form.date}}

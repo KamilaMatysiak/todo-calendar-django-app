@@ -3,6 +3,7 @@ body
     padding: 0;
     margin: 0;
     font-family: "Roboto", sans-serif;
+    background: #FCFCFC;
 }
 
 .bar
@@ -206,6 +207,8 @@ li:hover{background: #2B2E45;}
 
 .task
 {
+    display: flex;
+    justify-content: space-between;    
     margin-top: 5px;
     float: left;
     width: 100%;
@@ -215,7 +218,16 @@ li:hover{background: #2B2E45;}
     box-shadow: 2px 4px 4px rgba(0,0,0,0.2);
 }
 
-.task #header
+.task .header
+{
+    padding: 0;
+    width: 79px;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.task #checkbox-box
 {
     background-color: #2B2E45;
     width: 75px;
@@ -230,7 +242,21 @@ li:hover{background: #2B2E45;}
 
 }
 
-input
+.task #priority
+{
+    width: 45px;
+    height: 100%;
+    float: left;
+    top: 0;
+    left: 0;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+#checkbox
 {
     top: 0;
     left: 0;
@@ -240,13 +266,33 @@ input
     background-color: #eee;
 }
 
+.task .task-content
+{
+    position: relative;
+    width: 75%;
+    height: 100%;
+    display: flex;
+    justify-items: center;
+    justify-content: space-between;
+    flex-grow: 1; 
+}
+
+.overlay
+{
+    position: absolute;
+    height: 75px;
+    width: 100%;
+    background: rgb(0,0,0,0.25);
+}
+
+
 .task #textholder
 {
-    float: left;
     margin-left: 15px;
-    height: 100px;
-    width: 50%;
-    min-width: 200px;
+    height: 100%;
+    width: 100%;
+    flex-grow: 1;
+    min-width: 100px;
 }
 
 .task #divider-gradient
@@ -276,10 +322,9 @@ input
 
 .task #date-holder
 {
-    background: white;
+    top: 0;
     width: 100px;
-    height: 100%;
-    float: right;
+    height: 75px;
     position: relative;
 }
 
@@ -296,14 +341,6 @@ input
     top: 50%;              
     transform: translate(0, -50%) 
 }
-
-.overlay
-{
-    height: 75px;
-    width: 100%;
-    background: rgb(0,0,0,0.25);
-}
-
 
 .container
 {
@@ -353,6 +390,102 @@ input
     background: #FFFFFF;
     border: 1px solid #79797C;
     border-radius: 5px;
+}
+
+.popup-header
+{
+    width: 100%;
+    background: #2B2E45;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.popup-header img
+{
+    width: 25px;
+    height: auto;
+    padding: 10px;
+}
+
+.popup-header h1
+{
+    font-family: "Roboto", sans-serif;
+    color: white;
+    font-size: 20px;
+}
+
+.color-bar
+{
+    position: relative;
+    width: 100%;
+    height: 5px;
+    margin-bottom: 25px;
+}
+
+.blue-bar
+{
+    z-index: 0;
+    width: 100%;
+    height: 5px;;
+    background: #2F9CEB;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+    border-radius: 0px;
+}
+
+.orange-bar
+{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 50%;
+    border-bottom: 5px solid #FFA843;
+    border-left: 10px solid transparent;
+    border-right: 0 solid transparent;
+    border-top: 0 solid transparent;
+    transform: rotateX(180deg);
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+}
+
+#edit-form
+{
+    width: 50vw;
+    margin: auto;
+    margin-top: 15px;
+    background: white;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+}
+
+#edit-form .form-input
+{
+    padding: 2px 15px;
+
+}
+
+#edit-form .form-label
+{
+    margin: 5px;
+}
+
+.btn-cnt
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#save-changes
+{
+    padding: 10px 40px;
+    border: none;
+    color: white;
+    font-family: "Roboto", sans-serif;
+    background: #2B2E45;
+    border-radius: 8px; 
+    text-align: center;
+    width: 150px;
+    margin: 15px;
+    
 }
 
 @media (min-width: 900px) and (max-width: 959px)
@@ -449,13 +582,13 @@ input
         margin-top: 5px;
         float: left;
         width: 100%;
-        min-width: 400px;
+        min-width: 300px;
         height: 75px;
         background: white;
         box-shadow: 2px 4px 4px rgba(0,0,0,0.2);
     }
 
-    .task #header
+    .task #checkbox-box
     {
         background-color: #2B2E45;
         width: 75px;
@@ -470,7 +603,7 @@ input
 
     }
 
-    input
+    #checkbox
     {
         top: 0;
         left: 0;
@@ -479,14 +612,14 @@ input
         width: 35px;
         background-color: #eee;
     }
+    
 
     .task #textholder
     {
-        float: left;
         margin-left: 15px;
         height: 100px;
-        width: 50%;
-        min-width: 200px;
+        width: 60%;
+        min-width: 100px;
     }
 
     .task #divider-gradient
@@ -519,7 +652,6 @@ input
         background: white;
         width: 100px;
         height: 100%;
-        float: right;
         position: relative;
     }
 
@@ -539,16 +671,19 @@ input
 
     .overlay
     {
-        height: 75px;
+        position: absolute;
         width: 100%;
+        top: 0;
+        height: 100%;
         background: rgb(0,0,0,0.25);
     }
 
-        .container
+    .container
     {
         margin: 0;
         width: 95vw;
         margin-top: 80px;
+        min-width: 300px;
         display: flex;
         align-items: center;
         justify-content: space-around;
@@ -576,7 +711,7 @@ input
     .search-task input
     {
         width: 65vw;
-        min-width: 300px;
+        min-width: 200px;
         height: 45px;
         background: #FFFFFF;
         border: 1px solid #79797C;
@@ -591,5 +726,36 @@ input
         background: #FFFFFF;
         border: 1px solid #79797C;
         border-radius: 5px;
+    }
+}
+
+@media (max-width: 600px)
+{
+    
+    .add-task a
+    {
+        font-size: 8px;
+        padding:  15px 10px;
+    }
+    
+    .task
+    {
+        height: 100px;
+    }
+    
+    
+    .task #task-title
+    {
+        font-size: 16px;
+    }
+    
+    .task #task-info
+    {
+        font-size: 10px;
+    }
+    
+    .task #date-holder a
+    {
+        font-size: 10px;
     }
 }
