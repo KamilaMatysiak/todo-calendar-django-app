@@ -1,20 +1,7 @@
-{% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/>
+<h3>Update Task</h3>
 
-
-
-<form id="edit-form" method="POST" action="">
-    <div class="popup-header">
-        <div><a class="btn btn-sm btn-return" href="{% url 'test' %}"><img src="{% static 'image/icons/back-arrow.svg' %}" alt="Wróć"/></a></div>
-        <div><h1>EDYTUJ</h1></div>
-        <div><a class="btn btn-sm btn-danger" href="{% url 'delete' id %}"><img src="{% static 'image/icons/delete-icon.svg' %}" alt="Usuń"/></a></div>
-    </div>
-    <div class="color-bar"><div class="blue-bar"></div><div class="orange-bar"> </div></div>
+<form method="POST" action="">
     {% csrf_token %}
-    <div class="form-input"><div class="form-label">Nazwa: {{form.title}}</div></div>
-    <div class="form-input"><div class="form-label">Priorytet: {{form.priority}}</div></div>
-    <div class="form-input"><div class="form-label">Ukończone: {{form.complete}}</div></div>
-    <br>
-    <div class="btn-cnt"><input id="save-changes" type="submit" name="Update Task"></div>
+    {{form}}
+    <input type="submit" name="Update Task">
 </form>
-
