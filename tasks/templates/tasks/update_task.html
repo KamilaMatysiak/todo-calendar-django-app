@@ -11,9 +11,12 @@
     </div>
     <div class="color-bar"><div class="blue-bar"></div><div class="orange-bar"> </div></div>
     {% csrf_token %}
-    <div class="form-input"><div class="form-label">Nazwa: {{form.title}}</div></div>
-    <div class="form-input"><div class="form-label">Priorytet: {{form.priority}}</div></div>
-    <div class="form-input"><div class="form-label">Ukończone: {{form.complete}}</div></div>
+    <div class="form-input"><div class="form-label">Nazwa:</div><div class="input">{{form.title}}</div></div>
+    <div class="form-input"><div class="form-label">Lokalizacja:</div><div class="input">{{form.localization}}</div></div>
+    <div class="form-input"><div class="form-label">Data: </div><div class="input">{{form.date}}</div></div>
+    <div class="form-input"><div class="form-label">Kontakty: </div><div class="input">{{form.with_who}}</div></div>
+    <div class="form-input"><div class="form-label">Priorytet: </div><div class="input">{{form.priority}}</div></div>
+    <div class="form-input"><div class="form-label">Ukończone: </div><div class="input">{{form.complete}}</div></div>
     <br>
     <div class="btn-cnt"><input id="save-changes" type="submit" name="Update Task"></div>
 </form>
