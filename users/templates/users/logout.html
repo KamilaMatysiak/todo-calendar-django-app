@@ -1,23 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
+{% load static %}
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Rejestracja</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wylgowano - vTo-Do</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login-css.css' %}"/>
 </head>
-<body>
-
-
-
-    <h2>Zostałeś wylogowany</h2>
-
-
-
-
-    <div class="border-top pt-3">
-        <small class="text-muted">
-             Masz już konto? <a class="ml-2" href="{% url 'login' %}">Zaloguj się</a>
-        </small>
+<body style="background-image: url({% static 'image/backgr.jpg' %})">
+    <div class="overlay">
+        <div class="app-logo"><img src="{% static 'image/logo.svg' %}" alt="vTO-DO"></div>
+        <div class="content-section">
+            <div class="header"><h1 class="title">ZOSTAŁEŚ WYLOGOWANY</h1></div>
+            <div class="text-muted" id="again" >
+                 <a href="{% url 'login' %}">Zaloguj Ponownie</a><br>
+                 <a href="{% url 'index' %}">Wróć na stronę</a>
+            </div>
+        </div>
     </div>
 
 

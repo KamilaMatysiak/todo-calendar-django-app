@@ -1,30 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
+{% load static %}
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Rejestracja</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <title>Logowanie - vTo-Do</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login-css.css' %}"/>
     {% load crispy_forms_tags %}
 </head>
-<body>
-
-    <div class="content-section"  style="width:30%; margin-left: auto; margin-right: auto;">
-        <form method ="POST" action="">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Zaloguj się</legend>
-                {{ form|crispy  }}
-            </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Zaloguj się</button>
+<body style="background-image: url({% static 'image/backgr.jpg' %})">
+    <div class="overlay">
+        <div class="app-logo"><img src="{% static 'image/logo.svg' %}" alt="vTO-DO"></div>
+        <div class="content-section">
+            <div class="header"><h1 class="title">ZALOGUJ SIĘ</h1></div>
+            <form method ="POST" action="">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    <label>Nazwa użytkownika</label>
+                    {{  form.username   }}
+                    <label>Hasło</label>
+                    {{  form.password   }}
+                </fieldset>
+            <div class="text-muted">
+                <p>Nie masz konta? <a href="{% url 'register' %}">Zarejestruj się</a></p>
             </div>
-        </form>
-        <div class="border-top pt-3">
-            <small class="text-muted">
-                Nie masz konta? <a class="ml-2" href="{% url 'register' %}">Zarejestruj się</a>
-            </small>
+                <div class="center-button">
+                    <button class="center-btn" type="submit">ZALOGUJ</button>
+                </div>
+            </form>
+
         </div>
     </div>
-
 </body>
 </html>
