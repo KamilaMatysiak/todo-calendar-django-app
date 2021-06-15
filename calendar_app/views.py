@@ -1,28 +1,28 @@
 from django.shortcuts import redirect, render
 import calendar
-from calendar import HTMLCalendar
-from datetime import datetime
+from datetime import datetime, date
 from .models import *
 from .forms import *
 
 months = {
-    1: "Jan",
-    2: "Feb",
-    3: "Mar",
-    4: "Apr",
-    5: "May",
-    6: "Jun",
-    7: "Jul",
-    8: "Aug",
-    9: "Sep",
-    10: "Oct",
-    11: "Nov",
-    12: "Dec"
+    1: "Styczeń",
+    2: "Luty",
+    3: "Marzec",
+    4: "Kwiecień",
+    5: "Maj",
+    6: "Czerwiec",
+    7: "Lipiec",
+    8: "Sierpień",
+    9: "Wrzesień",
+    10: "Październik",
+    11: "Listopad",
+    12: "Grudzień"
 }
 
 def home(request, year, month, day):
     name = "usernaame"
     cal = calendar.Calendar(firstweekday=0)
+    date = datetime(year, month, day).date()
     month_name = months[month]
     if month == 1:
         prev = [year-1, 12]
@@ -46,8 +46,8 @@ def home(request, year, month, day):
     days = cal.itermonthdays2(year, month)
     now = datetime.now()
     current_day = now.day
-    current_month = now.month
-    current_year = now.year
+    # current_month = now.month
+    # current_year = now.year
     time = now.strftime('%H:%M:%S %p')
     meetings = Meeting.objects.all()
     return render(request,
@@ -57,13 +57,14 @@ def home(request, year, month, day):
                       "year": year,
                       "month": month,
                       "day": day,
+                      "date": date,
                       "prev_month": prev,
                       "next_month": next,
                       "month_name": month_name,
                       "days": days,
-                      "current_day": f"{current_day:02d}",
-                      "current_month": f"{current_month:02d}",
-                      "current_year": current_year,
+                      "current_day": current_day,
+                    #   "current_month": f"{current_month:02d}",
+                    #   "current_year": current_year,
                       "time": time,
                       "meetings": meetings
                   })

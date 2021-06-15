@@ -1,28 +1,127 @@
-<center>
-    <h1>Hello {{ name }}!</h1>
-    it is {{current_day}}.{{current_month}}.{{current_year}} <br>
-    <table border="0" cellpadding="0" cellspacing="0" class="month">
-    <td><th colspan="5" class="month">{{day}}{{month_name}} {{year}}</th></tr>
-    
-    <tr><th colspan="8">
-        <a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}">Prev</a>
-        <a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}">Next</a>
-    </th></tr>
-    <tr><th class="mon">Mon</th><th class="tue">Tue</th><th class="wed">Wed</th><th class="thu">Thu</th><th class="fri">Fri</th><th class="sat">Sat</th><th class="sun">Sun</th></tr>
-    {% for d in days %}
-        {% if d.0 == 0 %}
-            <td class="noday"> </td>
-        {% else %}
-            <td class="day"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
-        {% endif %}
-        {% if d.1 == 6 %}</tr>{% endif %}
-    {% endfor %}
-    </table>
-    Copyright {{current_year}}
-</center>
+{% load static %}
+<html>
+<head>
+    <title>Kalendarz - vToDo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/>
+</head>
+<body>
+    <div class="bar">
+        <button class="hamburger" onclick="openMenu()"><img src="{% static 'image/icons/hamburger.svg' %}"></button>
+        <h1 class="text">{{day}} / {{month}} / {{year}}</h1>
+        <img class="avatar" src="{% static 'image/avatar-test.png' %}" alt="avatar">
+    </div>
+    <div class="menu" id="menu"> 
+        <div class="main-menu">
+            <div class="main-menu-btn" id="home">
+                <a href=#><div class="mn-btn"><img src="{% static 'image/icons/home-icon.svg' %}" alt="STRONA GŁÓWNA"></div></a>
+            </div>
+            <div class="main-menu-btn" id="active">
+                <a href=#><div class="mn-btn"><img src="{% static 'image/icons/calendar-icon.svg' %}" alt="KALENDARZ"><h1>KALENDARZ</h1></div></a>
+                <ul class="option-dropdown-menu"  id="active-option">
+                    <li class="header" id="nohover">KALENDARZ</li>
+                    <li class="option-dropdown" id="nohover">
+                        <div class="calendar-module">
+                            <div class="calendar-header">
+                                <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"><img src="{% static 'image/icons/prev-arrow.svg' %}" alt="<"> </a></div>
+                                <div class="month-label"><p>{{month_name}} {{year}}</p></div>
+                                <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"><img src="{% static 'image/icons/next-arrow.svg' %}" alt=">"> </a></div>
+                            </div>
 
+                            <table class="month">
+                                <tr class="week-label">
+                                    <th class="mon"><p>Pon</p></th>
+                                    <th class="tue"><p>Wt</p></th>
+                                    <th class="wed"><p>Śr</p></th>
+                                    <th class="thu"><p>Czw</p></th>
+                                    <th class="fri"><p>Pt</p></th>
+                                    <th class="sat"><p>Sob</p></th>
+                                    <th class="sun"><p>Nd</p></th></tr>
+                            {% for d in days %}
+                                {% if d.0 == 0 %}
+                                    <td class="noday"></td>
+                                {% elif d.0 == current_day %}
+                                    <td class="current"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
+                                {% elif d.1 == 6 %}
+                                    <td class="sunday"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td><tr>
+                                {% else %}
+                                    <td class="day"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
+                                {% endif %}
+                                {% if d.1 == 6 %}<tr>{% endif %}
+                            {% endfor %}
+                            </table>
+                        </div>
+                    </li>
+                    <li class="option-dropdown"><a>Połącz z Kalendarzem Google</a></li>
+                </ul>
+            </div>
+            <div class="main-menu-btn">
+                <a href=#><div class="mn-btn"><img src="{% static 'image/icons/todolist-icon.svg' %}" alt="LISTA ZADAŃ"><h1>LISTA ZADAŃ</h1></div></a>
 
-<p><a class="btn add_meeting" href="{% url 'add_meeting'%}">Add meeting</a><p>
-{% for meeting in meetings %}
-<a href={% url 'edit_meeting' meeting.id%}>{{meeting.title}} &emsp;{{meeting.date_time_start}}</a><br>
-{% endfor %}
+                <ul class="option-dropdown-menu">
+                    <li class="header" id="nohover">LISTA TO-DO</li>
+                    <li class="option-dropdown" id="active-btn"><a href=#>Wszystkie</a></li>
+                    <li class="option-dropdown"><a href=#>Lokalizacje</a>
+                        <ul class="category-dropdown">
+                            <li class="cat-drop-btn"><a href=#>MS TEAMS</a></li>
+                        </ul>
+                    </li>
+                    <li class="option-dropdown"><a>Postęp</a>
+                        <ul class="category-dropdown">
+                            <li class="cat-drop-btn"><a>Do zrobienia</a></li>
+                            <li class="cat-drop-btn"><a>W trakcie</a></li>
+                            <li class="cat-drop-btn"><a>Zrobione</a></li>
+                        </ul>
+                    </li>
+                    <li class="option-dropdown"><a>Dodaj kategorię</a></li>
+                </ul>
+            </div>
+            <div class="main-menu-btn">
+                <a href=#><div class="mn-btn"><img src="{% static 'image/icons/settings-icon.svg' %}" alt="USTAWIENIA"><h1>USTAWIENIA</h1></div></a>
+                <ul class="option-dropdown-menu">
+                    <li class="header" id="nohover">USTAWIENIA</li>
+                    <li class="option-dropdown"><span>Profil</span></li>
+                    <li class="option-dropdown"><span>Zmiana hasła</span></li>
+                    <li class="option-dropdown"><span>Język i region</span></li>
+                    <li class="option-dropdown"><span>Inne</span>
+                        <ul class="category-dropdown">
+                            <li class="cat-drop-btn"><span>Dunno</span></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+        <script>
+            
+        window.onresize = function(){
+            var x = document.getElementById("menu");
+            
+            if(window.innerWidth >= 900) x.style.display='';
+        }
+            
+
+        function openMenu() {
+          var x = document.getElementById("menu");
+          if (x.style.display == "block") {
+            x.style.display = "none";
+          } else {
+            x.style.display = "block";  
+          }
+        }
+
+        </script>
+
+    <div class="events-container">
+        <a class="btn_add_meeting" href="{% url 'add_meeting'%}">Dodaj spotkanie</a>        
+        {% for meeting in meetings %}
+            {% if meeting.date_start <= date %}
+                {% if date <= meeting.date_end %}
+                    <a href={% url 'edit_meeting' meeting.id %}><div class="event"> <h1>{{meeting.title}}</h1> &emsp; <p>{{meeting.date_start}} {{meeting.time_start}}</p></div></a>
+                {% endif %}
+            {% endif %}
+        {% endfor %}    
+    </div>
+    </body>
+</html>
