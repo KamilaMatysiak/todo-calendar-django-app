@@ -56,17 +56,13 @@
 <div class="center-column">
     <form method="POST" action="/">
         {% csrf_token %}
-        {{form.title}}
-        {{form.localization}}
-        {{form.with_who}}
-        {{form.date}}
+        {{form.title}}{{form.priority}}
         <input class="btn btn-info" type="submit" name="CreateTask">
     </form>
     <div class="todo-list">
         {% for task in tasks %}
             <div class="item-row">
                 <a class="btn btn-sm btn-info" href="{% url 'update_task' task.id %}">Update</a>
-                <a class="btn btn-sm btn-danger" href="{% url 'delete' task.id %}">Delete</a>
 
                 {% if task.complete == True %}
                 <strike>{{task}}</strike>
