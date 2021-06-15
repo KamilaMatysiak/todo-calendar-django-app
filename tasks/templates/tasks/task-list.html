@@ -18,7 +18,7 @@
                 <a href=#><div class="mn-btn"><img src="{% static 'image/icons/home-icon.svg' %}" alt="STRONA GŁÓWNA"></div></a>
             </div>
             <div class="main-menu-btn">
-                <a href=#><div class="mn-btn"><img src="{% static 'image/icons/calendar-icon.svg' %}" alt="KALENDARZ"><h1>KALENDARZ</h1></div></a>
+                <a href="{% url 'home_empty' %}"><div class="mn-btn"><img src="{% static 'image/icons/calendar-icon.svg' %}" alt="KALENDARZ"><h1>KALENDARZ</h1></div></a>
                 <ul class="option-dropdown-menu">
                     <li class="header">KALENDARZ</li>
                     <li class="option-dropdown">
@@ -28,7 +28,7 @@
                 </ul>
             </div>
             <div class="main-menu-btn" id="active">
-                <a href=#><div class="mn-btn"><img src="{% static 'image/icons/todolist-icon.svg' %}" alt="LISTA ZADAŃ"><h1>LISTA ZADAŃ</h1></div></a>
+                <a href="{% url 'test' %}"><div class="mn-btn"><img src="{% static 'image/icons/todolist-icon.svg' %}" alt="LISTA ZADAŃ"><h1>LISTA ZADAŃ</h1></div></a>
 
                 <ul class="option-dropdown-menu" id="active-option">
                     <li class="header">LISTA TO-DO</li>
