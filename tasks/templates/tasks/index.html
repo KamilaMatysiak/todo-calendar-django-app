@@ -11,7 +11,6 @@
 
         <div class="log-in-banner">
             {% if user.is_authenticated %}
-                <a id="profile" href="{% url 'profile' %}">Profil</a>
                 <a id="logout" href="{% url 'logout' %}">Wyloguj się</a>
             {% else %}
                 Masz konto? <a id="log" href="{% url 'login' %}">ZALOGUJ SIĘ</a>
@@ -24,7 +23,7 @@
                     <div class="banner-content">
  
                         <h1 class="app-logo"><img src="{% static 'image/logo.svg' %}" alt="vTO-DO"></h1>
-                        <p class="banner-info">Zaawansowany i prosty system do organizacji.<br> Zacznij inteligentnie zarządzać swoim czasem.</p>
+                        <p class="banner-info">Zacznij inteligentnie zarządzać swoim czasem.</p>
                         <p class="banner-info" id="join-us">Dołącz do nas!</p>
                         <button class="button" id="join"><a id="reg" href="{% url 'register' %}"><span>ROZPOCZNIJ</span></a></button>
                     </div>
@@ -35,12 +34,8 @@
         <div class="arrows"><div id="orange"></div><div id="blue"></div></div>
     </div>
     <div class="content">
-        <h1 class="header">Welcome to the Calendar</h1>
-        <p class="info">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc sed venenatis arcu, at auctor elit. Donec consectetur urna ipsum, eget interdum dui vulputate quis. Mauris faucibus ipsum eget enim bibendum rhoncus. Aliquam eu dolor a leo molestie volutpat. Nunc condimentum ipsum eu augue facilisis, vel elementum felis tempor. Vestibulum consectetur enim nibh, in euismod augue tempor quis. Duis eget eleifend lectus, ac finibus lacus. Donec volutpat, leo et fringilla elementum, est massa accumsan nisl, at eleifend justo arcu ut eros. Vestibulum tempus dignissim nibh ut rutrum.
-
-        Praesent in mi vel dolor feugiat commodo. Nullam eget magna sem. Maecenas iaculis lobortis turpis nec sagittis. Sed venenatis sodales finibus. Maecenas eu metus ac lorem aliquam pretium. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Quisque convallis, ligula eu placerat elementum, nibh ante iaculis magna, id sagittis dui arcu nec nunc. Suspendisse condimentum nisl nec risus rutrum, nec lacinia metus pretium. Nam laoreet tellus felis, eget gravida lacus sollicitudin sed. Pellentesque euismod tortor in pharetra cursus. Fusce in tellus urna. Nulla est velit, vestibulum id ultricies sed, posuere cursus urna. Suspendisse potenti.
-
-        Donec eu blandit neque. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Praesent non lobortis libero. Sed rhoncus libero eget scelerisque auctor. Aliquam eu ipsum at eros consequat facilisis. Praesent iaculis metus felis, vel gravida ex commodo vel. Vivamus ac orci ut est rutrum egestas id at quam. Donec ultricies id eros id suscipit. Sed lectus ante, viverra in nunc eu, egestas tincidunt purus. Aenean faucibus imperdiet odio. Suspendisse mattis diam at vulputate consequat. Fusce vitae purus a velit aliquet gravida eu non magna. Maecenas maximus non nisi et efficitur.</p>
+        <h1 class="header">Strona promocyjna vTo-Do!</h1>
+        <p class="info">Już wkrótce!</p>
     </div>
     
     <div class="footer">
