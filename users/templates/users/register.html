@@ -1,12 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
+{% load static %}
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <title>Registration</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rejestracja - vTo-Do</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/login-css.css' %}"/>
     {% load crispy_forms_tags %}
 </head>
-<body>
+<body style="background-image: url({% static 'image/backgr.jpg' %})">
     <div>
         {% if messages %}
             {% for message in messages %}
@@ -17,23 +18,32 @@
         {% endif %}
     </div>
 
-    <div class="content-section"  style="width:30%; margin-left: auto; margin-right: auto;">
+    <div class="overlay">
+        <div class="app-logo"><img src="{% static 'image/logo.svg' %}" alt="vTO-DO"></div>
+    <div class="content-section" id="register">
+        <div class="header"><h1 class="title">ZAREJESTRUJ SIĘ</h1></div>
         <form method ="POST" action="">
             {% csrf_token %}
             <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Join Today</legend>
-                {{ form|crispy  }}
+                {{ form.username }}
+                {{ form.errors.username }}
+                {{ form.email }}
+                {{ form.errors.email }}
+                {{ form.password1}}
+                {{ form.password2}}
+                {{ form.errors.password1}}
+                {{ form.errors.password2}}
             </fieldset>
-            <div class="form-group">
-                <button class="btn btn-outline-info" type="submit">Sign Up</button>
+        <div class="text-muted">
+                Masz już konto? <a class="ml-2" href="{% url 'login' %}">Zaloguj się</a>
+        </div>
+            <div class="center-button">
+                <button class="btn btn-outline-info" type="submit">ZAREJESTRUJ</button>
             </div>
         </form>
-        <div class="border-top pt-3">
-            <small class="text-muted">
-                Masz już konto? <a class="ml-2" href="{% url 'login' %}">Zaloguj się</a>
-            </small>
-        </div>
+
     </div>
+</div>
 
 </body>
 </html>
