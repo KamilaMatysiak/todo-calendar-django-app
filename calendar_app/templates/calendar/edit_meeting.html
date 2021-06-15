@@ -1,5 +1,20 @@
-<form method="POST" action="">
-    {% csrf_token %}
-    {{form}}
-    <input type="submit" name="Update Meeting">
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/>
+
+
+
+<form class="edit-form" id="add-event" method="POST" action="">
+    <div class="popup-header" id="center">
+        <div><h1>EDYTUJ WYDARZENIE</h1></div>
+    </div>
+    <div class="color-bar"><div class="blue-bar"></div><div class="orange-bar"> </div></div>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <div class="form-input"><div class="input" id="title">{{form.title}}</div></div>
+                <div class="form-input"><img src="{% static 'image/icons/add-description.svg'%}"><div class="input">{{form.description}}</div></div>
+                <div class="form-input"><img src="{% static 'image/icons/add-date.svg'%}"><div class="input">{{form.date_start}}</div></div>
+                <div class="form-input"><img src="{% static 'image/icons/add-time.svg'%}"><div class="input">{{form.time_start}}</div></div>
+                <div class="form-input"><img src="{% static 'image/icons/add-date.svg'%}"><div class="input">{{form.date_end}}</div></div>
+                <div class="form-input"><img src="{% static 'image/icons/add-time.svg'%}"><div class="input">{{form.time_end}}</div></div>
+                <div class="btn-cnt"><input id="save-changes" type="submit" name="Update Meeting"></div>
 </form>
