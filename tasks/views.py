@@ -11,7 +11,7 @@ def homepage(request):
     return render(request, 'tasks/index.html')
 
 
-def test_list(request):
+def task_list(request):
     tasks = Task.objects.all()
     form = TaskForm()
 
@@ -27,18 +27,20 @@ def test_list(request):
 
 
 def index(request):
+    return render(request, 'tasks/vtodo.html')
+
+def addTask(request):
     tasks = Task.objects.all()
     form = TaskForm()
-
+    
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
             form.save()
-        return redirect('/')
+        return redirect('list')
 
     context = {"tasks": tasks, 'form': form}
-    return render(request, 'tasks/list.html', context)
-
+    return render(request, 'tasks/add_task.html', context)
 
 def updateTask(request, pk):
     task = Task.objects.get(id=pk)
@@ -48,7 +50,7 @@ def updateTask(request, pk):
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
             form.save()
-            return redirect(test_list)
+            return redirect('list')
 
     context = {'form': form, 'id': pk}
 
@@ -59,7 +61,7 @@ def deleteTask(request, pk):
     item = Task.objects.get(id=pk)
     if request.method == 'POST':
         item.delete()
-        return redirect(test_list)
+        return redirect('list')
 
     context = {'item': item, 'id': pk}
     return render(request, 'tasks/delet.html', context)

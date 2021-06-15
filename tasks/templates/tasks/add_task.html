@@ -1,0 +1,20 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/>
+
+<form class="edit-form" id="add-event" method="POST" action="">
+    <div class="popup-header" id="center">
+        <div><h1>DODAJ ZADANIE</h1></div>
+    </div>
+    <div class="color-bar"><div class="blue-bar"></div><div class="orange-bar"> </div></div>
+    <form method="POST" action="/">
+        {% csrf_token %}
+        <div class="form-input"><div class="input">{{form.title}}</div></div>
+        <div class="form-input"><div class="input">{{form.localization}}</div></div>
+        <div class="form-input"><div class="input">{{form.with_who}}</div></div>
+        <div class="form-input"><div class="input">{{form.date}}</div></div>
+        <div class="form-input"><div class="input">{{form.priority}}</div></div>
+        <div class="btn-cnt"><input id="save-changes" type="submit" name="CreateTask"></div>
+    </form>
+</form>
+
+<div id="back"><a href="{% url 'list' %}">WRÓĆ</a></div>

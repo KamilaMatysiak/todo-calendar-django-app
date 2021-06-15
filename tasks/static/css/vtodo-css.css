@@ -42,6 +42,11 @@ body
     border-radius: 50%;
 }
 
+#logo
+{
+    height: 40px;
+}
+
 a
 {
     text-decoration: none;
@@ -60,6 +65,21 @@ a
     filter: drop-shadow(4px 0px 4px rgba(0, 0, 0, 0.25));
 }
 
+
+#menu-active
+{
+    
+    display: block;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    position: fixed;
+    background: #2B2E45;
+    width: 75px;
+    height: 100vh;
+    overflow-x: hidden;
+    filter: drop-shadow(4px 0px 4px rgba(0, 0, 0, 0.25));
+}
 .main-menu
 {
     top: 0;
@@ -482,7 +502,8 @@ li:hover{background: #2B2E45;}
 
 .edit-form .form-label
 {
-    width: 100%;
+    width:20%;
+    margin-right: 25px;
     text-align: left;
 
 }
@@ -490,6 +511,7 @@ li:hover{background: #2B2E45;}
 .form-input
 {
     width: 90%;
+    margin: 5px 10px;
     display: flex;
     align-items: center;
 }
@@ -508,6 +530,7 @@ li:hover{background: #2B2E45;}
 .input input
 {
     width: 90%;
+    padding: 5px;
 }
 
 .form-input input
@@ -536,11 +559,27 @@ li:hover{background: #2B2E45;}
     
 }
 
+#back
+{
+    width: 50%;
+    margin: auto;
+    padding: 10px;
+    text-align: center;
+}
+
+#back a
+{
+    color: #FFA843;
+    font-weight: bold;
+    font-size: 12px;
+}
+
 /*CALENDAR MODULE*/
 
 #nohover
 {
     background: #2B2E45;
+
 }
 
 #nohover:hover
@@ -673,6 +712,15 @@ a
     
 }
 
+.vtodo-container
+{
+
+    width 90%;
+    margin: auto;
+        margin-top: 200px;
+    text-align: center;
+}
+
 
 @media (min-width: 900px) and (max-width: 959px)
 {
@@ -710,6 +758,15 @@ a
         overflow-x: hidden;
         display: none;
     }
+
+    #menu-active
+    {
+        top: 70px;
+        width: 100vw;
+        overflow-x: hidden;
+        display: none;
+    }
+    
     .main-menu
     {
         width: 100%;

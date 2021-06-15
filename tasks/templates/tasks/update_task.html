@@ -3,9 +3,9 @@
 
 
 
-<form id="edit-form" method="POST" action="">
+<form class="edit-form" id="add-event" method="POST" action="">
     <div class="popup-header">
-        <div><a class="btn btn-sm btn-return" href="{% url 'test' %}"><img src="{% static 'image/icons/back-arrow.svg' %}" alt="Wróć"/></a></div>
+        <div><a class="btn btn-sm btn-return" href="{% url 'list' %}"><img src="{% static 'image/icons/back-arrow.svg' %}" alt="Wróć"/></a></div>
         <div><h1>EDYTUJ</h1></div>
         <div><a class="btn btn-sm btn-danger" href="{% url 'delete' id %}"><img src="{% static 'image/icons/delete-icon.svg' %}" alt="Usuń"/></a></div>
     </div>
