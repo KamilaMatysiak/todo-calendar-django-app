@@ -1,0 +1,28 @@
+<center>
+    <h1>Hello {{ name }}!</h1>
+    it is {{current_day}}.{{current_month}}.{{current_year}} <br>
+    <table border="0" cellpadding="0" cellspacing="0" class="month">
+    <td><th colspan="5" class="month">{{day}}{{month_name}} {{year}}</th></tr>
+    
+    <tr><th colspan="8">
+        <a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}">Prev</a>
+        <a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}">Next</a>
+    </th></tr>
+    <tr><th class="mon">Mon</th><th class="tue">Tue</th><th class="wed">Wed</th><th class="thu">Thu</th><th class="fri">Fri</th><th class="sat">Sat</th><th class="sun">Sun</th></tr>
+    {% for d in days %}
+        {% if d.0 == 0 %}
+            <td class="noday"> </td>
+        {% else %}
+            <td class="day"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
+        {% endif %}
+        {% if d.1 == 6 %}</tr>{% endif %}
+    {% endfor %}
+    </table>
+    Copyright {{current_year}}
+</center>
+
+
+<p><a class="btn add_meeting" href="{% url 'add_meeting'%}">Add meeting</a><p>
+{% for meeting in meetings %}
+<a href={% url 'edit_meeting' meeting.id%}>{{meeting.title}} &emsp;{{meeting.date_time_start}}</a><br>
+{% endfor %}
