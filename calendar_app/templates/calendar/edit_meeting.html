@@ -4,8 +4,10 @@
 
 
 <form class="edit-form" id="add-event" method="POST" action="">
-    <div class="popup-header" id="center">
+    <div class="popup-header">
+        <div><a class="btn btn-sm btn-return" href="{% url 'date' %}"><img src="{% static 'image/icons/back-arrow.svg' %}" alt="Wróć"/></a></div>
         <div><h1>EDYTUJ WYDARZENIE</h1></div>
+        <div><a class="btn btn-sm btn-danger" href="{% url 'delete_meeting' id %}"><img src="{% static 'image/icons/delete-icon.svg' %}" alt="Usuń"/></a></div>
     </div>
     <div class="color-bar"><div class="blue-bar"></div><div class="orange-bar"> </div></div>
             <form method="POST" action="">

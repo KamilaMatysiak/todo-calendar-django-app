@@ -41,7 +41,7 @@
                             {% for d in days %}
                                 {% if d.0 == 0 %}
                                     <td class="noday"></td>
-                                {% elif d.0 == current_day %}
+                                {% elif month == current_month and d.0 == current_day %}
                                     <td class="current"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
                                 {% elif d.1 == 6 %}
                                     <td class="sunday"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td><tr>

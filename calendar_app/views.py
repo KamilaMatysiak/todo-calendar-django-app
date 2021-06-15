@@ -46,7 +46,7 @@ def home(request, year, month, day):
     days = cal.itermonthdays2(year, month)
     now = datetime.now()
     current_day = now.day
-    # current_month = now.month
+    current_month = now.month
     # current_year = now.year
     time = now.strftime('%H:%M:%S %p')
     meetings = Meeting.objects.all()
@@ -63,7 +63,7 @@ def home(request, year, month, day):
                       "month_name": month_name,
                       "days": days,
                       "current_day": current_day,
-                    #   "current_month": f"{current_month:02d}",
+                      "current_month": current_month,
                     #   "current_year": current_year,
                       "time": time,
                       "meetings": meetings
@@ -95,6 +95,14 @@ def edit_meeting(request, pk):
             form.save()
             return redirect('/calendar')
 
-    context = {'form': form}
+    context = {'form': form, 'id': pk}
 
     return render(request, 'calendar/edit_meeting.html', context)
+
+def delete_meeting(request, pk):
+    item = Meeting.objects.get(id=pk)
+    if request.method == 'POST':
+        item.delete()
+        return redirect(current_date)
+    context = {'item': item}
+    return render(request, 'calendar/delete_meeting.html', context)
