@@ -7,7 +7,7 @@ class TaskForm(forms.ModelForm):
     title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Nowe zadanie'}))
     localization = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Lokalizacja'}), required=False)
     with_who = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Kontakty'}), required=False)
-    date = forms.DateTimeField(widget=forms.DateTimeInput(format='%d-%m-%Y %H:%M',
+    date = forms.DateField(widget=forms.DateInput(format='%d-%m-%Y',
                                                           attrs={'class': 'myDateClass',
                                                                  'placeholder': 'Data'}), required=False)
 

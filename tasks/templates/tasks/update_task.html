@@ -1,23 +1,113 @@
 {% load static %}
-<link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/>
-
-
-
-<form class="edit-form" id="add-event" method="POST" action="">
-    <div class="popup-header">
-        <div><a class="btn btn-sm btn-return" href="{% url 'list' %}"><img src="{% static 'image/icons/back-arrow.svg' %}" alt="Wróć"/></a></div>
-        <div><h1>EDYTUJ</h1></div>
-        <div><a class="btn btn-sm btn-danger" href="{% url 'delete' id %}"><img src="{% static 'image/icons/delete-icon.svg' %}" alt="Usuń"/></a></div>
+<html>
+<head>
+    <title>vToDo - zadania</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/>
+</head>
+<body>
+    <div class="bar">
+        <button class="hamburger" onclick="openMenu()"><img src="{% static 'image/icons/hamburger.svg' %}"></button>
+        <h1 class="text"> </h1>
+        <img class="avatar" src="{% static 'image/avatar-test.png' %}" alt="avatar">
     </div>
-    <div class="color-bar"><div class="blue-bar"></div><div class="orange-bar"> </div></div>
-    {% csrf_token %}
-    <div class="form-input"><div class="form-label">Nazwa:</div><div class="input">{{form.title}}</div></div>
-    <div class="form-input"><div class="form-label">Lokalizacja:</div><div class="input">{{form.localization}}</div></div>
-    <div class="form-input"><div class="form-label">Data: </div><div class="input">{{form.date}}</div></div>
-    <div class="form-input"><div class="form-label">Kontakty: </div><div class="input">{{form.with_who}}</div></div>
-    <div class="form-input"><div class="form-label">Priorytet: </div><div class="input">{{form.priority}}</div></div>
-    <div class="form-input"><div class="form-label">Ukończone: </div><div class="input">{{form.complete}}</div></div>
-    <br>
-    <div class="btn-cnt"><input id="save-changes" type="submit" name="Update Task"></div>
-</form>
+    <div class="menu" id="menu"> 
+        <div class="main-menu">
+            <div class="main-menu-btn" id="home">
+                <a href="{% url 'vtodo' %}"><div class="mn-btn"><img src="{% static 'image/icons/home-icon.svg' %}" alt="STRONA GŁÓWNA"></div></a>
+            </div>
+            <div class="main-menu-btn">
+                <a href="{% url 'date' %}"><div class="mn-btn"><img src="{% static 'image/icons/calendar-icon.svg' %}" alt="KALENDARZ"><h1>KALENDARZ</h1></div></a>
+                <ul class="option-dropdown-menu">
+                    <li class="header">KALENDARZ</li>
+                    <li class="option-dropdown">
+                        <div class="mini-calendar-module"><span>Mini Kalendarz</span></div>
+                    </li>
+                    <li class="option-dropdown"><span><img width="25px" src="{% static 'image/avatar-test.png' %}"> Połącz z Kalendarzem Google</span></li>
+                </ul>
+            </div>
+            <div class="main-menu-btn" id="active">
+                <a href="{% url 'list' %}"><div class="mn-btn"><img src="{% static 'image/icons/todolist-icon.svg' %}" alt="LISTA ZADAŃ"><h1>LISTA ZADAŃ</h1></div></a>
+
+                <ul class="option-dropdown-menu" id="active-option">
+                    <li class="header">LISTA TO-DO</li>
+                    <li class="option-dropdown" id="active-btn"><a href=#>Wszystkie</a></li>
+                    <a href=#><li class="option-dropdown">Lokalizacje</li></a>
+                        <ul class="category-dropdown">
+                            <li class="cat-drop-btn"><a href=#>MS TEAMS</a></li>
+                        </ul>
+                    <a href=#><li class="option-dropdown">Postęp</li></a>
+                        <ul class="category-dropdown">
+                            <li class="cat-drop-btn"><a>Do zrobienia</a></li>
+                            <li class="cat-drop-btn"><a>W trakcie</a></li>
+                            <li class="cat-drop-btn"><a>Zrobione</a></li>
+                        </ul>
+                    
+                    <a href=#><li class="option-dropdown"><a>Dodaj kategorię</a></li>
+                </ul>
+            </div>
+            <div class="main-menu-btn">
+                <a href=#><div class="mn-btn"><img src="{% static 'image/icons/settings-icon.svg' %}" alt="USTAWIENIA"><h1>USTAWIENIA</h1></div></a>
+                <ul class="option-dropdown-menu">
+                    <li class="header">USTAWIENIA</li>
+                    <li class="option-dropdown"><span>Profil</span></li>
+                    <li class="option-dropdown"><span>Zmiana hasła</span></li>
+                    <li class="option-dropdown"><span>Język i region</span></li>
+                    <li class="option-dropdown"><span>Inne</span>
+                        <ul class="category-dropdown">
+                            <li class="cat-drop-btn"><span>Dunno</span></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+        <script>
+            
+        window.onresize = function(){
+            var x = document.getElementById("menu");
+            
+            if(window.innerWidth >= 900) x.style.display='';
+        }
+            
+
+        function openMenu() {
+          var x = document.getElementById("menu");
+          if (x.style.display == "block") {
+            x.style.display = "none";
+          } else {
+            x.style.display = "block";  
+          }
+        }
+
+        </script>
+		<div class="fullpage">
+		<div class="menu-placeholder"></div>
+		<div class="temp-container">
+			<form class="edit-form" method="POST" action="">
+				<div class="popup-header">
+					<div><a class="btn btn-sm btn-return" href="{% url 'list' %}"><img src="{% static 'image/icons/back-arrow.svg' %}" alt="Wróć"/></a></div>
+					<div><h1> EDYTUJ </h1></div>
+					<div><a class="btn btn-sm btn-danger" href="{% url 'delete' id %}"><img src="{% static 'image/icons/delete-icon.svg' %}" alt="Usuń"/></a></div>
+				</div>
+				<div class="color-bar"><div class="blue-bar"></div><div class="orange-bar"> </div></div>
+				<div class="popup-data">
+				{% csrf_token %}
+				<div class="data">
+					<div class="form-label">Tytuł:</div><div class="input">{{form.title}}</div>
+					<div class="form-label">Lokalizacja:</div><div class="input">{{form.localization}}</div>
+					<div class="form-label">Data: </div><div class="input">{{form.date}}</div>
+					<div class="form-label">Kontakty: </div><div class="input">{{form.with_who}}</div>
+					<div class="form-label">Priorytet: </div><div class="input">{{form.priority}}</div>
+					<div class="form-input"><div class="form-label">Ukończone: </div><div>{{form.complete}}</div></div>
+				</div>
+				<div class="btn-cnt"><input id="save-changes" type="submit" name="Update Task"></div>
+				</div>
+
+			</form>
+			</div>
+			</div>
+		</body>
+		</html>
 
