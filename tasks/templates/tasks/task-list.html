@@ -33,19 +33,18 @@
                 <ul class="option-dropdown-menu" id="active-option">
                     <li class="header">LISTA TO-DO</li>
                     <li class="option-dropdown" id="active-btn"><a href=#>Wszystkie</a></li>
-                    <li class="option-dropdown"><a href=#>Lokalizacje</a>
+                    <a href=#><li class="option-dropdown">Lokalizacje</li></a>
                         <ul class="category-dropdown">
                             <li class="cat-drop-btn"><a href=#>MS TEAMS</a></li>
                         </ul>
-                    </li>
-                    <li class="option-dropdown"><a>Postęp</a>
+                    <a href=#><li class="option-dropdown">Postęp</li></a>
                         <ul class="category-dropdown">
                             <li class="cat-drop-btn"><a>Do zrobienia</a></li>
                             <li class="cat-drop-btn"><a>W trakcie</a></li>
                             <li class="cat-drop-btn"><a>Zrobione</a></li>
                         </ul>
-                    </li>
-                    <li class="option-dropdown"><a>Dodaj kategorię</a></li>
+                    
+                    <a href=#><li class="option-dropdown"><a>Dodaj kategorię</a></li>
                 </ul>
             </div>
             <div class="main-menu-btn">
@@ -85,7 +84,7 @@
         </script>
     
     <div class="container">
-        <div class="add-task"><a href="{% url 'add_task' %}">DODAJ ZADANIE</a></div>
+        <a class="add-task" href="{% url 'add_task' %}">DODAJ ZADANIE</a>
         <div class="search-task"><input type="text"></div>
         <div class="sort-task"><input type="text"></div>
     </div>
