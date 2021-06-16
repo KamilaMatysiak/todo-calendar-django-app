@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 import calendar
 from datetime import datetime, date
@@ -19,20 +20,22 @@ months = {
     12: "Grudzień"
 }
 
+
+@login_required
 def home(request, year, month, day):
     name = "usernaame"
     cal = calendar.Calendar(firstweekday=0)
     date = datetime(year, month, day).date()
     month_name = months[month]
     if month == 1:
-        prev = [year-1, 12]
-        next = [year, month+1]
+        prev = [year - 1, 12]
+        next = [year, month + 1]
     elif month == 12:
-        prev = [year, month-1]
-        next = [year+1, 1]
+        prev = [year, month - 1]
+        next = [year + 1, 1]
     else:
-        prev = [year, month-1]
-        next = [year, month+1]
+        prev = [year, month - 1]
+        next = [year, month + 1]
     previous_month_range = calendar.monthrange(prev[0], prev[1])[1]
     if day > previous_month_range:
         prev.append(previous_month_range)
@@ -64,14 +67,16 @@ def home(request, year, month, day):
                       "days": days,
                       "current_day": current_day,
                       "current_month": current_month,
-                    #   "current_year": current_year,
+                      #   "current_year": current_year,
                       "time": time,
                       "meetings": meetings
                   })
 
+
 def current_date(request):
     now = datetime.now()
     return redirect('home', now.year, now.month, now.day)
+
 
 def new_meeting(request):
     form = MeetingForm()
@@ -84,6 +89,7 @@ def new_meeting(request):
 
     context = {'form': form}
     return render(request, 'calendar/add_meeting.html', context)
+
 
 def edit_meeting(request, pk):
     meeting = Meeting.objects.get(id=pk)
@@ -98,6 +104,7 @@ def edit_meeting(request, pk):
     context = {'form': form, 'id': pk}
 
     return render(request, 'calendar/edit_meeting.html', context)
+
 
 def delete_meeting(request, pk):
     item = Meeting.objects.get(id=pk)
