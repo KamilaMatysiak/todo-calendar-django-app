@@ -51,7 +51,7 @@ def home(request, year, month, day):
     current_day = now.day
     current_month = now.month
     # current_year = now.year
-    time = now.strftime('%H:%M:%S %p')
+    time = datetime.now().time()
     meetings = Meeting.objects.all()
     return render(request,
                   'calendar/home.html',

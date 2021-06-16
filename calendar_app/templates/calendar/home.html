@@ -117,7 +117,7 @@
         {% for meeting in meetings %}
             {% if meeting.date_start <= date %}
                 {% if date <= meeting.date_end %}
-                    <a href={% url 'edit_meeting' meeting.id %}><div class="event"> <h1>{{meeting.title}}</h1> &emsp; <p>{{meeting.date_start}} {{meeting.time_start}}</p></div></a>
+                    <a href={% url 'edit_meeting' meeting.id %}><div class="event"> <h1>{{meeting.title}}</h1> &emsp; <p>{{meeting.date_start}} {{meeting.time_start |date:"H:i"}}</p></div></a>
                 {% endif %}
             {% endif %}
         {% endfor %}    
