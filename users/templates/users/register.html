@@ -26,13 +26,22 @@
             {% csrf_token %}
             <fieldset class="form-group">
                 {{ form.username }}
-                {{ form.errors.username }}
+                {% if form.errors.username %}
+                    <p>Niepoprawna nazwa użytkownika</p>
+                {% endif %}
                 {{ form.email }}
-                {{ form.errors.email }}
+                {% if form.errors.email %}
+                    <p>Niepoprawny adres email</p>
+                {% endif %}
                 {{ form.password1}}
                 {{ form.password2}}
-                {{ form.errors.password1}}
-                {{ form.errors.password2}}
+                {% if form.errors.password1 %}
+                    <p>Podane hasło jest zbyt krotkie lub zawiera same cyfry</p>
+                {% endif %}
+                {% if form.errors.password2 %}
+                    <p>Podane hasło jest zbyt krotkie lub zawiera same cyfry</p>
+                {% endif %}
+
             </fieldset>
         <div class="text-muted">
                 Masz już konto? <a class="ml-2" href="{% url 'login' %}">Zaloguj się</a>

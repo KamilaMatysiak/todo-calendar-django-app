@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 class UserRegisterForm(UserCreationForm):
     password1 = forms.CharField(max_length=16, widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Podaj hasło'}))
     password2 = forms.CharField(max_length=16, widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Powtórz hasło'}))
+
     
     class Meta:
         model = User

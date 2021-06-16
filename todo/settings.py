@@ -89,15 +89,17 @@ DATABASES = {
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
+
+   # {
+   #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+   # },
+
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
+   # {
+   #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+   # },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
@@ -129,3 +131,4 @@ DATE_INPUT_FORMATS = ['%d-%m-%Y']
 TIME_FORMATS = ['%H:%M:%S']
 mimetypes.add_type('image/svg+xml', '.svg', True)
 TIME_INPUT_FORMATS = '%H:%M'
+
