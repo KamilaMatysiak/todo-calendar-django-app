@@ -17,8 +17,15 @@
                 <fieldset class="form-group">
                     <label>Nazwa użytkownika</label>
                     {{  form.username   }}
+                    {% if form.errors.username %}
+                        <p>Niepoprawna nazwa uzytkownika</p>
+                    {% endif %}
                     <label>Hasło</label>
                     {{  form.password   }}
+                    {% if form.errors.password %}
+                        <p>Niepoprawne hasło</p>
+                    {% endif %}
+
                 </fieldset>
             <div class="text-muted">
                 <p>Nie masz konta? <a href="{% url 'register' %}">Zarejestruj się</a></p>
