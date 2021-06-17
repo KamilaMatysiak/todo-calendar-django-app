@@ -85,7 +85,8 @@ def new_meeting(request):
         form = MeetingForm(request.POST)
         if form.is_valid():
             form.save()
-        return redirect(current_date)
+            return redirect(current_date)
+        print(form.errors)
 
     context = {'form': form}
     return render(request, 'calendar/add_meeting.html', context)
@@ -100,6 +101,7 @@ def edit_meeting(request, pk):
         if form.is_valid():
             form.save()
             return redirect('/calendar')
+
 
     context = {'form': form, 'id': pk}
 

@@ -14,7 +14,7 @@
     <div class="menu" id="menu-active"> 
         <div class="main-menu">
             <div class="main-menu-btn" id="home">
-                <a href=#><div class="mn-btn"><img src="{% static 'image/icons/home-icon.svg' %}" alt="STRONA GŁÓWNA"></div></a>
+                <a href="{% url 'vtodo' %}"><div class="mn-btn"><img src="{% static 'image/icons/home-icon.svg' %}" alt="STRONA GŁÓWNA"></div></a>
             </div>
             <div class="main-menu-btn">
                 <a href="{% url 'date' %}"><div class="mn-btn"><img src="{% static 'image/icons/calendar-icon.svg' %}" alt="KALENDARZ"><h1>KALENDARZ</h1></div></a>
@@ -106,5 +106,6 @@
 							<div class="btn-cnt"><input id="save-changes" type="submit" name="Update Meeting"></div>
 							</div>
 			</form>
+            </form>
 			</div>
 			<div>

@@ -14,7 +14,7 @@
     <div class="menu" id="menu-active"> 
         <div class="main-menu">
             <div class="main-menu-btn" id="home">
-                <a href=#><div class="mn-btn"><img src="{% static 'image/icons/home-icon.svg' %}" alt="STRONA GŁÓWNA"></div></a>
+                <a href="{% url 'vtodo' %}"><div class="mn-btn"><img src="{% static 'image/icons/home-icon.svg' %}" alt="STRONA GŁÓWNA"></div></a>
             </div>
             <div class="main-menu-btn">
                 <a href="{% url 'date' %}"><div class="mn-btn"><img src="{% static 'image/icons/calendar-icon.svg' %}" alt="KALENDARZ"><h1>KALENDARZ</h1></div></a>
@@ -91,7 +91,7 @@
 					<a id="back-abs-small" href="{% url 'date' %}"><img src="{% static 'image/icons/back-arrow.svg' %}" alt="Wróć"/></a>
 				</div>
 				<div class="color-bar"><div class="blue-bar"></div><div class="orange-bar"> </div></div>
-						<form method="POST" action="">
+						<form method="POST" action="/">
 						<div class="popup-data">
 							{% csrf_token %}
 							<div class="data">
@@ -106,5 +106,6 @@
 							</div>
 						</form>
 						
-			</div>
-			</div>
+            </form>
+        </div>
+</div>

@@ -1,6 +1,14 @@
-<p>Usunąć zadanie "{{item}}"? </p>
-<a href="{% url 'update_task' id %}">Cancel</a>
+{%load static%}
+<link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/>
+
+<div class="edit-form" id="center-content">
 <form method="POST" action="">
     {% csrf_token %}
-    <input type="submit" name="Confirm">
+    <div class="popup-header" id="center"><h1>Usunąć zadanie "{{item}}"? </h1></div>
+    <div class="color-bar"><div class="blue-bar"></div><div class="orange-bar"> </div></div>
+<div style="margin: auto; width: 90%;">
+    <input id="save-changes" type="submit" name="Confirm">
+    <a id="cancel" href="{% url 'update_task' id %}">Anuluj</a>
+    </div>
 </form>
+</div>
