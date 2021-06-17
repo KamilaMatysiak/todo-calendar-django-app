@@ -6,7 +6,7 @@
     {% csrf_token %}
     <div class="popup-header" id="center"><h1>Usunąć wydarzenie "{{item}}"? </h1></div>
     <div class="color-bar"><div class="blue-bar"></div><div class="orange-bar"> </div></div>
-<div style="margin: auto; width: 90%;">
+<div class="delet">
     <input id="save-changes" type="submit" name="Confirm">
     <a id="cancel" href="{% url 'date' %}">Anuluj</a>
     </div>
