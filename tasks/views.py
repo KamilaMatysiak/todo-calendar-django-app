@@ -40,6 +40,8 @@ def addTask(request):
         form = TaskForm(request.POST)
         if form.is_valid():
             form.save()
+        else:
+            print(form)
         return redirect('list')
 
     context = {"tasks": tasks, 'form': form}

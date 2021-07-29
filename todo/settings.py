@@ -126,9 +126,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'vtodo'
 LOGIN_URL = 'login'
-DATE_FORMAT = "d-m-Y"
-DATE_INPUT_FORMATS = ['%d-%m-%Y']
+DATE_FORMATS = ['d-m-Y', '%d-%m-%y', '%d.%m.%Y', 'd.m.y']
+DATE_INPUT_FORMATS = ['%d-%m-%Y', '%d-%m-%y', '%d.%m.%Y', '%d.%m.%y']
 TIME_FORMATS = ['%H:%M:%S']
 mimetypes.add_type('image/svg+xml', '.svg', True)
 TIME_INPUT_FORMATS = '%H:%M'
-
