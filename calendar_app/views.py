@@ -52,7 +52,9 @@ def home(request, year, month, day):
     current_month = now.month
     # current_year = now.year
     time = datetime.now().time()
-    meetings = Meeting.objects.all()
+    meetings = (x for x in Meeting.objects.all() if x.user == request.user)
+    # meetings = Meeting.objects.all()
+    print(meetings)
     return render(request,
                   'calendar/home.html',
                   {
@@ -84,7 +86,9 @@ def new_meeting(request):
     if request.method == 'POST':
         form = MeetingForm(request.POST)
         if form.is_valid():
-            form.save()
+            instance = form.save(commit=False) 
+            instance.user = request.user
+            instance.save()
             return redirect(current_date)
         print(form.errors)
 

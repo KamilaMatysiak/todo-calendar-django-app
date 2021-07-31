@@ -14,7 +14,7 @@ def homepage(request):
 
 @login_required
 def task_list(request):
-    tasks = Task.objects.all()
+    tasks = (x for x in Task.objects.all() if x.user == request.user)
     form = TaskForm()
 
     if request.method == 'POST':
@@ -39,9 +39,9 @@ def addTask(request):
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
-            form.save()
-        else:
-            print(form)
+            instance = form.save(commit=False) 
+            instance.user = request.user
+            instance.save()
         return redirect('list')
 
     context = {"tasks": tasks, 'form': form}
