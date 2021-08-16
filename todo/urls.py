@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from users import views as user_views
 from django.contrib.auth import views as auth_views
+from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,4 +29,6 @@ urlpatterns = [
     path('', include('tasks.urls')),
 
     path('calendar/', include('calendar_app.urls')),
+
+    path('sw.js', TemplateView.as_view(template_name='tasks/sw.js', content_type='application/javascript'), name='sw.js'),
     ]
