@@ -36,13 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'tasks',
-
     'users.apps.UsersConfig',
     'crispy_forms',
-
     'calendar_app',
+    'geolocation',
 ]
 
 MIDDLEWARE = [
@@ -121,6 +119,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
