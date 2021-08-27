@@ -23,6 +23,16 @@ months = {
 
 @login_required
 def home(request, year, month, day):
+    """Shows a map with starting point of user, based on users localization.
+        If user provide name of location,
+         then map will show both starting point and destination with a line connecting  them
+
+    Args:
+        request: request to return .html file
+    Returns:
+        .html file with a map of user starting point and places with task assigned to them
+
+    """
     name = "usernaame"
     cal = calendar.Calendar(firstweekday=0)
     date = datetime(year, month, day).date()
@@ -76,11 +86,27 @@ def home(request, year, month, day):
 
 
 def current_date(request):
+    """Shows current date in dd / mm / yyyy format
+
+    Args:
+        request: request to redirect
+    Returns:
+        redirection to 'home' with current year, month and day
+
+    """
     now = datetime.now()
     return redirect('home', now.year, now.month, now.day)
 
 
 def new_meeting(request):
+    """Adds new meeting to meeting list
+
+    Args:
+        request: POST request
+    Returns:
+        new meeting form
+
+    """
     form = MeetingForm()
 
     if request.method == 'POST':
@@ -97,6 +123,14 @@ def new_meeting(request):
 
 
 def edit_meeting(request, pk):
+    """Edits existing meeting
+
+    Args:
+        request: POST request
+    Returns:
+        updated meeting form
+
+    """
     meeting = Meeting.objects.get(id=pk)
     form = MeetingForm(instance=meeting)
 
@@ -113,6 +147,14 @@ def edit_meeting(request, pk):
 
 
 def delete_meeting(request, pk):
+    """Deletes meeting from meeting list
+
+    Args:
+        request: POST request
+    Returns:
+        redirection to delete meeting
+
+    """
     item = Meeting.objects.get(id=pk)
     if request.method == 'POST':
         item.delete()

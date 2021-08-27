@@ -7,10 +7,18 @@ from geopy.distance import geodesic
 import folium
 
 
-# Create your views here.
-
 def location(request):
-    # initial values
+    """Shows a map with starting point of user, based on users localization.
+        If user provide name of location,
+         then map will show both starting point and destination with a line connecting  them
+
+    Args:
+        request: request to return .html file
+    Returns:
+        .html file with a map of user starting point and places with task assigned to them
+
+    """
+
     distance = None
     destination = None
 
@@ -24,51 +32,50 @@ def location(request):
     country, city, lat, lon = get_geo(ip)
     location = geolocator.geocode(city)
 
-    # location coordinates
+    # koordynanty
     l_lat = lat
     l_lon = lon
     pointA = (l_lat, l_lon)
 
-    # initial folium map
+    # inicjowanie mapy
     m = folium.Map(width=800, height=500, location=get_center_coordinates(l_lat, l_lon), zoom_start=8)
-    # location marker
+    # znacznik lokalizacji początkowej
     folium.Marker([l_lat, l_lon], tooltip='twoja lokalizacja',
                   popup="kod pocztowy: " + city['postal_code'] + " miasto: " + city['city'],
                   icon=folium.Icon('green')).add_to(m)
-
+    # Jeżeli  uzytkownik poda prawidłową lokalizację, pokaż miejsce startowe i docelowe
     if form.is_valid():
-        print("dupa_formvalid")
         instance = form.save(commit=False)
         destination_ = form.cleaned_data.get('destination')
         destination = geolocator.geocode(destination_)
 
-        # destination coordinates
+        # koordynanty celu
         d_lat = destination.latitude
         d_lon = destination.longitude
         pointB = (d_lat, d_lon)
 
-        # distance calculation
+        # obliczanie odległości
         distance = round(geodesic(pointA, pointB).km, 2)
 
-        # initial folium map
+        # zainicjowanie mapy
         m = folium.Map(width=800, height=500,
                        location=get_center_coordinates(l_lat, l_lon, d_lat, d_lon),
                        zoom_start=get_zoom(distance))
-        # location marker
+        #  znacznik lokacji początkowej
         folium.Marker([l_lat, l_lon], tooltip='twoja lokalizacja',
                       popup="kod pocztowy: " + city['postal_code'] + " miasto: " + city['city'],
                       icon=folium.Icon('green')).add_to(m)
 
-        # destination  marker
+        # znacznik lokacji celu
         folium.Marker([d_lat, d_lon], tooltip='cel podróży',
                       popup=destination,
                       icon=folium.Icon('red', icon="cloud")).add_to(m)
 
-        # draw the line between location and destination
+        # linia pomiędzy punktem początkowym i docelowym
         line = folium.PolyLine(locations=[pointA, pointB], weight=2, color='blue')
         m.add_child(line)
 
-        # folium map modification
+        # modyfikacja mapy
         instance.location = location
         instance.distance = distance
         instance.save()

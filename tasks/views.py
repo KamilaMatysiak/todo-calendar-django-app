@@ -9,11 +9,27 @@ import datetime
 # Create your views here.
 
 def homepage(request):
+    """
+    Show homepage
+    Args:
+        request: request to return .html file
+
+    Returns: .html file of homepage.
+
+    """
     return render(request, 'tasks/index.html')
 
 
 @login_required
 def task_list(request):
+    """
+    Shows all tasks of specific user
+    Args:
+        request: request to return .html file
+
+    Returns: .html of all tasks.
+
+    """
     tasks = (x for x in Task.objects.all() if x.user == request.user)
     form = TaskForm()
 
@@ -29,10 +45,26 @@ def task_list(request):
 
 
 def index(request):
+    """
+    Show homepage
+    Args:
+        request: request to return .html file
+
+    Returns: .html file of homepage.
+
+    """
     return render(request, 'tasks/vtodo.html')
 
 
 def addTask(request):
+    """
+    Adds new task to list of tasks
+    Args:
+        request: request to return .html file
+
+    Returns: .html file of add-task.
+
+    """
     tasks = Task.objects.all()
     form = TaskForm()
 
@@ -49,6 +81,14 @@ def addTask(request):
 
 
 def updateTask(request, pk):
+    """
+    Lets user update their task.
+    Args:
+        request: request to return .html file
+
+    Returns: .html file of update-task
+
+    """
     task = Task.objects.get(id=pk)
     form = TaskForm(instance=task)
 
@@ -64,6 +104,14 @@ def updateTask(request, pk):
 
 
 def deleteTask(request, pk):
+    """
+    Lets user delete task
+    Args:
+        request: request to return .html file
+
+    Returns: .html file of delete-task.
+
+    """
     item = Task.objects.get(id=pk)
     if request.method == 'POST':
         item.delete()

@@ -5,9 +5,10 @@ register = template.Library()
 
 @register.filter
 def split_timeuntil(duration):
-    duration = duration.replace('hours', 'godzin') \
-        .replace('minutes', 'minuty') \
+    duration = duration.replace('hours', 'godz.') \
+        .replace('minutes', 'min.') \
         .replace('weeks', 'tygodnie') \
+        .replace('week', 'tydzień') \
         .replace('days', 'dni') \
         .replace('day', 'dzien') \
         .replace('hour', 'godzina') \
