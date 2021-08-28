@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/>
     <link rel="manifest" href="{% static 'manifest.webmanifest' %}">
+
+    <link rel="apple-touch-icon" href="{% static 'image/icon-192.png' %}">
+    <meta name="theme-color" content="#a300c4"/>
             <script>
             if ('serviceWorker' in navigator) {
                 navigator.serviceWorker.register('{% url "sw.js" %}', { scope: '/' }).then(function(reg) {
