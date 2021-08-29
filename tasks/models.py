@@ -9,6 +9,8 @@ class Task(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=1)
     title = models.CharField(max_length=200)
     localization = models.CharField(max_length=200)
+    l_lat = models.DecimalField(max_digits=15, decimal_places=10, blank=True, null=True, default=None)
+    l_lon = models.DecimalField(max_digits=15, decimal_places=10, blank=True, null=True, default=None)
     with_who = models.CharField(max_length=200)
     date = models.DateField(default=date.today())
     High_priority = "H"

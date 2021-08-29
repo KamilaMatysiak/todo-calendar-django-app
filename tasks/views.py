@@ -4,6 +4,10 @@ from django.http import HttpResponse
 from .models import *
 from .forms import *
 import datetime
+from geopy.geocoders import Nominatim
+from .utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
+from geopy.distance import geodesic
+import folium
 
 
 # Create your views here.
@@ -35,15 +39,21 @@ def index(request):
 def addTask(request):
     tasks = Task.objects.all()
     form = TaskForm()
-
+    
     if request.method == 'POST':
         form = TaskForm(request.POST)
         if form.is_valid():
-            instance = form.save(commit=False) 
+            instance = form.save(commit=False)
+            if instance.localization:
+                geolocator = Nominatim(user_agent='measurements')
+                destination_ = form.cleaned_data.get('localization')
+                destination = geolocator.geocode(destination_)
+                instance.l_lat = destination.latitude
+                instance.l_lon = destination.longitude
             instance.user = request.user
             instance.save()
         return redirect('list')
-
+        
     context = {"tasks": tasks, 'form': form}
     return render(request, 'tasks/add_task.html', context)
 

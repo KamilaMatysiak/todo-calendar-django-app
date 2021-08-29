@@ -1,6 +1,6 @@
-from django.contrib import admin
-from .models import Measurement
+# from django.contrib import admin
+# from .models import Measurement
 
-# Register your models here.
+# # Register your models here.
 
-admin.site.register(Measurement)
+# admin.site.register(Measurement)
