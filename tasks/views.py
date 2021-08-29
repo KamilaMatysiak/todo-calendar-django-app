@@ -34,7 +34,8 @@ def task_list(request):
     Returns: .html of all tasks.
 
     """
-    tasks = (x for x in Task.objects.all() if x.user == request.user)
+    tasks = [x for x in Task.objects.all() if x.user == request.user]
+    #tasks = Task.objects.all()
     form = TaskForm()
 
     if request.method == 'POST':

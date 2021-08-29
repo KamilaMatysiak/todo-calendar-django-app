@@ -3,6 +3,7 @@ from datetime import datetime, date, time
 from django.forms import CheckboxInput
 from django.contrib.auth import get_user_model
 
+
 # Create your models here.
 User = get_user_model()
 

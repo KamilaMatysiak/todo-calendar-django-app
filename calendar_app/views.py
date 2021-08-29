@@ -68,8 +68,8 @@ def home(request, year, month, day):
     current_month = now.month
     # current_year = now.year
     time = datetime.now().time()
-    meetings = (x for x in Meeting.objects.all() if x.user == request.user)
-    # meetings = Meeting.objects.all()
+    meetings = [x for x in Meeting.objects.all() if x.user == request.user]
+    #meetings = Meeting.objects.all()
     form = EventModelForm()
     return render(request,
                   'calendar/home.html',
