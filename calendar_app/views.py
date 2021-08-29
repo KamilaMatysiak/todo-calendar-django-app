@@ -112,6 +112,11 @@ class AddEventView(BSModalCreateView):
     success_message = "Dodano spotkanie"
     success_url = reverse_lazy('date')
 
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        return super(AddEventView, self).form_valid(form)
+
 
 class DeleteEventView(BSModalDeleteView):
     template_name = 'calendar/delete_meeting.html'

@@ -58,7 +58,11 @@ class AddTaskView(BSModalCreateView):
     form_class = TaskModelForm
     success_message = "Dodano zadanie"
     success_url = reverse_lazy('list')
-    
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        return super(AddTaskView, self).form_valid(form)
     
 class EditTaskView(BSModalUpdateView):
     model = Task
