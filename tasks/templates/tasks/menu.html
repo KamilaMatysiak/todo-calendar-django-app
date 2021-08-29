@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+<style>
+.logo {
+    text-align: center;
+}
+
+.logo img {
+    width: 50%;
+    margin: 20px auto;
+}
+
+.sub {
+    max-width: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-width 0s;
+    background: #fafafa;
+}
+ul.active {
+    max-width: 1000px;
+    max-height: 1000px;
+    transition: max-width 1s 0.1s;
+}
+li {
+    overflow: hidden;
+    white-space: nowrap;
+}
+</style>
+    </head>
+    <body>
+    <div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-6 col-sm-3 col-md-2 sidebar">
+      <div class="logo">
+        <img src="http://upload.wikimedia.org/wikipedia/commons/3/34/Red_star.svg" />
+      </div>
+      <ul class="nav nav-sidebar main">
+        <li class="active"><a href="#sub1">Navigation 1</a></li>
+        <li><a href="#sub2">Navigation 2</a></li>
+        <li><a href="#sub3">Navigation 3</a></li>
+      </ul>
+    </div>
+    <div class="col-xs-6 col-sm-3 col-md-2 sidebar">
+      <ul id="sub1" class="nav nav-sidebar sub active">
+        <li><a href="http://google.com" target="_blank">Subnavigation 1.1</a></li>
+        <li><a href="http://google.com" target="_blank">Subnavigation 1.2</a></li>
+        <li><a href="http://google.com" target="_blank">Subnavigation 1.3</a></li>
+        <li><a href="http://google.com" target="_blank">Subnavigation 1.4</a></li>
+      </ul>
+      <ul id="sub2" class="nav nav-sidebar sub">
+        <li><a href="/sub2.1">Subnavigation 2.1</a></li>
+        <li><a href="/sub2.2">Subnavigation 2.2</a></li>
+        <li><a href="/sub2.3">Subnavigation 2.3</a></li>
+      </ul>
+      <ul id="sub3" class="nav nav-sidebar sub">
+        <li><a href="#">Subnavigation 3.1</a></li>
+        <li><a href="#">Subnavigation 3.2</a></li>
+        <li><a href="#">Subnavigation 3.3</a></li>
+        <li><a href="#">Subnavigation 3.4</a></li>
+        <li><a href="#">Subnavigation 3.5</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+        
+        <script>
+        $(function () {
+    $(".main").on("click", "a", function () {
+        $(".sub").removeClass("active");
+        $($(this).attr("href")).addClass("active");
+        console.log($(".sub ul"));
+    });
+});
+        </script>
+    </body>
+</html>

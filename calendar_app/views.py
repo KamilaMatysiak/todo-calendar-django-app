@@ -1,9 +1,13 @@
+import locale
+
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 import calendar
 from datetime import datetime, date
 from .models import *
 from .forms import *
+from django.urls import reverse_lazy
+from bootstrap_modal_forms.generic import BSModalCreateView, BSModalDeleteView, BSModalUpdateView
 
 months = {
     1: "Styczeń",
@@ -34,6 +38,7 @@ def home(request, year, month, day):
 
     """
     name = "usernaame"
+    locale.setlocale(locale.LC_ALL, "pl_PL")
     cal = calendar.Calendar(firstweekday=0)
     date = datetime(year, month, day).date()
     month_name = months[month]
@@ -58,13 +63,14 @@ def home(request, year, month, day):
         next.append(day)
     days = cal.itermonthdays2(year, month)
     now = datetime.now()
+    day_name = date.strftime("%A")
     current_day = now.day
     current_month = now.month
     # current_year = now.year
     time = datetime.now().time()
     meetings = (x for x in Meeting.objects.all() if x.user == request.user)
     # meetings = Meeting.objects.all()
-    print(meetings)
+    form = EventModelForm()
     return render(request,
                   'calendar/home.html',
                   {
@@ -77,11 +83,13 @@ def home(request, year, month, day):
                       "next_month": next,
                       "month_name": month_name,
                       "days": days,
+                      "day_name": day_name,
                       "current_day": current_day,
                       "current_month": current_month,
                       #   "current_year": current_year,
                       "time": time,
-                      "meetings": meetings
+                      "meetings": meetings,
+                      "form": form
                   })
 
 
@@ -98,44 +106,26 @@ def current_date(request):
     return redirect('home', now.year, now.month, now.day)
 
 
-def new_meeting(request):
-    """Adds new meeting to meeting list
+class AddEventView(BSModalCreateView):
+    template_name = 'calendar/add_meeting.html'
+    form_class = EventModelForm
+    success_message = "Dodano spotkanie"
+    success_url = reverse_lazy('date')
 
-    Args:
-        request: POST request
-    Returns:
-        new meeting form
 
-    """
-    form = MeetingForm()
-
-    if request.method == 'POST':
-        form = MeetingForm(request.POST)
-        if form.is_valid():
-            instance = form.save(commit=False) 
-            instance.user = request.user
-            instance.save()
-            return redirect(current_date)
-        print(form.errors)
-
-    context = {'form': form}
-    return render(request, 'calendar/add_meeting.html', context)
+class DeleteEventView(BSModalDeleteView):
+    template_name = 'calendar/delete_meeting.html'
+    model = Meeting
+    success_message = "Pomyślnie usunięto spotkanie"
+    success_url = reverse_lazy('date')
 
 
 def edit_meeting(request, pk):
-    """Edits existing meeting
-
-    Args:
-        request: POST request
-    Returns:
-        updated meeting form
-
-    """
     meeting = Meeting.objects.get(id=pk)
-    form = MeetingForm(instance=meeting)
+    form = EventModelForm(instance=meeting)
 
     if request.method == 'POST':
-        form = MeetingForm(request.POST, instance=meeting)
+        form = EventModelForm(request.POST, instance=meeting, request=request)
         if form.is_valid():
             form.save()
             return redirect('/calendar')
@@ -160,4 +150,4 @@ def delete_meeting(request, pk):
         item.delete()
         return redirect(current_date)
     context = {'item': item}
-    return render(request, 'calendar/delete_meeting.html', context)
+    return render(request, 'calendar/edit_meeting.html', context)

@@ -25,7 +25,7 @@ SECRET_KEY = '@&ivg06$5v6#yo+^*y9ixt^^a(7bncddv$p2p7k2d#+@iaoc)i'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', '192.168.100.100','localhost']
 
 # Application definition
 
@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     'crispy_forms',
     'calendar_app',
     'geolocation',
+    'bootstrap4',
+    'bootstrap_modal_forms',
+    'bootstrap_datepicker_plus',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +55,10 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+BOOTSTRAP4 = {
+    'include_jquery': True,
+}
 
 ROOT_URLCONF = 'todo.urls'
 
@@ -106,7 +113,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pl-pl'
 
 TIME_ZONE = 'UTC'
 
@@ -124,9 +131,10 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'vtodo'
-LOGIN_URL = 'login'
-DATE_FORMATS = ['d-m-Y', '%d-%m-%y', '%d.%m.%Y', 'd.m.y']
-DATE_INPUT_FORMATS = ['%d-%m-%Y', '%d-%m-%y', '%d.%m.%Y', '%d.%m.%y']
+LOGIN_URL = 'index'
+DATE_FORMAT = "d-m-Y"
+DATE_INPUT_FORMATS = ['%d-%m-%Y']
 TIME_FORMATS = ['%H:%M:%S']
 mimetypes.add_type('image/svg+xml', '.svg', True)
-TIME_INPUT_FORMATS = '%H:%M'
+#TIME_INPUT_FORMATS = '%H:%M'
+

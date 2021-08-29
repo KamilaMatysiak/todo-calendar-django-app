@@ -1,9 +1,15 @@
 from django.db import models
-from datetime import date
+from datetime import datetime, date, time
+from django.forms import CheckboxInput
 from django.contrib.auth import get_user_model
 
 # Create your models here.
 User = get_user_model()
+
+
+
+# Create your models here.
+
 
 
 class Task(models.Model):
@@ -21,7 +27,8 @@ class Task(models.Model):
     title = models.CharField(max_length=200)
     localization = models.CharField(max_length=200)
     with_who = models.CharField(max_length=200)
-    date = models.DateField(default=date.today())
+    date = models.DateField(default=date.today, null=True)
+    time = models.TimeField(default=datetime.now)
     High_priority = "H"
     Medium_priority = "M"
     Low_priority = "L"
@@ -41,3 +48,6 @@ class Task(models.Model):
     def __str__(self):
         """Returns title of task"""
         return f"{self.title}"
+
+    class Meta:
+        ordering=['date']

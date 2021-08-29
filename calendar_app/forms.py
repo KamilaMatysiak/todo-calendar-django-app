@@ -1,13 +1,26 @@
 from django import forms
 from django.forms import ModelForm
 from .models import *
+from bootstrap_modal_forms.forms import BSModalModelForm
+from bootstrap_datepicker_plus import DatePickerInput, TimePickerInput
 
 
-class MeetingForm(forms.ModelForm):
-    title = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Nowe zadanie'}))
-    time_start = forms.TimeField(input_formats=['%H:%M'], widget=forms.TimeInput(format='%H:%M', attrs={'placeholder': 'gg:mm'}))
-    time_end = forms.TimeField(input_formats=['%H:%M'], widget=forms.TimeInput(format='%H:%M', attrs={'placeholder': 'gg:mm'}))
+class EventModelForm(BSModalModelForm):
+    description = forms.CharField(required=False, label="Opis")
 
     class Meta:
         model = Meeting
-        fields = '__all__'
+        fields = ['title', 'description', 'date_start', 'time_start', 'time_end', 'date_end']
+        widgets = {
+            'date_start': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl"}),
+            'date_end': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl"}),
+            'time_start': TimePickerInput(),
+            'time_end': TimePickerInput(),
+        }
+        labels = {
+            'title': ('Nazwa spotkania'),
+            'date_start': ('Data rozpoczęcia'),
+            'time_start': ('Rozpoczęcie'),
+            'time_end': ('Zakończenie'),
+            'date_end': ('Data zakończenia')
+        }

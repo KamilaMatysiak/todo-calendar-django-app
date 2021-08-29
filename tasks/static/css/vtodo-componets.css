@@ -1,0 +1,745 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f3f3f3 !important;
+    font-family: 'Poppins', san-serif;
+}
+
+a:hover {
+text-decoration: none;
+}
+
+/*------------------
+       BUTTONS
+-------------------*/
+
+.button {
+    display: inline-block;
+    border: none;
+    padding: 10px 20px;
+    height: 40px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-family: sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-align: center;
+    transition: background 250ms ease-in-out, 
+                transform 150ms ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+        margin: 0 4px;
+}
+
+.add {
+    background: #2F9CEB;
+    color: white; 
+}
+
+.add:hover {
+    background: #56ADEC;
+}
+
+.delete {
+    background: #eb5757;
+    color: white;
+    padding: 0.8rem 1.5rem;
+
+}
+
+    .delete:hover {
+        background: #E47676;
+    }
+
+.inverse{
+    background: white;
+    padding: 10px 20px;
+    border: 1px solid #2F9CEB;
+    color: #2F9CEB;
+}
+
+    .inverse:hover {
+        background: #56ADEC;
+        color: white;
+    }
+
+.borderless {
+    border: none;
+}
+
+    .borderless:hover {
+        border: none;
+        color: #56ADEC;
+        background: #fbfbfb;
+    }
+
+.hamburger
+{display: none;}
+/*---------------------
+        EVENTS
+----------------------*/
+
+.event {
+    width: 250px;
+    min-height: 250px;
+    color: white;
+    font-family: sans-serif;
+    padding: 5px;
+    margin: 10px;
+    float: left;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    
+}
+
+    .blue {
+        background: #2F9CEB;
+    }
+
+    .orange {
+        background: #F2994A;
+    }
+
+    .red {
+        background: #EB5757;
+    }
+
+    .green {
+        background: #27AE60;
+    }
+
+    .purple {
+        background: #9B51E0;
+    }
+
+.event .info {
+    width: 100%;
+    flex: 1;
+}
+
+.event h1 {
+    font-size: 1.3rem;
+}
+
+.event p {
+    font-size: 0.8em;
+}
+
+.event .date {
+    padding: 0;
+    font-size: 0.8rem;
+    width: 100px;
+    justify-self: right;
+    align-self: flex-end;
+}
+
+.long {
+    width: 90%;
+    min-height: 100px;
+    float: none;
+}
+
+.passed {
+    opacity: 0.5;
+}
+
+/*---------------------
+        INPUT
+----------------------*/
+
+.button-select {
+    border-radius: 4px;
+    text-align: left;
+    padding: 0.86rem 1rem 0.86rem 0.5rem;
+    margin: 0;
+    font-family: sans-serif;
+    font-size: 0.8rem;
+    cursor: pointer;
+    background: white;
+    border: 1px solid #2F9CEB;
+    color: #2F9CEB;
+}
+
+.button-select:hover {
+    background: #fbfbfb;
+    color: #2F9CEB;
+}
+
+/*--------------------
+        TASKS
+---------------------*/
+
+.task {
+    width: 90%;
+    height: 75px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.12)
+}
+
+.task-content {
+    flex: 1;
+}
+
+    .task-content h1 {
+        font-size: 1.2rem;
+        color: #111;
+    }
+
+.task-info {
+    height: 0.9rem;
+    font-size: 0.7rem;
+    color: #444;
+    display: flex;
+    flex-direction: row;
+}
+
+.task-info p {
+    padding-right: 5px;
+}
+
+    .task-info .passed {
+        color: #F93A3A;
+    }
+
+.task input, .task .important-tag
+{
+    margin: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.edit {
+    display: none;
+    align-items: center;
+    border: none;
+
+}
+
+        .task:hover + .edit {
+            display: inline-flex;
+            color: black;
+            font-size: 0.8rem;
+            width: 10%;
+            height: 75px;
+            padding: 15px;
+
+        }
+
+        .edit:hover {
+            display: inline-flex;
+            width: 10%;
+            font-size: 0.8rem;
+            height: 75px;
+            padding: 15px;
+        }
+
+.edit img {
+    width: 25px;
+    height: 25px;
+}
+
+.task-edit {
+    padding: 5px;
+    background: none;
+}
+
+
+.vcontainer {
+    padding: 5px 10px;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.center
+{
+    width: 90%;
+    height: auto;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+}
+
+.column {
+    flex-direction: column;
+}
+
+
+/*----------------------
+        WRAPPER
+-----------------------*/
+
+.wrapper {
+    display: flex;
+    width: 100%;
+}
+
+#sidebar {
+    width: 300px;
+    height: 100vh;
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+#small {
+    width: 75px;
+}
+
+.main {
+    width: 75px;
+    height: 100vh;
+    position: fixed;
+    background: #0C0E1B;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.main img {
+    width: 65px;
+    height: 65px;
+    padding: 0;
+}
+
+.sidebar-btn{
+    width: 75px;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.main .active {
+    background: #222433;
+}
+
+.menu {
+    width: 225px;
+        flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    box-shadow: 0px 4px 4px rgba(0,0,0,0.2);
+    background: white;
+    position:fixed;
+    left: 75px;
+    height: 100vh;
+}
+
+.header {
+    width: 100%;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+}
+
+.header h1 {
+    color: #111;
+    font-size: 1.5rem;
+    padding: 10px;
+    margin: auto 0;
+}
+
+.header img {
+    height: 1.8rem;
+    width: 1.8rem;
+    padding: 5px;
+        margin: auto 0;
+}
+
+.menu-buttons {
+    list-style: none;
+    width: 100%;
+    padding: 0;
+    margin: 5px 0;
+}
+
+.menu-buttons li {
+    padding: 10px 15px;
+
+}
+
+.menu-buttons li a {
+    color: #2F3045;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.menu-buttons .active {
+    background: #FF9213;
+    color: white;
+}
+
+.menu-buttons .active:hover {
+        background: #FF9213;
+}
+
+.menu-buttons li:hover {
+    background: #eee;
+}
+
+/* ---------------------------------------------------
+    CALENDAR MODULE
+----------------------------------------------------- */
+
+.calendar-header
+{
+    width: 100%;
+    color: #2F3045;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 40px 0px 10px 0px;
+}
+
+.prev img, .next img
+{
+    width: 15px;
+    height: auto;
+    padding: 2px;
+}
+
+.labels {
+margin: 0 auto;}
+
+.week-label
+{
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.week-label p
+{
+    padding: 0px 5px;
+}
+
+.month-label p
+{
+    padding: 5px 15px;
+    font-weight: bold;
+    color: #111;
+    background: #f5f5f5;
+}
+
+.month
+{
+    width: 96%;
+    border: 0;
+    margin: 0 2%;
+    box-shadow: inset 0px 0px 2px rgba(0,0,0,0.2);
+    background: #FBFAFA;
+}
+
+.month a {
+    color: #303030;
+}
+
+
+table
+{
+width: 90%
+background: #333;
+    border: none;
+    border-collapse: collapse;
+    padding: 0;
+    margin: auto;
+}
+
+td
+{
+    border: none;
+    padding: 5px;
+    height: auto;
+    text-align: center;
+}
+
+.day {
+    color: #2F3045;
+}
+
+.active-day {
+    box-shadow: inset 0 0 0 2px #FF9213;
+    border-radius: 4px;
+}
+
+.passed-day a {
+    color: #c4c4c4;
+}
+
+.current a {
+    font-weight: bold;
+}
+
+/* ---------------------------------------------------
+    CONTENT STYLE
+----------------------------------------------------- */
+
+#content {
+    width: calc(100% - 300px);
+    min-height: 100vh;
+    padding: 0 0 0 20px;
+    transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+#content-sml {
+    width: calc(100% - 80px);
+        min-height: 100vh;
+    padding: 0 0 0 20px;
+    transition: all 0.3s;
+    position: absolute;
+    top: 0;
+    right: 0;
+    }
+
+#content-sml.active {
+    width: 100%;
+}
+
+#content.active {
+    width: 100%;
+}
+
+/* ---------------------------------------------------
+    NAVBAR
+----------------------------------------------------- */
+
+.navbar {
+    margin: 0;
+    min-height: 75px;
+    width: 100%;
+}
+
+.navbar .right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 100%;
+    width: 70%;
+    align-self: flex-start;
+}
+
+.navbar .left {
+    display: flex;
+    justify-content: flex-start;
+
+    width: 30%;
+    height: 100%;
+    align-self: flex-end;
+}
+
+.navbar .left h1 {
+    font-size: 2.6rem;
+}
+
+.navbar .left p {
+        align-self: flex-end;
+    padding: 0 10px;
+    font-size: 1rem;
+}
+
+.avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin: 0 0 0 15px;
+}
+
+.big img {
+    width: 125px;
+    height: 125px;
+        border-radius: 50%;
+    margin: 25px;
+}
+
+.hr {
+    width: 95%;
+}
+
+.panel {
+    width: 45%;
+    min-height: 80vh;
+    min-width: 400px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    padding: 2%;
+    margin: 2%;
+    border-radius: 4px;
+    box-shadow: 0 4px 4px rgba(0,0,0,0.2);
+}
+.panel-container {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+/* ---------------------------
+PROFILE
+------------------------------*/
+.visitcard {
+    display: flex;
+    justify-content center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#logout {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    color: #222433;
+}
+
+#logout:hover {
+    color: #F2994A;
+}
+
+/* ---------------------------------------------------
+    MEDIAQUERIES
+----------------------------------------------------- */
+
+@media (max-width: 768px) {
+    #sidebar {
+        margin-left: -300px;
+    }
+    #sidebar.active {
+        margin-left: 0;
+    }
+    #content {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+    }
+    #content.active {
+        width: calc(100% - 300px);
+    }
+    #sidebarCollapse span {
+        display: none;
+    }
+
+    .vcontainer {
+    padding: 1px 0;
+    }
+
+.task {
+width: 100%;
+}
+
+    .task-content h1 {
+        font-size: 0.9rem;
+        }
+
+    .task-info {
+        font-size: 0.6rem;
+    }
+
+
+
+.edit {
+    display: none;
+    align-items: center;
+    border: none;
+
+}
+        .task:hover {
+            transform: 0.3s all;
+            width: 90%;
+        }
+
+        .task:hover + .edit {
+            transform: 0.3s all;
+            display: flex;
+            flex-direction: column;
+            color: black;
+            font-size: 0.4rem;
+            width: 7%;
+            height: 75px;
+            padding: 0 0 0 10px;
+
+        }
+
+        .edit:hover {
+            display: flex;
+            flex-direction: column;
+            width: 7%;
+            font-size: 0.4rem;
+            height: 75px;
+            padding: 0 0 0 10px;
+        }
+
+        .edit img {
+    width: 20px;
+    height: 20px;
+}
+
+.task-edit {
+    padding: 0px;
+    background: none;
+}
+
+.task input, .task .important-tag
+{
+    margin: 10px;
+    width: 20px;
+    height: 20px;
+}
+
+
+.avatar img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin: 0 0 0 15px;
+}
+
+.hamburger {
+    display: block;
+    position: absolute;
+    left: 15px;
+    top: 20px;
+    width: 15px;
+    height: 15px;
+    font-size: 5px;
+    margin 15px;
+}
+
+.navbar {
+    height: 115px;
+}
+
+.navbar .right {
+align-items: flex-start;}
+
+.navbar .left {
+    align-self: flex-end;
+}
+
+    .navbar .left h1 {
+    font-size: 1.5rem;
+    align-self: flex-end;
+}
+
+hr {
+padding: 0;
+margin: 0 10px 20px 10px}
+
+.add {
+content: '+';
+}
+
+}

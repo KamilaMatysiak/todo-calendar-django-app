@@ -1,58 +1,34 @@
-{% load static %}
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rejestracja - vTo-Do</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/login-css.css' %}"/>
-    {% load crispy_forms_tags %}
-</head>
-<body style="background-image: url({% static 'image/backgr.jpg' %})">
-    <div>
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-success" role="alert">
-                    {{message}}
-                </div>
-            {% endfor %}
-        {% endif %}
+
+{% load bootstrap4 %}
+{% load crispy_forms_tags %}
+
+<form method="post" action="">
+  {% csrf_token %}
+
+  <div class="modal-header">
+    <h3 class="modal-title">Rejestracja</h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+
+    {% for field in form %}
+          <div class="form-group{% if field.errors %} is-invalid{% endif %}">
+              {{ field | as_crispy_field }}
+          </div>
+    {% endfor %}
+
+    <div class="{% if form.non_field_errors %}is-invalid{% endif %} mb-2">
+      {% for error in form.non_field_errors %}
+        {{ error }}
+      {% endfor %}
     </div>
+  </div>
 
-    <div class="overlay">
-        <div class="app-logo"><img src="{% static 'image/logo.svg' %}" alt="vTO-DO"></div>
-    <div class="content-section" id="register">
-        <div class="header"><h1 class="title">ZAREJESTRUJ SIĘ</h1></div>
-        <form method ="POST" action="">
-            {% csrf_token %}
-            <fieldset class="form-group">
-                {{ form.username }}
-                {% if form.errors.username %}
-                    <p>Niepoprawna nazwa użytkownika</p>
-                {% endif %}
-                {{ form.email }}
-                {% if form.errors.email %}
-                    <p>Niepoprawny adres email</p>
-                {% endif %}
-                {{ form.password1}}
-                {{ form.password2}}
-                {% if form.errors.password1 %}
-                    <p>Podane hasło jest zbyt krotkie lub zawiera same cyfry</p>
-                {% endif %}
-                {% if form.errors.password2 %}
-                    <p>Podane hasło jest zbyt krotkie lub zawiera same cyfry</p>
-                {% endif %}
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary" formnovalidate="formnovalidate">Zarejestruj</button>
+  </div>
 
-            </fieldset>
-        <div class="text-muted">
-                Masz już konto? <a class="ml-2" href="{% url 'login' %}">Zaloguj się</a>
-        </div>
-            <div class="center-button">
-                <button class="btn btn-outline-info" type="submit">ZAREJESTRUJ</button>
-            </div>
-        </form>
-
-    </div>
-</div>
-
-</body>
-</html>
+</form>

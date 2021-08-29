@@ -1,14 +1,24 @@
+{% load bootstrap4 %}
 {%load static%}
-<link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/>
 
-<div class="edit-form" id="center-content">
+
 <form method="POST" action="">
-    {% csrf_token %}
-    <div class="popup-header" id="center"><h1>Usunąć wydarzenie "{{item}}"? </h1></div>
-    <div class="color-bar"><div class="blue-bar"></div><div class="orange-bar"> </div></div>
-<div class="delet">
-    <input id="save-changes" type="submit" name="Confirm">
-    <a id="cancel" href="{% url 'date' %}">Anuluj</a>
-    </div>
+  {% csrf_token %}
+
+  <div class="modal-header">
+    <h3 class="modal-title">Usuwanie spotkania</h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    <p class="delete-text">Usunąć spotkanie:
+      <strong>{{ meeting.pk  }}</strong>?</p>
+  </div>
+
+  <div class="modal-footer">
+    <button type="submit" id="delete-btn" class="btn btn-danger">Usuń</button>
+  </div>
+
 </form>
-</div>

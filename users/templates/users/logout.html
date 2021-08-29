@@ -1,23 +1,27 @@
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
 {% load static %}
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wylgowano - vTo-Do</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/login-css.css' %}"/>
+    <meta http-equiv="refresh" content="3;url={% url 'index' %}" />
+    <title>Wylogowano - vTo-Do</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
 </head>
-<body style="background-image: url({% static 'image/backgr.jpg' %})">
-    <div class="overlay">
-        <div class="app-logo"><img src="{% static 'image/logo.svg' %}" alt="vTO-DO"></div>
-        <div class="content-section">
-            <div class="header"><h1 class="title">ZOSTAŁEŚ WYLOGOWANY</h1></div>
-            <div class="text-muted" id="again" >
-                 <a href="{% url 'login' %}">Zaloguj Ponownie</a><br>
-                 <a href="{% url 'index' %}">Wróć na stronę</a>
-            </div>
+<body>
+<div class="center">
+    <div class="panel" style="text-align: center; min-height: 20vh;">
+        <h1>ZOSTAŁEŚ WYLOGOWANY</h1>
+        <hr class="hr">
+        <p>Przekierowuję na stronę główną...</p>
+        <div class="center">
+        <div class="loader"></div>
         </div>
     </div>
-
+</div>
 
 </body>
 </html>

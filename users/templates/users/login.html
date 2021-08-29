@@ -1,41 +1,35 @@
-{% load static %}
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <title>Logowanie - vTo-Do</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/login-css.css' %}"/>
-    {% load crispy_forms_tags %}
-</head>
-<body style="background-image: url({% static 'image/backgr.jpg' %})">
-    <div class="overlay">
-        <div class="app-logo"><img src="{% static 'image/logo.svg' %}" alt="vTO-DO"></div>
-        <div class="content-section">
-            <div class="header"><h1 class="title">ZALOGUJ SIĘ</h1></div>
-            <form method ="POST" action="">
-                {% csrf_token %}
-                <fieldset class="form-group">
-                    <label>Nazwa użytkownika</label>
-                    {{  form.username   }}
-                    {% if form.errors.username %}
-                        <p>Niepoprawna nazwa uzytkownika</p>
-                    {% endif %}
-                    <label>Hasło</label>
-                    {{  form.password   }}
-                    {% if form.errors.password %}
-                        <p>Niepoprawne hasło</p>
-                    {% endif %}
 
-                </fieldset>
-            <div class="text-muted">
-                <p>Nie masz konta? <a href="{% url 'register' %}">Zarejestruj się</a></p>
-            </div>
-                <div class="center-button">
-                    <button class="center-btn" type="submit">ZALOGUJ</button>
-                </div>
-            </form>
+{% load bootstrap4 %}
+{% load crispy_forms_tags %}
 
-        </div>
+<form method="post" action="">
+  {% csrf_token %}
+
+  <div class="modal-header">
+    <h3 class="modal-title">Logowanie</h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+
+    <div class="modal-body">
+
+    {% for field in form %}
+          <div class="form-group{% if field.errors %} is-invalid{% endif %}">
+              {{ field | as_crispy_field }}
+          </div>
+    {% endfor %}
+
+    <div class="{% if form.non_field_errors %}is-invalid{% endif %} mb-2">
+      {% for error in form.non_field_errors %}
+        {{ error }}
+      {% endfor %}
     </div>
-</body>
-</html>
+
+  </div>
+
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary" formnovalidate="formnovalidate">Zaloguj</button>
+  </div>
+
+</form>

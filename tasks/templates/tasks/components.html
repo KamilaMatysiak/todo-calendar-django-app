@@ -1,0 +1,66 @@
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{%load static%}
+<link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
+
+
+    <body>
+        <div style="display: flex; align-items: center;margin:5px">
+    <button class="button add">ZAPISZ</button>
+    <button class="button delete">USUŃ</button>
+    <button class="button inverse">WYBIERZ</button>
+
+    <select class="button-select inverse">
+      <option>DZIEŃ</option>
+      <option>TYDZIEŃ</option>
+      <option>MIESIĄC</option>
+    </select>
+
+    <button class="button inverse borderless">ANULUJ</button>
+        </div>
+    <br><br>
+        
+    <div class="event blue long"><div class="info"><h1>WYDARZENIE 1</h1><p>Opis spotkania</p></div><div class="date">gg:mm - gg:mm</div></div>
+    <div class="event orange"><div class="info"><h1>WYDARZENIE 2</h1><p>Opis spotkania</p></div><div class="date">gg:mm - gg:mm</div></div>
+
+    <div class="event red"><div class="info"><h1>WYDARZENIE 3</h1><p>Opis spotkania</p></div><div class="date">gg:mm - gg:mm</div></div>
+    <div class="event green"><div class="info"><h1>WYDARZENIE 4</h1><p>Opis spotkania</p></div><div class="date">gg:mm - gg:mm</div></div>
+    <div class="event purple"><div class="info"><h1>WYDARZENIE 5</h1><p>Opis spotkania</p></div><div class="date">gg:mm - gg:mm</div></div>
+        
+    <div class="event blue passed"><div class="info"><h1>MINIĘTE WYDARZENIE</h1><p>Test opisu spotkania. Powinno byc dłuższe, gdyz nei wiem czy mi sie wszystko nie rozleci, a jak mi się rozleci, będzie smutno.</p></div><div class="date">gg:mm - gg:mm</div></div>
+        
+        <div class="event blue passed"><div class="info"><h1>Spotkanie biznesowe bardzo ważne coś tam</h1><p>Długi opis tekstowy zawierający 250 znaków, czyli maksymalną długość opisu. Długi opis tekstowy zawierający 250 znaków, czyli maksymalną długość opisu. Długi opis tekstowy zawierający 250 znaków, czyli maksymalną długość opisu. Długi opis tekstowy ta</p></div><div class="date">gg:mm - gg:mm</div></div>
+      
+        
+    <br><br>
+        <div class="container column">
+    <div class="container">
+        <div class="task">
+            <input type="checkbox">
+            <div class="task-content"><h1>Tytuł zadania</h1><div class="task-info"><p id="date">czas</p><p>∙</p><p>lokalizacja</p><p>∙</p><p>kontakty</p></div></div>
+            <div class="important-tag">X</div>
+        </div> 
+        <div class="edit"> Edytuj | Usuń </div>
+    </div>
+
+    <div class="container">
+    <div class="task">
+        <input type="checkbox">
+        <div class="task-content"><h1>Tytuł zadania</h1><div class="task-info"><p id="date" class="passed">czas</p><p>∙</p><p>lokalizacja</p><p>∙</p><p>kontakty</p></div></div>
+        <div class="important-tag">X</div>
+    </div>
+    <div class="edit"> Edytuj | Usuń </div>
+        </div>
+        
+    <div class="container">
+    <div class="task passed">
+        <input type="checkbox" checked>
+        <div class="task-content"><h1>Tytuł zadania</h1><div class="task-info"><p id="date">czas</p><p>∙</p><p>lokalizacja</p><p>∙</p><p>kontakty</p></div></div>
+        <div class="important-tag">X</div>
+    </div> 
+    <div class="edit"> Edytuj | Usuń </div>
+        </div>
+        </div>
+
+    </body>

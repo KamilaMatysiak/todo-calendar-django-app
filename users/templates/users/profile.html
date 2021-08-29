@@ -1,14 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{{form.media}}
+
+{% load poll_extras %}
+{%load static%}
+
+
+
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Registration</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    {% load crispy_forms_tags %}
+    <title>vToDo - zadania</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
 </head>
 <body>
+<div class="wrapper">
+<nav id="sidebar small">
+<nav class="sidebar main">
+    <div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div>
+    <a href="{% url 'date' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
+    <div class="sidebar-btn active"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div>
+    <div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>
+</nav>
+</nav>
+<div id="content-sml">
+               <button class="hamburger">MENU</button>
+    <a id="logout" href="{% url 'logout' %}">Wyloguj się</a>
+    <div class="center">
+    <div class="panel">
+        <div class="visitcard">
+            <div class="avatar big">
+                {% if user.avatar == None %}
+                    <img src="{%static 'image/avatar-test.png' %}" />
+                {% else %}
+                    <img src="user.avatar"/>
+                {% endif %}
+            </div>
+        <h2>{{user.username}}</h2>
+        </div>
+        <hr class="hr">
+        <div class="user_info">
+            <p>Imię i Nazwisko:</p>
+            <p>Data urodzenia:</p>
+            <p>Adres e-mail: <b>{{user.email}}</b></p>
+            <p>Numer telefonu:</p>
+            <p>Hasło: <b>********</b> <button class="button inverse borderless">ZMIEŃ HASŁO</button></p>
+        </div>
+        <button class="button add">Edytuj konto</button>
+        <button class="button inverse borderless" style="color:#eb5757">Usuń konto</button>
+    </div>
 
-   <h1>witaj użykowniku {{ user.username }}!</h1>
+    <script type="text/javascript">
+    $(document).ready(function() {
+
+        $("#add-task").modalForm({
+            formURL: "{% url 'add_task' %}"
+        });
+
+        $(".delete-task").each(function () {
+            $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
+        });
+    });
+    </script>
+    <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
 </body>
 </html>
