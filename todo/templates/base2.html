@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+{% load static %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{% bootstrap_messages %}
+<html>
+<head>
+    <title>vToDo - zadania</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/>
+    <style>
+.body
+{
+background: #F5F5F6;
+}
+
+.sidebar
+{
+background: #fff;
+box-shadow: 4px 0px 4px rgba(0,0,0,0.12);
+max-width: 350px;
+height: 100vh;
+
+}
+
+.nav {
+max-width: 75px;
+padding: 0;
+margin: 0;
+display: flex;
+flex-direction: column;
+justify-content: flex-start;
+}
+
+.main {
+    height: 100vh;
+    text-align: center;
+    width: 75px;
+    background: green;
+
+  }
+.nav .main
+{
+width: 75px;
+}
+.main img
+{
+width: 75px;
+text-align: center;
+padding: 0;
+margin: 0;
+}
+
+.sub {
+  max-width: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-width 0s;
+}
+
+.sub li
+{
+width: 100%;
+  padding: 20px;
+    overflow: hidden;
+  }
+
+.sub li a
+{
+width: 100%;
+padding: 10px;
+}
+
+
+ul.active {
+  max-width: 350px;
+  max-height: 350px;
+  transition: max-width 1s 0.1s;
+}
+
+.sub li a:hover
+{
+background: #c4c4c4;
+}
+
+li {
+
+  width: 100%;
+  white-space: nowrap;
+}
+
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+  <div class="row">
+    <div class="sidebar">
+      <ul class="nav main">
+        <li class="active"><img src="{%static 'image/icons/home-icon.svg' %}" /><a href="#sub1"></a></li>
+        <li><a href="#sub2"><img src="{%static 'image/icons/calendar-icon.svg' %}"/></a></li>
+        <li><a href="#sub3"><img src="{%static 'image/icons/todolist-icon.svg' %}"/></a></li>
+      </ul>
+    </div>
+    <div class="sidebar">
+      <ul id="sub1" class="nav sub">
+          <li></li>
+      </ul>
+      <ul id="sub2" class="nav sub">
+        <li><h1>KALENDARZ</h1></li>
+        <li><a href="/sub2.1">Moduł kalendarza</a></li>
+        <li><a href="/sub2.2">Połącz z google</a></li>
+      </ul>
+      <ul id="sub3" class="nav sub">
+        <li><h1>LISTA ZADAŃ</h1></li>
+        <li><a href="#">WSZYSTKIE</a></li>
+        <li><a href="#">Lokalizacja</a></li>
+        <li><a href="#">Postęp</a></li>
+        <li><a href="#">Kategoria</a></li>
+        <li><a href="#">+ Dodaj kategorię</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<script>
+$(function () {
+    $(".main").on("click", "a", function () {
+        $(".sub").removeClass("active");
+        $($(this).attr("href")).addClass("active");
+        console.log($(".sub ul"));
+    });
+});
+</script>
+
+    <div class="vtodo-container">
+        {% block contentarea %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>

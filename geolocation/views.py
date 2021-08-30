@@ -38,7 +38,7 @@ def location(request):
     pointA = (l_lat, l_lon)
 
     # inicjowanie mapy
-    m = folium.Map(width=800, height=500, location=get_center_coordinates(l_lat, l_lon), zoom_start=8)
+    m = folium.Map(width='100%', height='100%', location=get_center_coordinates(l_lat, l_lon), zoom_start=8)
     # znacznik lokalizacji początkowej
     folium.Marker([l_lat, l_lon], tooltip='twoja lokalizacja',
                   popup="kod pocztowy: " + city['postal_code'] + " miasto: " + city['city'],

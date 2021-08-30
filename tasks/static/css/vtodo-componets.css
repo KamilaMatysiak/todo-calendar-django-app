@@ -75,6 +75,10 @@ text-decoration: none;
         background: #fbfbfb;
     }
 
+.nonflex {
+    max-width: 150px;
+}
+
 .hamburger
 {display: none;}
 /*---------------------
@@ -308,6 +312,12 @@ text-decoration: none;
 .main img {
     width: 65px;
     height: 65px;
+    padding: 0;
+}
+
+.main #map {
+    width: 20px !important;
+    height: auto;
     padding: 0;
 }
 

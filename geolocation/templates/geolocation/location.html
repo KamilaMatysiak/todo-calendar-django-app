@@ -1,101 +1,57 @@
-{% load static %}
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% bootstrap_javascript jquery='full' %}
+{{form.media}}
+{% load crispy_forms_tags %}
 {% load poll_extras %}
+{%load static%}
+
 <html>
 <head>
     <title>vToDo - zadania</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
-
+    <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
 </head>
 <body>
-    <div class="bar">
-        <button class="hamburger" onclick="openMenu()"><img src="{% static 'image/icons/hamburger.svg' %}"></button>
-        <h1 class="text">WSZYSTKIE</h1>
-        <img class="avatar" src="{% static 'image/avatar-test.png' %}" alt="avatar">
-    </div>
-    <div class="menu" id="menu"> 
-        <div class="main-menu">
-            <div class="main-menu-btn" id="home">
-                <a href="{% url 'vtodo' %}"><div class="mn-btn"><img src="{% static 'image/icons/home-icon.svg' %}" alt="STRONA GŁÓWNA"></div></a>
-            </div>
-            <div class="main-menu-btn">
-                <a href="{% url 'date' %}"><div class="mn-btn"><img src="{% static 'image/icons/calendar-icon.svg' %}" alt="KALENDARZ"><h1>KALENDARZ</h1></div></a>
-                <ul class="option-dropdown-menu">
-                    <li class="header">KALENDARZ</li>
-                    <li class="option-dropdown">
-                        <div class="mini-calendar-module"><span>Mini Kalendarz</span></div>
-                    </li>
-                    <li class="option-dropdown"><span><img width="25px" src="{% static 'image/avatar-test.png' %}"> Połącz z Kalendarzem Google</span></li>
-                </ul>
-            </div>
-            <div class="main-menu-btn" id="active">
-                <a href="{% url 'list' %}"><div class="mn-btn"><img src="{% static 'image/icons/todolist-icon.svg' %}" alt="LISTA ZADAŃ"><h1>LISTA ZADAŃ</h1></div></a>
+<div class="wrapper">
+<nav id="sidebar small">
+<nav class="sidebar main">
+    <div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div>
+    <a href="{% url 'date' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
+    <a href="{% url 'list' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div></a>
+    <a href="{% url 'location' %}"><div class="sidebar-btn active"><img id="map" src="{%static 'image/icons/map.svg' %}"></div></a>
+    <div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>
+</nav>
+</nav>
+<div id="content-sml">
+               <button class="hamburger">MENU</button>
+        <nav class="navbar">
+        <div class="left">
 
-                <ul class="option-dropdown-menu" id="active-option">
-                    <li class="header">LISTA TO-DO</li>
-                    <li class="option-dropdown" id="active-btn"><a href=#>Wszystkie</a></li>
-                    <a href="{% url 'location' %}"><li class="option-dropdown">Lokalizacje</li></a>
-                        <ul class="category-dropdown">
-                            <li class="cat-drop-btn"><a href=#>MS TEAMS</a></li>
-                        </ul>
-                    <a href=#><li class="option-dropdown">Postęp</li></a>
-                        <ul class="category-dropdown">
-                            <li class="cat-drop-btn"><a>Do zrobienia</a></li>
-                            <li class="cat-drop-btn"><a>W trakcie</a></li>
-                            <li class="cat-drop-btn"><a>Zrobione</a></li>
-                        </ul>
-
-                    <a href=#><li class="option-dropdown"><a>Dodaj kategorię</a></li>
-                </ul>
-            </div>
-            <div class="main-menu-btn">
-                <a href=#><div class="mn-btn"><img src="{% static 'image/icons/settings-icon.svg' %}" alt="USTAWIENIA"><h1>USTAWIENIA</h1></div></a>
-                <ul class="option-dropdown-menu">
-                    <li class="header">USTAWIENIA</li>
-                    <li class="option-dropdown"><span>Profil</span></li>
-                    <li class="option-dropdown"><span>Zmiana hasła</span></li>
-                    <li class="option-dropdown"><span>Język i region</span></li>
-                    <li class="option-dropdown"><span>Inne</span>
-                        <ul class="category-dropdown">
-                            <li class="cat-drop-btn"><span>Dunno</span></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
+        <img style="height: 60px;" src="{% static 'image/orange.svg' %}">
+        </div>
+        <div class="right">
+        <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content"></div>
+          </div>
         </div>
 
-    </div>
-
-
-
-
-        <script>
-            
-        window.onresize = function(){
-            var x = document.getElementById("menu");
-            
-            if(window.innerWidth >= 900) x.style.display='';
-        }
-            
-
-        function openMenu() {
-          var x = document.getElementById("menu");
-          if (x.style.display == "block") {
-            x.style.display = "none";
-          } else {
-            x.style.display = "block";  
-          }
-        }
-
-        </script>
-
- <div class="events-container">
-{% load crispy_forms_tags %}
+        <!-- Create book button -->
+            <h4 style="margin: 20px 0;"> Hej, <b>{{user.username}}</b>!</h4>
+    <div class="avatar">
+        <a href="{% url 'profile' %}">
+        {% if user.avatar == None %}
+            <img src="{%static 'image/avatar-test.png' %}" />
+        {% else %}
+            <img src="user.avatar"/>
+        {% endif %}
+            </a>
+            </div>
+        </div>
+    </nav>
+    <hr class="hr">
 
 
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -116,13 +72,17 @@
   </div>
 </div>
 
-{{ map | safe }}
+    <div style="width: 80%; margin: auto;">
+    <form style="margin-bottom: 10px;" action="" method="POST" autocomplete="off">
+        {% csrf_token %}
+            {{form | crispy}}
+        <button type="submit" class="button add nonflex"> Wyszukaj </button>
 
-<form action="" method="POST" autocomplete="off">
-    {% csrf_token %}
-    {{form | crispy}}
-    <button type="submit" class="btn btn-primary"> confirm </button>
-</form>
+    </form>
+
+    {{ map | safe }}
+    </div>
+
 
 {% if request.POST and distance is not None %}
     <script>
