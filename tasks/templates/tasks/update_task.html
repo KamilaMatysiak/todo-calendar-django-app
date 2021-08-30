@@ -1,98 +1,41 @@
 {% load bootstrap4 %}
-{% bootstrap_javascript jquery='full' %}
-{% bootstrap_css %}
-{{form.media}}
 {% load crispy_forms_tags %}
-
-
+{{form.media}}
 {%load static%}
-<html>
-<head>
-    <title>{{task.title}}</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
-</head>
 
-<body>
+<form method="post" action="">
+  {% csrf_token %}
 
+  <div class="modal-header">
+    <h3 class="modal-title">Edytuj zadanie</h3>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
 
-<div class="wrapper">
-<nav id="sidebar small">
-<nav class="sidebar main">
-    <div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div>
-    <a href="{% url 'date' %}"><div class="sidebar-btn active"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
-    <a href="{% url 'list' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div></a>
-    <div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>
-</nav>
+  <div class="modal-body">
 
-<div id="content-sml">
-                    <div class="modal fade" tabindex="-1" role="dialog" id="modal">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content"></div>
-                    </div>
-                </div>
-	<form method="POST" action="">
-        {% csrf_token %}
-        <nav class="navbar">
-            <div class="left">
-                <h1>X</h1>
-            </div>
-            <div class="right">
-                <!-- Create book button -->
-                <button id="save-changes" class="button add" type="submit" name="Update Meeting">ZAPISZ</button>
-                <form action="" method="post">
-                    <button id="delete-event" data-form-url="{% url 'delete_meeting' id %}" class="button delete delete-event" type="button" name="button">USUŃ</button>
-
-                <div class="avatar">
-                    <a href="{% url 'profile' %}">
-                    {% if user.avatar == None %}
-                        <img src="{%static 'image/avatar-test.png' %}" />
-                    {% else %}
-                        <img src="user.avatar"/>
-                    {% endif %}
-                        </a>
-                </div>
-            </div>
-        </nav>
-        <hr>
-
-        <div class="panel-container">
-            <div class="panel">
-                <div class="navbar"><h2>Edytuj spotkanie:</h2></div>
-                <hr class="hr">
-                <div class="modal-body">
-                    {% for field in form %}
-                        <div class="form-group{% if field.errors %} invalid{% endif %}">
-                            {{ field | as_crispy_field }}
-                            {% for error in field.errors %}
-                              <p class="help-block">{{ error }}</p>
-                            {% endfor %}
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-                        </form>
-    </form>
-
-    <div class="panel">
-        <div class="navbar"><h2>Menedżer zadań</h2><h2>0</h2></div>
-            <hr class="hr">
-                <button class="button add" style="width: 50%; align-self: center;">DODAJ ZADANIA</button>
-        </div>
+    <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+      {% for error in form.non_field_errors %}
+        {{ error }}
+      {% endfor %}
     </div>
-</div>
 
-    <script type="text/javascript">
-    $(document).ready(function() {
+    {% for field in form %}
+      <div class="form-group">
+        {{ field | as_crispy_field }}
+        <div class="{% if field.errors %} invalid{% endif %}">
+          {% for error in field.errors %}
+            <p class="help-block">{{ error }}</p>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+      {{ form.complete}}
+  </div>
 
-        $(".delete-event").each(function () {
-            $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
-        });
-    });
-    </script>
-    <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+  </div>
 
-    </body>
-</html>
+</form>

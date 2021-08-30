@@ -3,6 +3,7 @@
 {% bootstrap_javascript jquery='full' %}
 {{form.media}}
 {% load crispy_forms_tags %}
+{% load avatar_tags %}
 {% load poll_extras %}
 {%load static%}
 
@@ -41,12 +42,7 @@
         <!-- Create book button -->
             <h4 style="margin: 20px 0;"> Hej, <b>{{user.username}}</b>!</h4>
     <div class="avatar">
-        <a href="{% url 'profile' %}">
-        {% if user.avatar == None %}
-            <img src="{%static 'image/avatar-test.png' %}" />
-        {% else %}
-            <img src="user.avatar"/>
-        {% endif %}
+        {% avatar user %}
             </a>
             </div>
         </div>

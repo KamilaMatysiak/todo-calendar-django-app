@@ -51,4 +51,4 @@ class Task(models.Model):
         return f"{self.title}"
 
     class Meta:
-        ordering=['date']
+        ordering=['priority','date']

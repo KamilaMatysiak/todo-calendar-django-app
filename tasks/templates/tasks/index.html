@@ -31,7 +31,11 @@
     <div class="overlay">
     <h1> Dołącz do vTo-Do</h1>
     <p>Zacznij lepiej zarządzać swoim czasem <br> Wypróbuj naszą aplikację już dziś!</p>
-    <button id="signup-btn" class="button add">ROZPOCZNIJ</button>
+    {%if user.is_anonymous %}
+        <button id="signup-btn" class="button add">ROZPOCZNIJ</button>
+    {%else%}
+        <a href="{% url 'vtodo' %}"><button id="continue" class="button add">PRZEJDŹ DO vTO-DO</button></a>
+            {%endif%}
         </div>
 </div>
 

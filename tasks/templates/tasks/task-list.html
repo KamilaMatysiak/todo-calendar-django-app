@@ -2,7 +2,7 @@
 {% bootstrap_css %}
 {% bootstrap_javascript jquery='full' %}
 {{form.media}}
-
+{% load avatar_tags %}
 {% load poll_extras %}
 {%load static%}
 
@@ -22,7 +22,7 @@
     <div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div>
     <a href="{% url 'date' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
     <div class="sidebar-btn active"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div>
-    <a href="{% url 'location' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/map.svg' %}"></div></a>
+    <a href="{% url 'location' %}"><div class="sidebar-btn"><img id="map" src="{%static 'image/icons/map.svg' %}"></div></a>
     <div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>
 </nav>
 <nav class="sidebar menu">
@@ -54,13 +54,9 @@
         <button id="add-task" class="button add" type="button" name="button">DODAJ ZADANIE</button>
     <div class="avatar">
         <a href="{% url 'profile' %}">
-        {% if user.avatar == None %}
-            <img src="{%static 'image/avatar-test.png' %}" />
-        {% else %}
-            <img src="user.avatar"/>
-        {% endif %}
+                {% avatar user %}
             </a>
-            </div>
+    </div>
         </div>
     </nav>
     <hr>
@@ -84,7 +80,7 @@
                 </div>
             </div>
         <div class="edit"> 
-            <button class="button task-edit" data-toggle="modal" data-target="#fm-modal-grid"><img src="{% static 'image/icons/edit-icon.svg'%}" alt="Edytuj"></button>
+            <button class="button task-edit" data-toggle="modal" data-form-url="{% url 'update_task' task.pk %}"><img src="{% static 'image/icons/edit-icon.svg'%}" alt="Edytuj"></button>
                     <button type="button" class="delete-task button task-edit" data-form-url="{% url 'delete' task.pk %}">
                           <img src="{% static 'image/icons/delete-icon.svg'%}" alt="Usuń">
         </button>
@@ -108,6 +104,11 @@
         $(".delete-task").each(function () {
             $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
         });
+
+        $(".task-edit").each(function () {
+              $(this).modalForm({
+                formURL: $(this).data("form-url")});
+                });
     });
     </script>
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>

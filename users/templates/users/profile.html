@@ -2,7 +2,7 @@
 {% bootstrap_css %}
 {% bootstrap_javascript jquery='full' %}
 {{form.media}}
-
+{% load avatar_tags %}
 {% load poll_extras %}
 {%load static%}
 
@@ -21,7 +21,8 @@
 <nav class="sidebar main">
     <div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div>
     <a href="{% url 'date' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
-    <div class="sidebar-btn active"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div>
+    <a href="{% url 'list' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div></a>
+    <a href="{% url 'location' %}"><div class="sidebar-btn"><img id="map" src="{%static 'image/icons/map.svg' %}"></div></a>
     <div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>
 </nav>
 </nav>
@@ -32,12 +33,9 @@
     <div class="panel">
         <div class="visitcard">
             <div class="avatar big">
-                {% if user.avatar == None %}
-                    <img src="{%static 'image/avatar-test.png' %}" />
-                {% else %}
-                    <img src="user.avatar"/>
-                {% endif %}
+                {% avatar user %}
             </div>
+            <a href="{% url 'avatar_change' %}">Zmień avatar</a>
         <h2>{{user.username}}</h2>
         </div>
         <hr class="hr">

@@ -25,7 +25,7 @@ class TaskModelForm(BSModalModelForm):
     
     class Meta:
         model = Task
-        fields = ['title', 'localization', 'with_who', 'date', 'time']
+        fields = ['title', 'localization', 'with_who', 'date', 'time', 'priority']
         widgets = {
             'date': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl"}),
             'time': TimePickerInput()
@@ -34,4 +34,5 @@ class TaskModelForm(BSModalModelForm):
             'title': ('Nazwa zadania'),
             'date': ('Data'),
             'time': ('Czas'),
+            'priority': ('Priorytet'),
         }

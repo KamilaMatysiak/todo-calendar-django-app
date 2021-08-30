@@ -539,27 +539,28 @@ td
     justify-content: flex-end;
     align-items: center;
     height: 100%;
-    width: 70%;
+    width: 60%;
     align-self: flex-start;
 }
 
 .navbar .left {
     display: flex;
     justify-content: flex-start;
-
-    width: 30%;
+    flex-wrap: wrap;
+    width: 40%;
     height: 100%;
     align-self: flex-end;
 }
 
 .navbar .left h1 {
-    font-size: 2.6rem;
+    font-size: 2.5rem;
 }
 
 .navbar .left p {
         align-self: flex-end;
     padding: 0 10px;
     font-size: 1rem;
+    min-width: 150px;
 }
 
 .avatar img {
@@ -622,9 +623,13 @@ PROFILE
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
-
+@media (max-width: 900px) {
+    .navbar .left h1 {
+        font-size: 1.7rem;
+    }
+}
 @media (max-width: 768px) {
-    #sidebar {
+    #sidebar, .menu {
         margin-left: -300px;
     }
     #sidebar.active {
@@ -741,6 +746,7 @@ align-items: flex-start;}
 
     .navbar .left h1 {
     font-size: 1.5rem;
+    font-weight: bold;
     align-self: flex-end;
 }
 
@@ -750,6 +756,11 @@ margin: 0 10px 20px 10px}
 
 .add {
 content: '+';
+}
+
+.event {
+ width: 100%;
+ margin: 0;
 }
 
 }
