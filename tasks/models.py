@@ -33,7 +33,9 @@ class Task(models.Model):
     High_priority = "H"
     Medium_priority = "M"
     Low_priority = "L"
+    None_priority = "N"
     Priorities = [
+        (None_priority, "---"),
         (Low_priority, "Niski"),
         (Medium_priority, "Średni"),
         (High_priority, "Wysoki")
@@ -41,7 +43,7 @@ class Task(models.Model):
     priority = models.CharField(
         max_length=10,
         choices=Priorities,
-        default=Low_priority
+        default=None_priority
     )
     complete = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
@@ -51,4 +53,4 @@ class Task(models.Model):
         return f"{self.title}"
 
     class Meta:
-        ordering=['priority','date']
+        ordering=['priority','date','title','localization']

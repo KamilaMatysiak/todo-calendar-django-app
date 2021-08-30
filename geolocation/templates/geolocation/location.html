@@ -29,8 +29,7 @@
                <button class="hamburger">MENU</button>
         <nav class="navbar">
         <div class="left">
-
-        <img style="height: 60px;" src="{% static 'image/orange.svg' %}">
+            <h1>Lokalizacja</h1>
         </div>
         <div class="right">
         <div class="modal fade" tabindex="-1" role="dialog" id="modal">
@@ -40,7 +39,7 @@
         </div>
 
         <!-- Create book button -->
-            <h4 style="margin: 20px 0;"> Hej, <b>{{user.username}}</b>!</h4>
+
     <div class="avatar">
         {% avatar user %}
             </a>
@@ -68,7 +67,7 @@
   </div>
 </div>
 
-    <div style="width: 80%; margin: auto;">
+    <div style="width: 90%; margin: auto;">
     <form style="margin-bottom: 10px;" action="" method="POST" autocomplete="off">
         {% csrf_token %}
             {{form | crispy}}
