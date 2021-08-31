@@ -1,22 +1,9 @@
-{% load bootstrap4 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %}
-
+{% extends 'base.html' %}
 {{form.media}}
 
 {%load static%}
 
-<html>
-<head>
-    <title>Kalendarz - vToDo</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!--link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/-->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
-</head>
-<body>
-
-
+{% block content %}
 <div class="wrapper">
 <nav id="sidebar">
 <nav class="sidebar main">
@@ -37,12 +24,12 @@
 
                             <table class="labels">
                                 <tr class="week-label">
-                                    <th class="mon"><p>Pon</p></th>
+                                    <th class="mon"><p>Pn</p></th>
                                     <th class="tue"><p>Wt</p></th>
                                     <th class="wed"><p>Śr</p></th>
-                                    <th class="thu"><p>Czw</p></th>
+                                    <th class="thu"><p>Cz</p></th>
                                     <th class="fri"><p>Pt</p></th>
-                                    <th class="sat"><p>Sob</p></th>
+                                    <th class="sat"><p>Sb</p></th>
                                     <th class="sun"><p>Nd</p></th></tr>
                             </table>
 
@@ -127,5 +114,4 @@
     </script>
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
-    </body>
-</html>
+{% endblock %}

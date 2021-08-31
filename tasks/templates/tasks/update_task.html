@@ -1,20 +1,10 @@
-{% load bootstrap4 %}
-{% bootstrap_javascript jquery='full' %}
-{% bootstrap_css %}
+
+
+{% extends 'base.html' %}
 {{form.media}}
 {% load crispy_forms_tags %}
-
-
-{%load static%}
-<html>
-<head>
-    <title>{{task.title}}</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
-</head>
-
-<body>
+{% load static %}
+{% block content %}
 
 
 <div class="wrapper">
@@ -93,6 +83,4 @@
     });
     </script>
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
-
-    </body>
-</html>
+{% endblock  %}
