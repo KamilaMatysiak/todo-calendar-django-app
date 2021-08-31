@@ -31,5 +31,5 @@ urlpatterns = [
 
     path('calendar/', include('calendar_app.urls')),
 
-    path('sw.js', TemplateView.as_view(template_name='tasks/sw.js', content_type='application/javascript'), name='sw.js'),
+    path('sw.js', TemplateView.as_view(template_name='sw.js', content_type='application/javascript'), name='sw.js'),
     ]
