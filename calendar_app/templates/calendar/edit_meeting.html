@@ -1,22 +1,10 @@
-{% load bootstrap4 %}
-{% bootstrap_javascript jquery='full' %}
-{% bootstrap_css %}
+{% extends 'base.html' %}
 {{form.media}}
+{%load static%}
 {% load crispy_forms_tags %}
 
+{% block content %}
 
-{%load static%}
-<html>
-    <head>
-        <title>vToDo - zadania</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
-    </head>
-
-    <body>
-
-    <div class="wrapper">
         <nav id="sidebar small">
             <nav class="sidebar main">
                 <div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div>
@@ -88,7 +76,6 @@
 
 
         </div>
-    </div>
 
         <script type="text/javascript">
         $(document).ready(function() {
@@ -100,5 +87,5 @@
         </script>
         <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
-    </body>
-</html>
+{% endblock %}
+
