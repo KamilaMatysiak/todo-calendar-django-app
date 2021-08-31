@@ -1,21 +1,11 @@
-{% load bootstrap4 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %}
+{% extends 'base.html' %}
 {{form.media}}
-
 {% load poll_extras %}
-{%load static%}
+{% extends 'blog/base.html' %}
 
 
 
-<html>
-<head>
-    <title>vToDo - profil użytkownika</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
-</head>
-<body>
+{% block content %}
 <div class="wrapper"> 
 <nav id="sidebar">
 <nav class="sidebar main">
@@ -111,5 +101,4 @@
     </script>
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
-</body>
-</html>
+{% endblock %}
