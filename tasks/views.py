@@ -65,7 +65,14 @@ def updateTask(request, pk):
     if request.method == 'POST':
         form = TaskForm(request.POST, instance=task)
         if form.is_valid():
-            form.save()
+            instance = form.save(commit=False)
+            if instance.localization:
+                geolocator = Nominatim(user_agent='measurements')
+                destination_ = form.cleaned_data.get('localization')
+                destination = geolocator.geocode(destination_)
+                instance.l_lat = destination.latitude
+                instance.l_lon = destination.longitude
+            instance.save()
             return redirect('list')
 
     context = {'form': form, 'id': pk}

@@ -64,11 +64,17 @@ def location(request):
         # destination  marker
     tasks = (x for x in Task.objects.all() if x.user == request.user)
 
+    color = {
+        'H': 'red',
+        'M': 'orange',
+        'L': 'lightgray'
+    } 
+
     for x in tasks:
         if x.l_lon and x.l_lat:
             folium.Marker([x.l_lat, x.l_lon], tooltip='cel podróży',
                     popup=x.localization,
-                    icon=folium.Icon('red', icon="cloud")).add_to(m)
+                    icon=folium.Icon(color[x.priority], icon="cloud")).add_to(m)
 
         # draw the line between location and destination
         # line = folium.PolyLine(locations=[pointA, pointB], weight=2, color='blue')
