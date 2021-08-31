@@ -2,17 +2,12 @@
 {{form.media}}
 {% load poll_extras %}
 {%load static%}
-{% block content %}
 
-
-<html>
-<head>
+{% block headcontent %}
     <title>vToDo - zadania</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
-</head>
-<body>
+{% endblock%}
+
+{% block content %}
 <div class="wrapper">
 <nav id="sidebar small">
 <nav class="sidebar main">
