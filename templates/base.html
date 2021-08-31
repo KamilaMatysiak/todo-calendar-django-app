@@ -5,9 +5,13 @@
 
 <html lang="en">
 <head>
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
+    {% block headcontent %}
+    {% endblock %}
     <title>vToDo</title>
     <link rel="apple-touch-icon" href="{% static 'image/icon-192.png' %}">
     <script>
@@ -24,7 +28,7 @@
 
 </head>
 <body>
-    <div class="content container">
+    <div>
 
             {% block content %}
             {% endblock %}

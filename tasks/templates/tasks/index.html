@@ -3,19 +3,17 @@
 {% bootstrap_css %}
 {% bootstrap_javascript jquery='full' %}
 {%load static%}
-<html>
-<head>
-    <title>vToDo</title>
-    <meta charset="utf-8">
+
+
+    {% block headcontent %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
-</head>
-<body>
+    {% endblock %}
+
+
+     {% block content %}
 <div class="modal fade" id="create-modal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog mt-5">
     <div class="modal-content">
@@ -90,7 +88,4 @@ function scrollFunction() {
           });
 </script>
 <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
-
-</body>
-
-</html>
+ {% endblock %}
