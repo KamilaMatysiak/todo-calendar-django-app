@@ -107,3 +107,33 @@ class DeleteTaskView(BSModalDeleteView):
 
     #context = {"tasks": tasks, 'form': form}
     #return render(request, 'tasks/add_task.html', #context)
+
+def updateTask(request, pk):
+    """
+    Lets user update their task.
+    Args:
+        request: request to return .html file
+
+    Returns: .html file of update-task
+
+    """
+    task = Task.objects.get(id=pk)
+    form = TaskModelForm(instance=task)
+
+    if request.method == 'POST':
+        form = TaskModelForm(request.POST, instance=task)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            if instance.localization:
+                geolocator = Nominatim(user_agent='measurements')
+                destination_ = form.cleaned_data.get('localization')
+                destination = geolocator.geocode(destination_)
+                instance.l_lat = destination.latitude
+                instance.l_lon = destination.longitude
+            instance.save()
+            return redirect('list')
+
+    context = {'form': form, 'id': pk}
+
+    return render(request, 'tasks/update_task.html', context)	
+    
