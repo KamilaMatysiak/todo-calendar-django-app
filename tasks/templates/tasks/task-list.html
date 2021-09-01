@@ -1,20 +1,14 @@
-{% load bootstrap4 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %}
+{% extends 'base.html' %}
 {{form.media}}
 {% load avatar_tags %}
 {% load poll_extras %}
-{%load static%}
+{% load static %}
 
-<html>
-<head>
+{% block headcontent %}
     <title>vToDo - profil użytkownika</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
-</head>
+{% endblock %}
 
-<body>
+{% block content %}
 <div class="wrapper"> 
     <nav id="sidebar">
         <nav class="sidebar main">
@@ -157,5 +151,4 @@
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script><script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
-</body>
-</html>
+{% endblock %}

@@ -6,6 +6,10 @@ from .forms import *
 import datetime
 from django.urls import reverse_lazy
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalDeleteView, BSModalUpdateView
+from geopy.geocoders import Nominatim
+from .utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
+from geopy.distance import geodesic
+import folium
 
 
 # Create your views here.
@@ -62,6 +66,12 @@ class AddTaskView(BSModalCreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.user = self.request.user
+        if obj.localization:
+            geolocator = Nominatim(user_agent='measurements')
+            destination_ = form.cleaned_data.get('localization')
+            destination = geolocator.geocode(destination_)
+            obj.l_lat = destination.latitude
+            obj.l_lon = destination.longitude
         return super(AddTaskView, self).form_valid(form)
     
 class EditTaskView(BSModalUpdateView):
@@ -98,7 +108,6 @@ class DeleteTaskView(BSModalDeleteView):
     #context = {"tasks": tasks, 'form': form}
     #return render(request, 'tasks/add_task.html', #context)
 
-
 def updateTask(request, pk):
     """
     Lets user update their task.
@@ -114,27 +123,17 @@ def updateTask(request, pk):
     if request.method == 'POST':
         form = TaskModelForm(request.POST, instance=task)
         if form.is_valid():
-            form.save()
+            instance = form.save(commit=False)
+            if instance.localization:
+                geolocator = Nominatim(user_agent='measurements')
+                destination_ = form.cleaned_data.get('localization')
+                destination = geolocator.geocode(destination_)
+                instance.l_lat = destination.latitude
+                instance.l_lon = destination.longitude
+            instance.save()
             return redirect('list')
 
     context = {'form': form, 'id': pk}
 
-    return render(request, 'tasks/update_task.html', context)
-
-
-def deleteTask(request, pk):
-    """
-    Lets user delete task
-    Args:
-        request: request to return .html file
-
-    Returns: .html file of delete-task.
-
-    """
-    item = Task.objects.get(id=pk)
-    if request.method == 'POST':
-        item.delete()
-        return redirect('list')
-
-    context = {'item': item, 'id': pk}
-    return render(request, 'tasks/delet.html', context)
+    return render(request, 'tasks/update_task.html', context)	
+    

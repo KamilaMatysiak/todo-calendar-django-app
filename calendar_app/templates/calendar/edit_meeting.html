@@ -1,28 +1,17 @@
-{% load bootstrap4 %}
-{% bootstrap_javascript jquery='full' %}
-{% bootstrap_css %}
+{% extends 'base.html' %}
 {{form.media}}
+{%load static%}
 {% load crispy_forms_tags %}
 
-
-{%load static%}
-<html>
-    <head>
-        <title>vToDo - zadania</title>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
-    </head>
-
-    <body>
+{% block content %}
 
     <div class="wrapper">
         <nav id="sidebar" class="small">
             <nav class="sidebar main">
-                <div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div>
-                <a href="{% url 'date' %}"><div class="sidebar-btn active"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
-                <a href="{% url 'list' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div></a>
-                <div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>
+                <div class="sidebar-btn"><img alt="home" src="{%static 'image/icons/home-icon.svg' %}"></div>
+                <a href="{% url 'date' %}"><div alt="calendar"  class="sidebar-btn active"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
+                <a href="{% url 'list' %}"><div alt="todolist" class="sidebar-btn"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div></a>
+                <div class="sidebar-btn"><img alt="settings" src="{%static 'image/icons/settings-icon.svg' %}"></div>
             </nav>
         </nav>
 
@@ -51,9 +40,9 @@
                         <div class="avatar">
                             <a href="{% url 'profile' %}">
                             {% if user.avatar == None %}
-                                <img src="{%static 'image/avatar-test.png' %}" />
+                                <img alt="avatar" src="{%static 'image/avatar-test.png' %}" />
                             {% else %}
-                                <img src="user.avatar"/>
+                                <img alt="avatar" src="user.avatar"/>
                             {% endif %}
                                 </a>
                         </div>
@@ -102,5 +91,5 @@
         </script>
         <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
-    </body>
-</html>
+{% endblock %}
+
