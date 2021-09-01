@@ -79,8 +79,6 @@ text-decoration: none;
     max-width: 150px;
 }
 
-.hamburger
-{display: none;}
 /*---------------------
         EVENTS
 ----------------------*/
@@ -295,7 +293,7 @@ text-decoration: none;
     left: 0;
 }
 
-#small {
+.small {
     width: 75px;
 }
 
@@ -397,6 +395,132 @@ text-decoration: none;
 
 .menu-buttons li:hover {
     background: #eee;
+}
+
+/*-----------------------------------------------------
+    SIDEBAR MOBILE
+------------------------------------------------------*/
+
+#sidebarCollapse {
+    display: none;
+}
+
+#mobile-sidebar {
+    width: 100%;
+    max-width: 400px;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    height: auto;
+    min-height: 100%;
+    z-index: 999;
+    background: #fff;
+    color: #111;
+    transition: all 0.3s;
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.2);
+}
+
+#mobile-sidebar .scroll {
+   max-height: 100vh;
+   overflow: auto;
+   padding-bottom: 10px;
+}
+
+#mobile-sidebar.active {
+    left: 0;
+}
+
+#dismiss {
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+
+    background: #0C0E1B;
+    color: #fff;
+
+    -webkit-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+}
+
+#dismiss:hover {
+    background: #14172d;
+}
+
+#mobile-sidebar .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    color: white;
+    background: #0C0E1B;
+}
+
+#mobile-sidebar ul.components {
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+
+#mobile-sidebar ul p {
+
+    padding: 10px;
+}
+
+#mobile-sidebar ul li a {
+    padding: 10px;
+    font-size: 1.3rem;
+        color: #111;
+    display: block;
+}
+
+#mobile-sidebar ul li a:hover {
+    color: #111;
+    background: #e4e4e4;
+}
+
+#mobile-sidebar ul li img {
+    padding: 15px;
+}
+
+#mobile-sidebar ul li.active>a,
+a[aria-expanded="true"] {
+    color: #111;
+    background: #eee;
+}
+
+a[data-toggle="collapse"] {
+    position: relative;
+}
+
+.dropdown-toggle::after {
+    display: block;
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    transform: translateY(-50%);
+}
+
+ul ul a {
+    font-size: 0.9em ;
+    padding-left: 30px;
+    background: #e4e4e4;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px #eee;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #c4c4c4;
+  border-radius: 10px;
 }
 
 /* ---------------------------------------------------
@@ -528,6 +652,10 @@ td
     NAVBAR
 ----------------------------------------------------- */
 
+.mobile-nav {
+    display: none;
+}
+
 .navbar {
     margin: 0;
     min-height: 75px;
@@ -539,7 +667,7 @@ td
     justify-content: flex-end;
     align-items: center;
     height: 100%;
-    width: 60%;
+    width: 70%;
     align-self: flex-start;
 }
 
@@ -547,7 +675,7 @@ td
     display: flex;
     justify-content: flex-start;
     flex-wrap: wrap;
-    width: 40%;
+    width: 30%;
     height: 100%;
     align-self: flex-end;
 }
@@ -603,6 +731,7 @@ td
 PROFILE
 ------------------------------*/
 .visitcard {
+    margin: 15px;
     display: flex;
     justify-content center;
     align-items: center;
@@ -623,11 +752,6 @@ PROFILE
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
-@media (max-width: 900px) {
-    .navbar .left h1 {
-        font-size: 1.7rem;
-    }
-}
 @media (max-width: 768px) {
     #sidebar, .menu {
         margin-left: -300px;
@@ -635,24 +759,26 @@ PROFILE
     #sidebar.active {
         margin-left: 0;
     }
-    #content {
+    #content, #content-sml {
         width: 100%;
         padding: 0;
         margin: 0;
     }
-    #content.active {
+    #content.active, #content-sml.active {
         width: calc(100% - 300px);
-    }
-    #sidebarCollapse span {
-        display: none;
     }
 
     .vcontainer {
     padding: 1px 0;
     }
 
+    #sidebarCollapse {
+        display: block;
+    }
+
 .task {
 width: 100%;
+height: 100px;
 }
 
     .task-content h1 {
@@ -663,8 +789,6 @@ width: 100%;
         font-size: 0.6rem;
     }
 
-
-
 .edit {
     display: none;
     align-items: center;
@@ -672,8 +796,8 @@ width: 100%;
 
 }
         .task:hover {
-            transform: 0.3s all;
-            width: 90%;
+            transform: 0.3s left;
+            width: 85%;
         }
 
         .task:hover + .edit {
@@ -682,25 +806,27 @@ width: 100%;
             flex-direction: column;
             color: black;
             font-size: 0.4rem;
-            width: 7%;
+            width: 15%;
             height: 75px;
-            padding: 0 0 0 10px;
+            padding: 10px;
 
         }
 
         .edit:hover {
             display: flex;
             flex-direction: column;
-            width: 7%;
+            width: 15%;
             font-size: 0.4rem;
             height: 75px;
-            padding: 0 0 0 10px;
+            padding: 10px;
         }
 
         .edit img {
-    width: 20px;
-    height: 20px;
+    width: 30px;
+    height: 30px;
+    margin: 5px 0;
 }
+
 
 .task-edit {
     padding: 0px;
@@ -723,31 +849,45 @@ width: 100%;
 }
 
 .hamburger {
-    display: block;
-    position: absolute;
-    left: 15px;
-    top: 20px;
-    width: 15px;
-    height: 15px;
+    z-index: 998;
+    width: 50px;
+    height: 50px;
     font-size: 5px;
     margin 15px;
+    border: none;
+    background: none;
 }
 
-.navbar {
-    height: 115px;
+.button #add-task {
+    font-size: 0.2rem !important;
+}
+
+.mobile-nav {
+    height: 75px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #0C0E1B;
+    box-shadow: 0 4px 4px rgba(0,0,0,0.2);
+
+}
+
+.mobile-nav div {
+    margin: 15px;
+}
+
+.navbar .right .avatar
+{
+display: none;
 }
 
 .navbar .right {
-align-items: flex-start;}
-
-.navbar .left {
-    align-self: flex-end;
+    width: 50%;
 }
 
-    .navbar .left h1 {
-    font-size: 1.5rem;
-    font-weight: bold;
-    align-self: flex-end;
+.navbar .left {
+    width: 50%;
 }
 
 hr {
@@ -761,6 +901,30 @@ content: '+';
 .event {
  width: 100%;
  margin: 0;
+}
+
+#mobile-sidebar .week-label
+{
+    color: #111 !important;
+}
+
+#mobile-sidebar .labels {
+    width: 98%;
+    margin-left: 2%;
+}
+td {
+    padding: 10px 0;
+}
+
+.panel {
+    min-width: 100% !important;
+    padding: 0;
+    margin:  5px 0;
+}
+
+#logout {
+    top: 25px;
+    color: #fff;
 }
 
 }

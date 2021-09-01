@@ -1,6 +1,7 @@
 
 {% load bootstrap4 %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 <form method="post" action="">
   {% csrf_token %}
@@ -29,7 +30,7 @@
   </div>
 
   <div class="modal-footer">
-    <button type="submit" class="btn btn-primary" formnovalidate="formnovalidate">Zaloguj</button>
+    <button type="submit" class="button add" formnovalidate="formnovalidate">Zaloguj</button>
   </div>
 
 </form>

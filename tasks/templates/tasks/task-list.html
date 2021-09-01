@@ -6,8 +6,6 @@
 {% load poll_extras %}
 {%load static%}
 
-
-
 <html>
 <head>
     <title>vToDo - profil użytkownika</title>
@@ -15,86 +13,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
 </head>
+
 <body>
 <div class="wrapper"> 
-<nav id="sidebar">
-<nav class="sidebar main">
-    <a href="{% url 'vtodo' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div></a>
-    <a href="{% url 'date' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
-    <div class="sidebar-btn active"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div>
-    <a href="{% url 'location' %}"><div class="sidebar-btn"><img id="map" src="{%static 'image/icons/map.svg' %}"></div></a>
-    <div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>
-</nav>
-<nav class="sidebar menu">
-    <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>LISTA ZADAŃ</h1></div>
-    <ul class="menu-buttons">
-        <li class="active"><a class="active" href=#>WSZYSTKIE</a></li>
-        <li><a href=#>Kategoria 1</a></li>
-        <li><a href=#>Kategoria 2</a></li>
-        <li><a href=#>Kategoria 3</a></li>
-        <li><a href=#>+ Dodaj kategorię</a></li>
-    </ul>
+    <nav id="sidebar">
+        <nav class="sidebar main">
+            <a href="{% url 'vtodo' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div></a>
+            <a href="{% url 'date' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
+            <div class="sidebar-btn active"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div>
+            <a href="{% url 'location' %}"><div class="sidebar-btn"><img id="map" src="{%static 'image/icons/map.svg' %}"></div></a>
+            <div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>
+        </nav>
+        <nav class="sidebar menu">
+            <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>LISTA ZADAŃ</h1></div>
+            <ul class="menu-buttons">
+                <li class="active"><a class="active" href=#>WSZYSTKIE</a></li>
+                <li><a href=#>Kategoria 1</a></li>
+                <li><a href=#>Kategoria 2</a></li>
+                <li><a href=#>Kategoria 3</a></li>
+                <li><a href=#>+ Dodaj kategorię</a></li>
+            </ul>
+        </nav>
     </nav>
-</nav>
-<div id="content">
-               <button class="hamburger">MENU</button>
-    <nav class="navbar">
-        <div class="left">
 
-        <h1>WSZYSTKIE</h1>
-        </div>
-        <div class="right">
-        <div class="modal fade" tabindex="-1" role="dialog" id="modal">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content"></div>
-          </div>
-        </div>
-
-        <!-- Create book button -->
-        <button id="add-task" class="button add" type="button" name="button">DODAJ ZADANIE</button>
-    <div class="avatar">
-        <a href="{% url 'profile' %}">
-                {% avatar user %}
-            </a>
-    </div>
+    <nav id="mobile-sidebar">
+        <div class="scroll">
+            <div class="sidebar-header">
+                <h3>vTo-Do</h3>
+                <div id="dismiss"><p>X</p></div>
+            </div>
+            <ul class="list-unstyled components">
+                <li><a href="{% url 'vtodo' %}"><img src="{%static 'image/icons/mobile/home-icon-black.svg' %}"> Strona Główna</a></li>
+                <li><a href="{% url 'date' %}"><img src="{%static 'image/icons/mobile/cal-icon-black.svg' %}"> Kalendarz</a></li>
+                <li class="active">
+                    <a href="{% url 'list' %}"><img src="{%static 'image/icons/mobile/list-icon-black.svg' %}"> Lista zadań</a>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Wszystkie</a></li>
+                        <li><a>+ Dodaj kategorię</a></li>
+                    </ul>
+                </li>
+                <li><a href="{% url 'location' %}"><img src="{%static 'image/icons/mobile/map-icon-black.svg' %}"> Mapa</a></li>
+                <li><a href="#"><img src="{%static 'image/icons/mobile/set-icon-black.svg' %}"> Ustawienia</a></li>
+            </ul>
+            <ul class="list-unstyled"><li><a href="{% url 'logout' %}"><img src="{%static 'image/icons/mobile/logout.svg' %}"> Wyloguj się</a></li></ul>
         </div>
     </nav>
-    <hr>
 
-    
+
+    <div id="content">
+        <div class="mobile-nav">
+            <div><button id="sidebarCollapse" class="hamburger"><img src="{% static 'image/icons/hamburger.svg' %}"></button></div>
+            <div><img style="height: 49px;" src="{% static 'image/logo.svg' %}"></div>
+            <div class="avatar"><a href="{% url 'profile' %}">{% avatar user %}</a></div>
+        </div>
+        <nav class="navbar">
+            <div class="left">
+                <h1>WSZYSTKIE</h1>
+            </div>
+            <div class="right">
+                <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content"></div>
+                  </div>
+                </div>
+
+                <!-- Create book button -->
+                <button id="add-task" class="button add" type="button" name="button">DODAJ ZADANIE</button>
+                <div class="avatar">
+                    <a href="{% url 'profile' %}">{% avatar user %}</a>
+                </div>
+            </div>
+        </nav>
+        <hr>
 
     <div class="vcontainer column">
         {% for task in tasks %}
             <div class="vcontainer">
-            <div class="task">
-                <input type="checkbox">
-                <div class="task-content"><h1>{{task}}</h1><div class="task-info"><p id="date">{{task.date |timeuntil | split_timeuntil}}</p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div></div>
-                <div class="important-tag">
-                    {% if task.priority == "H" %}
-                        <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
-                    {% elif task.priority == "M" %}
-                        <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
-                    {% elif task.priority == "L" %}
-                        <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
-                    {% else %}
-                    <div style="width: 15px; height: 15px;"></div>
-                    {% endif %}
+                <div class="task">
+                    <input type="checkbox">
+                    <div class="task-content">
+                        <h1>{{task}}</h1><div class="task-info"><p id="date">{{task.date |timeuntil | split_timeuntil}}</p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
+                    </div>
+                    <div class="important-tag">
+                        {% if task.priority == "H" %}
+                            <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
+                        {% elif task.priority == "M" %}
+                            <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
+                        {% elif task.priority == "L" %}
+                            <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
+                        {% else %}
+                        <div style="width: 15px; height: 15px;"></div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="edit">
+                    <button class="button task-edit" data-toggle="modal" data-form-url="{% url 'update_task' task.pk %}"><img src="{% static 'image/icons/edit-icon.svg'%}" alt="Edytuj"></button>
+                    <button type="button" class="delete-task button task-edit" data-form-url="{% url 'delete' task.pk %}">
+                        <img src="{% static 'image/icons/delete-icon.svg'%}" alt="Usuń">
+                    </button>
                 </div>
             </div>
-        <div class="edit"> 
-            <button class="button task-edit" data-toggle="modal" data-form-url="{% url 'update_task' task.pk %}"><img src="{% static 'image/icons/edit-icon.svg'%}" alt="Edytuj"></button>
-                    <button type="button" class="delete-task button task-edit" data-form-url="{% url 'delete' task.pk %}">
-                          <img src="{% static 'image/icons/delete-icon.svg'%}" alt="Usuń">
-        </button>
-                </div>
-
-        </div>
 
             {% endfor %}
 
+            </div>
     </div>
-    </div>
-    </div>
+</div>
 
     <script type="text/javascript">
     $(document).ready(function() {
@@ -114,6 +138,24 @@
     });
     </script>
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#mobile-sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+
+            $('#dismiss').on('click', function () {
+                $('#mobile-sidebar').removeClass('active');
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#mobile-sidebar').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script><script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
 </body>
 </html>

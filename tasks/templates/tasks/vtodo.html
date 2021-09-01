@@ -6,8 +6,6 @@
 {% load poll_extras %}
 {%load static%}
 
-
-
 <html>
 <head>
     <title>vToDo - zadania</title>
@@ -17,48 +15,86 @@
 </head>
 <body>
 <div class="wrapper">
-<nav id="sidebar small">
-<nav class="sidebar main">
-    <div class="sidebar-btn active"><img src="{%static 'image/icons/home-icon.svg' %}"></div>
-    <a href="{% url 'date' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
-    <a href="{% url 'list' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div></a>
-    <a href="{% url 'location' %}"><div class="sidebar-btn"><img id="map" src="{%static 'image/icons/map.svg' %}"></div></a>
-    <div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>
-</nav>
-</nav>
-<div id="content-sml">
-               <button class="hamburger">MENU</button>
-        <nav class="navbar">
-        <div class="left">
+    <nav id="sidebar" class="small">
+        <nav class="sidebar main">
+            <div class="sidebar-btn active"><img src="{%static 'image/icons/home-icon.svg' %}"></div>
+            <a href="{% url 'date' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
+            <a href="{% url 'list' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div></a>
+            <a href="{% url 'location' %}"><div class="sidebar-btn"><img id="map" src="{%static 'image/icons/map.svg' %}"></div></a>
+            <div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>
+        </nav>
+    </nav>
 
-        <img style="height: 60px;" src="{% static 'image/orange.svg' %}">
-        </div>
-        <div class="right">
-        <div class="modal fade" tabindex="-1" role="dialog" id="modal">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content"></div>
-          </div>
-        </div>
-
-        <!-- Create book button -->
-            <h4 style="margin: 20px 0;"> Hej, <b>{{user.username}}</b>!</h4>
-    <div class="avatar">
-        <a href="{% url 'profile' %}">
-            {% avatar user %}
-            </a>
+    <nav id="mobile-sidebar">
+        <div class="scroll">
+            <div class="sidebar-header">
+                <h3>vTo-Do</h3>
+                <div id="dismiss"><p>X</p></div>
             </div>
+            <ul class="list-unstyled components">
+                <li class="active"><a href="{% url 'vtodo' %}"><img src="{%static 'image/icons/mobile/home-icon-black.svg' %}"> Strona Główna</a></li>
+                <li><a href="{% url 'date' %}"><img src="{%static 'image/icons/mobile/cal-icon-black.svg' %}"> Kalendarz</a></li>
+                <li><a href="{% url 'list' %}"><img src="{%static 'image/icons/mobile/list-icon-black.svg' %}"> Lista zadań</a></li>
+                <li><a href="{% url 'location' %}"><img src="{%static 'image/icons/mobile/map-icon-black.svg' %}"> Mapa</a></li>
+                <li><a href="#"><img src="{%static 'image/icons/mobile/set-icon-black.svg' %}"> Ustawienia</a></li>
+            </ul>
+            <ul class="list-unstyled"><li><a href="{% url 'logout' %}"><img src="{%static 'image/icons/mobile/logout.svg' %}"> Wyloguj się</a></li></ul>
         </div>
     </nav>
-    <hr class="hr">
 
-    <div class="panel-container">
-        <p>Trzeba coś wymyślić</p>
-        <p>jakieś statystyki?</p>
-        <p>przekazanie dzisiejszych eventów</p>
-        <p>czy cu</p>
+    <div id="content-sml">
+            <div class="mobile-nav">
+        <div><button id="sidebarCollapse" class="hamburger"><img src="{% static 'image/icons/hamburger.svg' %}"></button></div>
+        <div><img style="height: 49px;" src="{% static 'image/logo.svg' %}"></div>
+        <div class="avatar"><a href="{% url 'profile' %}">{% avatar user %}</a></div>
+    </div>
+        <nav class="navbar">
+            <div class="left">
+                <img style="height: 60px;" src="{% static 'image/orange.svg' %}">
+            </div>
+            <div class="right">
+                <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content"></div>
+                    </div>
+                </div>
+                <h4 style="margin: 20px 0;"> Hej, <b>{{user.username}}</b>!</h4>
+                <div class="avatar">
+                    <a href="{% url 'profile' %}">
+                        {% avatar user %}
+                    </a>
+                </div>
+            </div>
+        </nav>
+        <hr class="hr">
+
+        <div class="panel-container">
+            <p>Trzeba coś wymyślić</p>
+            <p>jakieś statystyki?</p>
+            <p>przekazanie dzisiejszych eventów</p>
+            <p>czy cu</p>
         </div>
+    </div>
+</div>
 
-    <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#mobile-sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+
+            $('#dismiss').on('click', function () {
+                $('#mobile-sidebar').removeClass('active');
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#mobile-sidebar').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script><script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
 </body>
 </html>

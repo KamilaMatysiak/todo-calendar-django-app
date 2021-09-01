@@ -42,7 +42,7 @@ background: white !important;
 .banner h1
 {
     position: absolute;
-    top: 25px;
+    top: 45px;
     left: 5%;
     font-size: 3rem;
     font-weight: bold;
@@ -209,15 +209,15 @@ background: #222433;
 @media (max-width: 600px) {
     .banner h1 {
         font-size: 2rem;
-        left: 20%;
+        left: 10%;
     }
 
     .banner p {
-        left: 20%;
+        left: 10%;
     }
 
     .banner button {
-        left: 40%;
+        left: 10%;
     }
 
         .card

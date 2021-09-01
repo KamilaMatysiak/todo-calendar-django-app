@@ -62,6 +62,7 @@ def home(request, year, month, day):
     else:
         next.append(day)
     days = cal.itermonthdays2(year, month)
+    daysy = cal.itermonthdays2(year, month)
     now = datetime.now()
     day_name = date.strftime("%A")
     current_day = now.day
@@ -83,6 +84,7 @@ def home(request, year, month, day):
                       "next_month": next,
                       "month_name": month_name,
                       "days": days,
+                      "daysy": daysy,
                       "day_name": day_name,
                       "current_day": current_day,
                       "current_month": current_month,
