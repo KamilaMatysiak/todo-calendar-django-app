@@ -73,7 +73,8 @@ class AddTaskView(BSModalCreateView):
             obj.l_lat = destination.latitude
             obj.l_lon = destination.longitude
         return super(AddTaskView, self).form_valid(form)
-    
+
+
 class EditTaskView(BSModalUpdateView):
     model = Task
     template_name = 'tasks/update_task.html'
@@ -88,25 +89,6 @@ class DeleteTaskView(BSModalDeleteView):
     success_message = "Pomyślnie usunięto zadanie"
     success_url = reverse_lazy('list')
 
-
-
-   
-  #  def get_object(self):
-#        id_ = self.kwargs.get("id")
-#        return get_object_or_404(Task, id=id_)
-
-#def addTask(request):
-  #  tasks = Task.objects.all()
- #   form = TaskForm()
-
-#    if request.method == 'POST':
-       # form = TaskForm(request.POST)
-      #  if form.is_valid():
-       #     form.save()
-     #   return redirect('list')
-
-    #context = {"tasks": tasks, 'form': form}
-    #return render(request, 'tasks/add_task.html', #context)
 
 def updateTask(request, pk):
     """

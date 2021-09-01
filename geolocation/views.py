@@ -57,9 +57,9 @@ def location(request):
         # distance = round(geodesic(pointA, pointB).km, 2)
 
         # initial folium map
-    m = folium.Map(width=800, height=500,
+    m = folium.Map(width='100%', height='100%',
                     location=get_center_coordinates(l_lat, l_lon),
-                    zoom_start=5)
+                    zoom_start=10)
                     # ,
                     # zoom_start=get_zoom(distance))
         # location marker
@@ -73,7 +73,8 @@ def location(request):
     color = {
         'H': 'red',
         'M': 'orange',
-        'L': 'lightgray'
+        'L': 'lightgray',
+        'N': 'white'
     } 
 
     for x in tasks:

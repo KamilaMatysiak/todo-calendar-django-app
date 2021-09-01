@@ -85,6 +85,24 @@
     });
     </script>
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#mobile-sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
+
+            $('#dismiss').on('click', function () {
+                $('#mobile-sidebar').removeClass('active');
+            });
+
+            $('#sidebarCollapse').on('click', function () {
+                $('#mobile-sidebar').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
+        });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script><script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
 </body>
 </html>
