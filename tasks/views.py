@@ -40,10 +40,10 @@ def task_list(request):
     """
     tasks = [x for x in Task.objects.all() if x.user == request.user]
     #tasks = Task.objects.all()
-    form = TaskForm()
+    form = TaskModelForm()
 
     if request.method == 'POST':
-        form = TaskForm(request.POST)
+        form = TaskModelForm(request.POST)
 
         if form.is_valid():
             form.save()
@@ -118,4 +118,19 @@ def updateTask(request, pk):
     context = {'form': form, 'id': pk}
 
     return render(request, 'tasks/update_task.html', context)	
-    
+
+
+def finishTask(request):
+    taskID = request.POST['taskID']
+    complete = request.POST['complete']
+    task = Task.objects.get(pk=taskID)
+
+    if complete == 'true':
+        print("saving to true")
+        task.complete = True
+    else:
+        print("saving to false")
+        task.complete = False
+
+    task.save()
+    return HttpResponse('')

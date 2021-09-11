@@ -55,4 +55,4 @@ class Task(models.Model):
         return f"{self.title}"
 
     class Meta:
-        ordering=['priority','date','title','localization']
+        ordering=['complete', 'priority','date','title','localization']
