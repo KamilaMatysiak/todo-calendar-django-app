@@ -2,18 +2,18 @@
 {% load static %}
 {% load bootstrap4 %}
 {% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %}
+
 {% bootstrap_messages %}
 
 <html>
-<head>
-    <title>vToDo</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <title>vToDo</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
-</head>
+    </head>
     <body>
-        {% block contentarea %}
-        {% endblock %}
-</body>
+            {% block contentarea %}
+            {% endblock %}
+    </body>
 </html>

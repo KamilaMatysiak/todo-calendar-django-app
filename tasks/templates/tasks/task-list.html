@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{{form.media}}
 {% load avatar_tags %}
 {% load poll_extras %}
 {% load static %}
@@ -9,7 +8,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="wrapper"> 
+<div class="wrapper">
     <nav id="sidebar">
         <nav class="sidebar main">
             <a href="{% url 'vtodo' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div></a>
@@ -79,44 +78,43 @@
             </div>
         </nav>
         <hr>
-  {% csrf_token %}
-    <div class="vcontainer column">
-        {% for task in tasks %}
-            <div class="vcontainer">
-                {% if task.complete %}
-                <div class="task passed">
-                    <input type="checkbox" checked onclick='taskFinish(this,"{{task.id}}")'>
+        {% csrf_token %}
+        <div class="vcontainer column">
+            {% for task in tasks %}
+                <div class="vcontainer">
+                    {% if task.complete %}
+                    <div class="task passed">
+                        <input type="checkbox" checked onclick='taskFinish(this,"{{task.id}}")'>
 
-                {% else %}
-                <div class="task">
-                    <input type="checkbox" onclick='taskFinish(this,"{{task.id}}")'>
-                {% endif %}
-                    <div class="task-content">
-                        <h1>{{task}}</h1><div class="task-info"><p id="date">{{task.date |timeuntil | split_timeuntil}}</p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
+                    {% else %}
+                    <div class="task">
+                        <input type="checkbox" onclick='taskFinish(this,"{{task.id}}")'>
+                    {% endif %}
+                        <div class="task-content">
+                            <h1>{{task}}</h1><div class="task-info"><p id="date">{{task.date |timeuntil | split_timeuntil}}</p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
+                        </div>
+                        <div class="important-tag">
+                            {% if task.priority == "H" %}
+                                <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
+                            {% elif task.priority == "M" %}
+                                <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
+                            {% elif task.priority == "L" %}
+                                <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
+                            {% else %}
+                            <div style="width: 15px; height: 15px;"></div>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="important-tag">
-                        {% if task.priority == "H" %}
-                            <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
-                        {% elif task.priority == "M" %}
-                            <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
-                        {% elif task.priority == "L" %}
-                            <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
-                        {% else %}
-                        <div style="width: 15px; height: 15px;"></div>
-                        {% endif %}
+                    <div class="edit">
+                        <button class="button task-edit" data-toggle="modal" data-form-url="{% url 'update_task' task.pk %}"><img src="{% static 'image/icons/edit-icon.svg'%}" alt="Edytuj"></button>
+                        <button type="button" class="delete-task button task-edit" data-form-url="{% url 'delete' task.pk %}">
+                            <img src="{% static 'image/icons/delete-icon.svg'%}" alt="Usuń">
+                        </button>
                     </div>
                 </div>
-                <div class="edit">
-                    <button class="button task-edit" data-toggle="modal" data-form-url="{% url 'update_task' task.pk %}"><img src="{% static 'image/icons/edit-icon.svg'%}" alt="Edytuj"></button>
-                    <button type="button" class="delete-task button task-edit" data-form-url="{% url 'delete' task.pk %}">
-                        <img src="{% static 'image/icons/delete-icon.svg'%}" alt="Usuń">
-                    </button>
-                </div>
-            </div>
 
             {% endfor %}
-
-            </div>
+        </div>
     </div>
 </div>
 
@@ -135,10 +133,24 @@
         $(".task-edit").each(function () {
               $(this).modalForm({
                 formURL: $(this).data("form-url")});
-                });
+        });
+
+        $("#mobile-sidebar").mCustomScrollbar({
+            theme: "minimal"
+        });
+
+        $('#dismiss').on('click', function () {
+            $('#mobile-sidebar').removeClass('active');
+        });
+
+        $('#sidebarCollapse').on('click', function () {
+            $('#mobile-sidebar').addClass('active');
+            $('.collapse.in').toggleClass('in');
+            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        });
     });
     </script>
-    <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+
     <script>
         function taskFinish(element, task) {
             link = "{% url 'finish-task' %}";
@@ -157,24 +169,8 @@
             });
         }
     </script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $("#mobile-sidebar").mCustomScrollbar({
-                theme: "minimal"
-            });
-
-            $('#dismiss').on('click', function () {
-                $('#mobile-sidebar').removeClass('active');
-            });
-
-            $('#sidebarCollapse').on('click', function () {
-                $('#mobile-sidebar').addClass('active');
-                $('.collapse.in').toggleClass('in');
-                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-            });
-        });
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+{{form.media}}
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 
 {% endblock %}
