@@ -23,7 +23,7 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
+    path('', include('pwa.urls')),
     path('register/', user_views.SignUpView.as_view(), name='register'),
     path('profile/', user_views.profile, name='profile'),
     path('avatar/', include('avatar.urls')),
@@ -34,5 +34,4 @@ urlpatterns = [
 
     path('calendar/', include('calendar_app.urls')),
 
-    path('sw.js', TemplateView.as_view(template_name='sw.js', content_type='application/javascript'), name='sw.js'),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
