@@ -6,6 +6,7 @@ from .utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
 from geopy.distance import geodesic
 import folium
 from tasks.models import Task
+import json
 
 
 def location(request):
@@ -57,15 +58,30 @@ def location(request):
         # distance = round(geodesic(pointA, pointB).km, 2)
 
         # initial folium map
-    m = folium.Map(width='100%', height='100%',
-                    location=get_center_coordinates(l_lat, l_lon),
-                    zoom_start=10)
+    # m = folium.Map(width='100%', height='100%',
+    #                 location=get_center_coordinates(lat, lon),
+    #                 zoom_start=10)
                     # ,
                     # zoom_start=get_zoom(distance))
         # location marker
-    folium.Marker([l_lat, l_lon], tooltip='twoja lokalizacja',
-                    popup="kod pocztowy: " + city['postal_code'] + " miasto: " + city['city'],
+    
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    if is_ajax:
+        if request.method == 'POST':
+            data = json.load(request)
+            a_lat = data.get('lat')
+            a_lon = data.get('lon')
+            print(a_lat)
+            print(a_lon)
+
+            m = folium.Map(width='100%', height='100%',
+                    location=get_center_coordinates(a_lat, a_lon),
+                    zoom_start=10)
+            
+            folium.Marker([a_lat, a_lon], tooltip='twoja lokalizacja',
+                    popup="TUTAJ JESTEŚ",
                     icon=folium.Icon('green')).add_to(m)
+
 
         # destination  marker
     tasks = (x for x in Task.objects.all() if x.user == request.user)
