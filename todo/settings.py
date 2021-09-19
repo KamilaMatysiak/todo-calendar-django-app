@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'bootstrap_modal_forms',
     'bootstrap_datepicker_plus',
     'avatar',
+    'pwa'
 ]
 
 MIDDLEWARE = [
@@ -148,3 +149,40 @@ TIME_FORMATS = ['%H:%M:%S']
 mimetypes.add_type('image/svg+xml', '.svg', True)
 #TIME_INPUT_FORMATS = '%H:%M'
 
+STATICFILE_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
+
+PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'templates', 'serviceworker.js')
+
+PWA_APP_NAME = 'vTo-Do'
+PWA_APP_DESCRIPTION = "Description"
+PWA_APP_THEME_COLOR = '#A300C4'
+PWA_APP_BACKGROUND_COLOR = '#ffffff'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'any'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+PWA_APP_ICONS = [
+
+    {
+        'src': '/static/image/icon-192.png',
+        'sizes': '192x192'
+    }
+
+]
+PWA_APP_ICONS_APPLE = [
+    {
+        'src': '/static/image/icon-192.png',
+        'sizes': '192x192'
+    }
+]
+PWA_APP_SPLASH_SCREEN = [
+    {
+        'src': '/static/image/icon-512.png',
+        'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
+    }
+]
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'en-US'
