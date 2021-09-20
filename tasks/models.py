@@ -33,7 +33,7 @@ class Task(models.Model):
     date = models.DateField(default=date.today, null=True)
     time = models.TimeField(default=datetime.now)
     High_priority = "H"
-    Medium_priority = "M"
+    Medium_priority = "J"
     Low_priority = "L"
     None_priority = "N"
     Priorities = [
