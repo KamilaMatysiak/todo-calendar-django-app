@@ -103,12 +103,20 @@ def location(request):
         'L': 'lightgray',
         'N': 'white'
     }
-
+    count = 0
     for x in tasks:
+
         if x.l_lon and x.l_lat:
             folium.Marker([x.l_lat, x.l_lon], tooltip='cel podróży',
                           popup=x.localization,
                           icon=folium.Icon(color[x.priority], icon="cloud")).add_to(m)
+        if(x.l_lat != None and x.l_lon != None):
+            diff_lat = abs(float(x.l_lat) - float(lat))
+            diff_lon = abs(float(x.l_lon) - float(lon))
+            if(diff_lat < 0.01 or diff_lon < 0.01):
+                count = count + 1
+    if count > 0:
+        print("Zadania w pobliżu: ", count)
 
         # draw the line between location and destination
         # line = folium.PolyLine(locations=[pointA, pointB], weight=2, color='blue')
@@ -145,7 +153,6 @@ def location(request):
 @require_POST
 @csrf_exempt
 def send_push(request):
-    print("aaaaa")
     try:
         body = request.body
         data = json.loads(body)
@@ -155,7 +162,7 @@ def send_push(request):
 
         user_id = data['id']
         user = get_object_or_404(User, pk=user_id)
-        payload = {'head': data['head'], 'body': data['body']}
+        payload = {'head': "Zadania w pobliżu:", 'body': "treść zadań?"}
         send_user_notification(user=user, payload=payload, ttl=1000)
 
         return JsonResponse(status=200, data={"message": "Web push successful"})
