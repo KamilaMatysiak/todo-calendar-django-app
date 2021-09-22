@@ -36,8 +36,7 @@ urlpatterns = [
     path('calendar/', include('calendar_app.urls')),
     url(r'^webpush/', include('webpush.urls')),
 
-    path('serviceworker.js', TemplateView.as_view(template_name='serviceworker.js', content_type='application'
-                                                                                                 '/javascript'),
-         name='serviceworker.js'),
+    path('serviceworker.js', TemplateView.as_view(template_name='serviceworker.js',
+                    content_type='application/javascript'), name='serviceworker.js'),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)\
               + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
