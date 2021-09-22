@@ -1,6 +1,9 @@
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 # from .models import Measurement
 # from .forms import MeasurementModelForm
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from geopy.geocoders import Nominatim
 from .utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
 from geopy.distance import geodesic
@@ -10,6 +13,7 @@ import json
 from webpush import send_user_notification
 from django.conf import settings
 from django.conf.urls.static import static
+
 
 def location(request):
     """Shows a map with starting point of user, based on users location. Also shows the locations of tasks and their priorities.
@@ -122,14 +126,21 @@ def location(request):
     return render(request, 'geolocation/location.html', context)
 
 
+@require_POST
+@csrf_exempt
 def send_push(request):
-    payload = {"head": "Welcome!", "body": "Hello World"}
-    user = request.user
-    print(user)
-    send_user_notification(user=user, payload=payload, ttl=1000)
+    try:
+        user = request.user
+        payload = {'head': "message", 'body': "hello world"}
+        send_user_notification(user=user, payload=payload, ttl=1000)
+
+        return JsonResponse(status=200, data={"message": "Web push successful"})
+    except TypeError:
+        return JsonResponse(status=500, data={"message": "An error occurred"})
+
 
 def home(request):
-   webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
-   vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
-   user = request.user
-   return render(request, 'home.html', {user: user, 'vapid_key': vapid_key})
+    webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
+    vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
+    user = request.user
+    return render(request, 'geolocation/location.html', {user: user, 'vapid_key': vapid_key})
