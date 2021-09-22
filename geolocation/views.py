@@ -7,7 +7,9 @@ from geopy.distance import geodesic
 import folium
 from tasks.models import Task
 import json
-
+from webpush import send_user_notification
+from django.conf import settings
+from django.conf.urls.static import static
 
 def location(request):
     """Shows a map with starting point of user, based on users location. Also shows the locations of tasks and their priorities.
@@ -22,8 +24,8 @@ def location(request):
     # distance = None
     # destination = None
 
-    #nie odkomentowuj bo on psuje wszystko
-    #obj = get_object_or_404(Measurement, id=1)
+    # nie odkomentowuj bo on psuje wszystko
+    # obj = get_object_or_404(Measurement, id=1)
     # form = MeasurementModelForm(request.POST or None)
     geolocator = Nominatim(user_agent='measurements')
     ip_ = get_ip_address(request)
@@ -45,26 +47,26 @@ def location(request):
                   icon=folium.Icon('green')).add_to(m)
 
     # if form.is_valid():
-        # instance = form.save(commit=False)
-        # destination_ = form.cleaned_data.get('destination')
-        # destination = geolocator.geocode(destination_)
+    # instance = form.save(commit=False)
+    # destination_ = form.cleaned_data.get('destination')
+    # destination = geolocator.geocode(destination_)
 
-        # destination coordinates
-        # d_lat = destination.latitude
-        # d_lon = destination.longitude
-        # pointB = (d_lat, d_lon)
+    # destination coordinates
+    # d_lat = destination.latitude
+    # d_lon = destination.longitude
+    # pointB = (d_lat, d_lon)
 
-        # distance calculation
-        # distance = round(geodesic(pointA, pointB).km, 2)
+    # distance calculation
+    # distance = round(geodesic(pointA, pointB).km, 2)
 
-        # initial folium map
+    # initial folium map
     # m = folium.Map(width='100%', height='100%',
     #                 location=get_center_coordinates(lat, lon),
     #                 zoom_start=10)
-                    # ,
-                    # zoom_start=get_zoom(distance))
-        # location marker
-    
+    # ,
+    # zoom_start=get_zoom(distance))
+    # location marker
+
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     if is_ajax:
         if request.method == 'POST':
@@ -75,13 +77,12 @@ def location(request):
             print(a_lon)
 
             m = folium.Map(width='100%', height='100%',
-                    location=get_center_coordinates(a_lat, a_lon),
-                    zoom_start=10)
-            
-            folium.Marker([a_lat, a_lon], tooltip='twoja lokalizacja',
-                    popup="TUTAJ JESTEŚ",
-                    icon=folium.Icon('green')).add_to(m)
+                           location=get_center_coordinates(a_lat, a_lon),
+                           zoom_start=10)
 
+            folium.Marker([a_lat, a_lon], tooltip='twoja lokalizacja',
+                          popup="TUTAJ JESTEŚ",
+                          icon=folium.Icon('green')).add_to(m)
 
         # destination  marker
     tasks = (x for x in Task.objects.all() if x.user == request.user)
@@ -91,13 +92,13 @@ def location(request):
         'M': 'orange',
         'L': 'lightgray',
         'N': 'white'
-    } 
+    }
 
     for x in tasks:
         if x.l_lon and x.l_lat:
             folium.Marker([x.l_lat, x.l_lon], tooltip='cel podróży',
-                    popup=x.localization,
-                    icon=folium.Icon(color[x.priority], icon="cloud")).add_to(m)
+                          popup=x.localization,
+                          icon=folium.Icon(color[x.priority], icon="cloud")).add_to(m)
 
         # draw the line between location and destination
         # line = folium.PolyLine(locations=[pointA, pointB], weight=2, color='blue')
@@ -120,3 +121,15 @@ def location(request):
 
     return render(request, 'geolocation/location.html', context)
 
+
+def send_push(request):
+    payload = {"head": "Welcome!", "body": "Hello World"}
+    user = request.user
+    print(user)
+    send_user_notification(user=user, payload=payload, ttl=1000)
+
+def home(request):
+   webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
+   vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
+   user = request.user
+   return render(request, 'home.html', {user: user, 'vapid_key': vapid_key})

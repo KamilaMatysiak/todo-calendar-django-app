@@ -1,11 +1,15 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from django.views.decorators.http import require_POST
+
 from .models import *
 from .forms import *
 import datetime
 from django.urls import reverse_lazy
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalDeleteView, BSModalUpdateView
+from webpush import send_user_notification
+from django.contrib.auth.models import User
 from geopy.geocoders import Nominatim
 from .utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
 from geopy.distance import geodesic
@@ -25,9 +29,11 @@ def homepage(request):
     """
     return render(request, 'tasks/index.html')
 
+
 def test(request):
     return render(request, 'tasks/components.html')
-    
+
+
 @login_required
 def task_list(request):
     """
@@ -39,7 +45,7 @@ def task_list(request):
 
     """
     tasks = [x for x in Task.objects.all() if x.user == request.user]
-    #tasks = Task.objects.all()
+    # tasks = Task.objects.all()
     form = TaskModelForm()
 
     if request.method == 'POST':
@@ -117,7 +123,7 @@ def updateTask(request, pk):
 
     context = {'form': form, 'id': pk}
 
-    return render(request, 'tasks/update_task.html', context)	
+    return render(request, 'tasks/update_task.html', context)
 
 
 def finishTask(request):

@@ -48,7 +48,8 @@ INSTALLED_APPS = [
     'bootstrap_modal_forms',
     'bootstrap_datepicker_plus',
     'avatar',
-    'pwa'
+    'pwa',
+    'webpush',
 ]
 
 MIDDLEWARE = [
@@ -152,6 +153,15 @@ mimetypes.add_type('image/svg+xml', '.svg', True)
 STATICFILE_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
+WEBPUSH_SETTINGS = {
+    "VAPID_PUBLIC_KEY": """MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEu4mDLyZxabCphMhcfsLJHCdwo9CT
+UhXD8Bb0sLMOLOKaxv9lIBCqb0VAySB/SZ4z/NPOfXTX3DTBzD1CDfU2+g==""",
+    "VAPID_PRIVATE_KEY": """MIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg+d9X+v3Q+ZamCnUq
+5ZbaSebVhEX08EbnhroLSW0ej6ihRANCAAS7iYMvJnFpsKmEyFx+wskcJ3Cj0JNS
+FcPwFvSwsw4s4prG/2UgEKpvRUDJIH9JnjP80859dNfcNMHMPUIN9Tb6""",
+    "VAPID_ADMIN_EMAIL": "adrcha2@st.amu.edu.pl"
+}
 
 PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'templates', 'serviceworker.js')
 

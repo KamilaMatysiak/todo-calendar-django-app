@@ -5,16 +5,22 @@
 {% load crispy_forms_tags %}
 {% load avatar_tags %}
 {% load poll_extras %}
-{%load static%}
+{% load static %}
 
 <html>
 <head>
+    <meta name="vapid-key" content="{{ vapid_key }}">
+    {% if user.id %}
+        <meta name="user_id" content="{{ user.id }}">
+    {% endif %}
+
     <title>vToDo - zadania</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
     {% comment %} <script src="{% static '/js/geolocation.js' %}" type="text/javascript"></script>   {% endcomment %}
 </head>
 <body>
@@ -91,7 +97,13 @@
     </div>
   </div>
 </div> {% endcomment %}
-
+ <form id="send-push__form">
+        <h3 class="header">Send a push notification</h3>
+        <p class="error"></p>
+        <input type="text" name="head" placeholder="Header: Your favorite airline 😍">
+        <textarea name="body" id="" cols="30" rows="10" placeholder="Body: Your flight has been cancelled 😱😱😱"></textarea>
+        <button>Send Me</button>
+    </form>
         <div style="width: 90%; height: 80vh; margin: auto;">
 
             <script>

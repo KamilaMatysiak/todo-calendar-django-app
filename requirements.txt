@@ -34,3 +34,5 @@ typing-extensions==3.10.0.1
 yarl==1.6.3
 folium~=0.12.1
 six~=1.14
+pywebpush~=1.9.4
+django-webpush~=0.3.3

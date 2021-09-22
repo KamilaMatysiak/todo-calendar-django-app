@@ -3,9 +3,11 @@
 {% load avatar_tags %}
 {% load poll_extras %}
 {%load static%}
+{% load webpush_notifications %}
 
 {% block headcontent %}
     <title>vToDo - zadania</title>
+    {% webpush_header %}
 {% endblock%}
 
 {% block content %}
@@ -64,10 +66,8 @@
         <hr class="hr">
 
         <div class="panel-container">
-            <p>Trzeba coś wymyślić</p>
-            <p>jakieś statystyki?</p>
-            <p>przekazanie dzisiejszych eventów</p>
-            <p>czy cu</p>
+             {% webpush_button with_class="btn btn-outline-info" %}
+            <p>button fajny</p>
         </div>
     </div>
 </div>
