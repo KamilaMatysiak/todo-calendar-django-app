@@ -150,6 +150,23 @@ def location(request):
 #    print(user)
 #    send_user_notification(user=user, payload=payload, ttl=1000)
 
+def how_many_tasks(user, lat, lon):
+    a = 0
+    y = 5
+    nearest_task = None
+    for x in Task.objects.all():
+        if x.user == user and x.l_lat and x.l_lon:
+            distance = geodesic((lat, lon), (x.l_lat, x.l_lon)).km
+            if distance <= 5:
+                a += 1
+                if distance < y:
+                    y = distance
+                    nearest_task = x.title
+    if not nearest_task:
+        nearest_task = None
+    print('jest')
+    return (str(a), nearest_task, str(round(y, 1)))
+
 @require_POST
 @csrf_exempt
 def send_push(request):
@@ -162,7 +179,14 @@ def send_push(request):
 
         user_id = data['id']
         user = get_object_or_404(User, pk=user_id)
-        payload = {'head': "Zadania w pobliżu:", 'body': "treść zadań?"}
+        data_tasks = how_many_tasks(user, float(data['head']), float(data['body']))
+        print(data_tasks)
+        if data_tasks[1] != None:
+            payload = {'head': 'Zadań w okolicy: ' + data_tasks[0], 'body': 'Najbliższe zadanie: ' + data_tasks[1] + ' - ' +
+                data_tasks[2] + 'km stąd'}
+        else:
+            payload = {'head': 'Brak zadań w okolicy'}
+        print(payload)
         send_user_notification(user=user, payload=payload, ttl=1000)
 
         return JsonResponse(status=200, data={"message": "Web push successful"})

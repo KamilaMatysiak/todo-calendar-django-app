@@ -51,8 +51,8 @@ self.addEventListener('push', function (event) {
     // on https://developer.mozilla.org/en-US/docs/Web/API/PushMessageData.
     const eventInfo = event.data.text();
     const data = JSON.parse(eventInfo);
-    const head = data.head || 'New Notification 🕺🕺';
-    const body = data.body || 'This is default content. Your notification didn\'t have one 🙄🙄';
+    const head = data.head || '';
+    const body = data.body || '';
 
     // Keep the service worker alive until the notification is created.
     event.waitUntil(
