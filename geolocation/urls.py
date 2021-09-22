@@ -8,10 +8,10 @@ from django.views.generic import TemplateView
 
 urlpatterns = [
     path('', views.location, name="location"),
-    path('send_push', send_push),
+    path('send_push', send_push, name="send"),
     path('webpush/', include('webpush.urls')),
     path('', home),
-    path('serviceworker.js', TemplateView.as_view(template_name='servicewworker.js', content_type='application/x'
+    path('serviceworker.js', TemplateView.as_view(template_name='serviceworker.js', content_type='application/x'
                                                                                                   '-javascript')),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

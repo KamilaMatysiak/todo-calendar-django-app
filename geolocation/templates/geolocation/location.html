@@ -97,6 +97,7 @@
     </div>
   </div>
 </div> {% endcomment %}
+
  <form id="send-push__form">
         <h3 class="header">Send a push notification</h3>
         <p class="error"></p>
@@ -104,6 +105,7 @@
         <textarea name="body" id="" cols="30" rows="10" placeholder="Body: Your flight has been cancelled 😱😱😱"></textarea>
         <button>Send Me</button>
     </form>
+
         <div style="width: 90%; height: 80vh; margin: auto;">
 
             <script>
@@ -163,7 +165,7 @@
                 console.warn(`ERROR(${err.code}): ${err.message}`);
                 }
 
-                const watchPosition = navigator.geolocation.getCurrentPosition(success, error, options);
+                const watchPosition = navigator.geolocation.watchPosition(success, error, options);
 
                 
 
@@ -206,7 +208,11 @@
             });
         });
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script><script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+
+    <script src="{% static '/js/registerSw.js' %}"></script>
+    <script src="{% static '/js/site.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
 </body>
 </html>

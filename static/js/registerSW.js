@@ -4,21 +4,21 @@ const registerSw = async () => {
         initialiseState(reg)
 
     } else {
-        showNotAllowed("You can't send push notifications ☹️😢")
+        showNotAllowed("You can't send push notifications")
     }
 };
 
 const initialiseState = (reg) => {
     if (!reg.showNotification) {
-        showNotAllowed('Showing notifications isn\'t supported ☹️😢');
+        showNotAllowed('Showing notifications isn\'t supported ');
         return
     }
     if (Notification.permission === 'denied') {
-        showNotAllowed('You prevented us from showing notifications ☹️🤔');
+        showNotAllowed('You prevented us from showing notifications');
         return
     }
     if (!'PushManager' in window) {
-        showNotAllowed("Push isn't allowed in your browser 🤔");
+        showNotAllowed("Push isn't allowed in your browser");
         return
     }
     subscribe(reg);
@@ -52,6 +52,7 @@ const subscribe = async (reg) => {
 
     const vapidMeta = document.querySelector('meta[name="vapid-key"]');
     const key = vapidMeta.content;
+    console.log(key);
     const options = {
         userVisibleOnly: true,
         // if key exists, create applicationServerKey property

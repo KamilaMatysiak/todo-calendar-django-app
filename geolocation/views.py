@@ -6,10 +6,16 @@ from .utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
 from geopy.distance import geodesic
 import folium
 from tasks.models import Task
-import json
-from webpush import send_user_notification
 from django.conf import settings
 from django.conf.urls.static import static
+
+from django.http.response import JsonResponse, HttpResponse
+from django.views.decorators.http import require_GET, require_POST
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
+from webpush import send_user_notification
+import json
 
 def location(request):
     """Shows a map with starting point of user, based on users location. Also shows the locations of tasks and their priorities.
@@ -20,6 +26,10 @@ def location(request):
         .html file with a map of user starting point and places with task assigned to them
 
     """
+    webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
+    vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
+    user = request.user
+
 
     # distance = None
     # destination = None
@@ -116,20 +126,44 @@ def location(request):
         # 'distance': distance,
         # 'destination': destination,
         # 'form': form,
+        user: user,
+        'vapid_key': vapid_key,
         'map': m,
     }
+
+    print(vapid_key, user)
 
     return render(request, 'geolocation/location.html', context)
 
 
+#def send_push(request):
+#    payload = {"head": "Welcome!", "body": "Hello World"}
+#    user = request.user
+#    print(user)
+#    send_user_notification(user=user, payload=payload, ttl=1000)
+
+@require_POST
+@csrf_exempt
 def send_push(request):
-    payload = {"head": "Welcome!", "body": "Hello World"}
-    user = request.user
-    print(user)
-    send_user_notification(user=user, payload=payload, ttl=1000)
+    print("aaaaa")
+    try:
+        body = request.body
+        data = json.loads(body)
+
+        if 'head' not in data or 'body' not in data or 'id' not in data:
+            return JsonResponse(status=400, data={"message": "Invalid data format"})
+
+        user_id = data['id']
+        user = get_object_or_404(User, pk=user_id)
+        payload = {'head': data['head'], 'body': data['body']}
+        send_user_notification(user=user, payload=payload, ttl=1000)
+
+        return JsonResponse(status=200, data={"message": "Web push successful"})
+    except TypeError:
+        return JsonResponse(status=500, data={"message": "An error occurred"})
 
 def home(request):
    webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
    vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
    user = request.user
-   return render(request, 'home.html', {user: user, 'vapid_key': vapid_key})
+   return render(request, 'location.html', {user: user, 'vapid_key': vapid_key})
