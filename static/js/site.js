@@ -1,5 +1,4 @@
 async function sendNotification(lat, lon) {
-    alert("not");
     const meta = document.querySelector('meta[name="user_id"]');
     const id = meta ? meta.content : null;
     const res = await fetch('send_push', {

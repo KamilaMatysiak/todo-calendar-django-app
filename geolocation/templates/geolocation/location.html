@@ -9,7 +9,7 @@
 
 <html>
 <head>
-    <title>vToDo - zadania</title>
+    <title>Lokalizacja - vToDo</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
@@ -22,7 +22,7 @@
 <div class="wrapper">
     <nav id="sidebar" class="small">
         <nav class="sidebar main">
-            <div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div>
+            <a href="{% url 'vtodo' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div></a>
             <a href="{% url 'date' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
             <a href="{% url 'list' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div></a>
             <a href="{% url 'location' %}"><div class="sidebar-btn active"><img id="map" src="{%static 'image/icons/map.svg' %}"></div></a>
@@ -67,8 +67,7 @@
         <!-- Create book button -->
 
     <div class="avatar">
-        {% avatar user %}
-            </a>
+         <a href="{% url 'profile' %}">{% avatar user %}</a>
             </div>
         </div>
     </nav>
