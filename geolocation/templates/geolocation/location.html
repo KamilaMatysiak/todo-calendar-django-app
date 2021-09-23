@@ -9,11 +9,6 @@
 
 <html>
 <head>
-    <meta name="vapid-key" content="{{ vapid_key }}">
-    {% if user.id %}
-        <meta name="user_id" content="{{ user.id }}">
-    {% endif %}
-
     <title>vToDo - zadania</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -101,12 +96,6 @@
 
 
         <div style="width: 90%; height: 80vh; margin: auto;">
-            <form id="send-push__form">
-                <p class="error"></p>
-                <input type="hidden" name="head" value="{{lat}}">
-                <input type="hidden" name="body" value="{{lon}}">
-                <button class="button_inverse">Send Me</button>
-            </form>
             <script>
                 function getCookie(name) {
                     let cookieValue = null;
@@ -197,9 +186,6 @@
             });
         });
     </script>
-
-    <script src="{% static '/js/registerSw.js' %}"></script>
-    <script src="{% static '/js/site.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 

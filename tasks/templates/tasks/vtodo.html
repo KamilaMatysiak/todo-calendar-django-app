@@ -58,14 +58,6 @@
                         <div class="modal-content"></div>
                     </div>
                 </div>
-
-                    <form id="send-push__form">
-                        <p class="error"></p>
-                        <input type="hidden" name="head" value="{{lat}}">
-                        <input type="hidden" name="body" value="{{lon}}">
-                        <button class="button inverse">Wyślij powiadomienie</button>
-                    </form>
-
                 <div class="avatar">
                     <a href="{% url 'profile' %}">
                         {% avatar user %}
@@ -113,6 +105,7 @@
     </script>
 <script src="{% static '/js/site.js' %}"></script>
 <script>
+
                 function getCookie(name) {
                     let cookieValue = null;
                     if (document.cookie && document.cookie !== "") {
@@ -159,6 +152,7 @@
                             var long = crd.longitude;
                             console.log("it worked!");
                             sendNotification(lati, long);
+
                         },
                         error: function (data) {
                             console.log("it didnt work");

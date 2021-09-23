@@ -119,35 +119,3 @@ def how_many_tasks(user, lat, lon):
         nearest_task = None
     print('jest')
     return (str(a), nearest_task, str(round(y, 1)))
-
-@require_POST
-@csrf_exempt
-def send_push(request):
-    try:
-        body = request.body
-        data = json.loads(body)
-
-        if 'head' not in data or 'body' not in data or 'id' not in data:
-            return JsonResponse(status=400, data={"message": "Invalid data format"})
-
-        user_id = data['id']
-        user = get_object_or_404(User, pk=user_id)
-        data_tasks = how_many_tasks(user, float(data['head']), float(data['body']))
-        print(data_tasks)
-        if data_tasks[1] != None:
-            payload = {'head': 'Zadań w okolicy: ' + data_tasks[0], 'body': 'Najbliższe zadanie: ' + data_tasks[1] + ' - ' +
-                data_tasks[2] + 'km stąd'}
-        else:
-            payload = {'head': 'Brak zadań w okolicy'}
-        print(payload)
-        send_user_notification(user=user, payload=payload, ttl=1000)
-
-        return JsonResponse(status=200, data={"message": "Web push successful"})
-    except TypeError:
-        return JsonResponse(status=500, data={"message": "An error occurred"})
-
-def home(request):
-   webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
-   vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
-   user = request.user
-   return render(request, 'location.html', {user: user, 'vapid_key': vapid_key})
