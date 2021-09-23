@@ -2,12 +2,12 @@
 {{form.media}}
 {% load avatar_tags %}
 {% load poll_extras %}
-{%load static%}
+{% load static%}
 {% load webpush_notifications %}
 
 {% block headcontent %}
     <title>vToDo - zadania</title>
-    {% webpush_header %}
+    {% comment %} {% webpush_header %} {% endcomment %}
 {% endblock%}
 
 {% block content %}
@@ -65,10 +65,7 @@
         </nav>
         <hr class="hr">
 
-        <div class="panel-container">
-             {% webpush_button with_class="btn btn-outline-info" %}
-            <p>button fajny</p>
-        </div>
+        <p>Wersja demonostracyjna</p>
     </div>
 </div>
 
