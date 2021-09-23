@@ -4,21 +4,21 @@ const registerSw = async () => {
         initialiseState(reg)
 
     } else {
-        showNotAllowed("You can't send push notifications")
+        showNotAllowed("Nie możesz wysyłać powiadomień")
     }
 };
 
 const initialiseState = (reg) => {
     if (!reg.showNotification) {
-        showNotAllowed('Showing notifications isn\'t supported ');
+        showNotAllowed('Powiadiomienia nie są wspierane przez przeglądarkę');
         return
     }
     if (Notification.permission === 'denied') {
-        showNotAllowed('You prevented us from showing notifications');
+        showNotAllowed('Zablokowano przesyłanie powiadomień');
         return
     }
     if (!'PushManager' in window) {
-        showNotAllowed("Push isn't allowed in your browser");
+        showNotAllowed("Powiadiomienia są zablokowane przez przeglądarkę");
         return
     }
     subscribe(reg);
@@ -49,8 +49,8 @@ const subscribe = async (reg) => {
         sendSubData(subscription);
         return;
     }
-
     const vapidMeta = document.querySelector('meta[name="vapid-key"]');
+    console.log(vapidMeta);
     const key = vapidMeta.content;
     console.log(key);
     const options = {

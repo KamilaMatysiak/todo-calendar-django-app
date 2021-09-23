@@ -1,4 +1,8 @@
 from django.urls import path, include
+from django.views.generic import TemplateView
+from django.conf import settings
+from django.conf.urls.static import static
+from django.conf.urls import url
 from . import views
 
 urlpatterns = [
@@ -9,5 +13,10 @@ urlpatterns = [
     path('update_task/<str:pk>/', views.EditTaskView.as_view(), name="update_task"),
     path('delete/<str:pk>/', views.DeleteTaskView.as_view(), name="delete"),
     path('task-list/finish', views.finishTask, name="finish-task"),
-    path('test', views.test, name="test")
-]
+    path('send_push', views.send_push),
+
+    path('test', views.test, name="test"),
+    path('serviceworker.js', TemplateView.as_view(template_name='serviceworker.js', content_type='application/x'
+                                                                                                  '-javascript')),
+
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

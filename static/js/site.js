@@ -1,6 +1,20 @@
-const pushForm = document.getElementById('send-push__form');
-const errorMsg = document.querySelector('.error');
+async function sendNotification(lat, lon) {
+    const meta = document.querySelector('meta[name="user_id"]');
+    const id = meta ? meta.content : null;
+    console.log("lov u");
+    const res = await fetch('send_push', {
+            method: 'POST',
+            body: JSON.stringify({lat, lon, id}),
+            headers: {
+                'content-type': 'application/json'
+            }
+        });
 
+        console.log(res.status);
+
+};
+
+/*
 pushForm.addEventListener('submit', async function (e) {
     e.preventDefault();
     const input = this[0];
@@ -26,6 +40,7 @@ pushForm.addEventListener('submit', async function (e) {
         });
 
         if (res.status === 200) {
+            alert(res.status);
             button.innerText = 'Send another !';
             button.disabled = false;
             input.value = '';
@@ -47,3 +62,5 @@ pushForm.addEventListener('submit', async function (e) {
         errorMsg.innerText = error;
     }
 });
+
+*/

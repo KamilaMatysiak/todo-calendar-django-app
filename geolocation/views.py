@@ -8,7 +8,6 @@ import folium
 from tasks.models import Task
 from django.conf import settings
 from django.conf.urls.static import static
-
 from django.http.response import JsonResponse, HttpResponse
 from django.views.decorators.http import require_GET, require_POST
 from django.shortcuts import get_object_or_404
@@ -29,8 +28,6 @@ def location(request, lat, lon):
         .html file with a map of user starting point and places with task assigned to them
 
     """
-    print(request.method)
-
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     print(is_ajax)
     if is_ajax:
@@ -61,7 +58,6 @@ def location(request, lat, lon):
     folium.Marker([lat, lon], tooltip='twoja lokalizacja',
             popup="Twoja lokalizacja",
             icon=folium.Icon('green')).add_to(m)
-
 
         # destination  marker
     tasks = (x for x in Task.objects.all() if x.user == request.user)

@@ -181,15 +181,15 @@ PWA_APP_ICONS = [
 ]
 PWA_APP_ICONS_APPLE = [
     {
-        'src': '/static/image/icon-192.png',
+        'src': '/static/image/favicon.png',
         'sizes': '192x192'
     }
 ]
 PWA_APP_SPLASH_SCREEN = [
     {
-        'src': '/static/image/icon-512.png',
+        'src': '/static/image/app-icon.png',
         'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
     }
 ]
 PWA_APP_DIR = 'ltr'
-PWA_APP_LANG = 'en-US'
+PWA_APP_LANG = 'pl-PL'

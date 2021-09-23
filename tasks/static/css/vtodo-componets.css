@@ -664,6 +664,12 @@ margin-left: 15px;
     cursor: pointer;
 }
 
+.line-text {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
 /* ---------------------------------------------------
     NAVBAR
 ----------------------------------------------------- */

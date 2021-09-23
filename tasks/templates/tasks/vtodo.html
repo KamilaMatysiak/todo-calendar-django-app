@@ -3,14 +3,17 @@
 {% load avatar_tags %}
 {% load poll_extras %}
 {% load static%}
-{% load webpush_notifications %}
 
 {% block headcontent %}
     <title>vToDo - zadania</title>
-    {% comment %} {% webpush_header %} {% endcomment %}
+    <meta name="vapid-key" content="{{ vapid_key }}">
+    {% if user.id %}
+        <meta name="user_id" content="{{ user.id }}">
+    {% endif %}
 {% endblock%}
 
 {% block content %}
+
 <div class="wrapper">
     <nav id="sidebar" class="small">
         <nav class="sidebar main">
@@ -39,9 +42,6 @@
         </div>
     </nav>
 
-
-
-
     <div id="content-sml">
             <div class="mobile-nav">
         <div><button id="sidebarCollapse" class="hamburger"><img src="{% static 'image/icons/hamburger.svg' %}"></button></div>
@@ -58,7 +58,14 @@
                         <div class="modal-content"></div>
                     </div>
                 </div>
-                <h4 style="margin: 20px 0;"> Hej, <b>{{user.username}}</b>!</h4>
+
+                    <form id="send-push__form">
+                        <p class="error"></p>
+                        <input type="hidden" name="head" value="{{lat}}">
+                        <input type="hidden" name="body" value="{{lon}}">
+                        <button class="button inverse">Wyślij powiadomienie</button>
+                    </form>
+
                 <div class="avatar">
                     <a href="{% url 'profile' %}">
                         {% avatar user %}
@@ -68,17 +75,20 @@
         </nav>
         <hr class="hr">
 
-    <br>
-        <div class="panel-container">
+        <div style="margin: 50px;">
+              <h2>Witaj, {{user.username}}!</h2>
             {% if count > 4 %}
-            <h3 class="center">MASZ <p style="color: orange; margin: 0 15px; font-weight: bold;">{{count}}</p> ZADAŃ NA DZIŚ</h3>
+            <h3 class="line-text">Masz <p style="color: orange; margin: 0 15px; font-weight: bold;">{{count}}</p> zadań na dziś</h3>
             {% elif count > 1 %}
-            <h3 class="center">MASZ <p style="color: orange; margin: 0 15px; font-weight: bold;">{{count}}</p> ZADANIA NA DZIŚ</h3>
+            <h3 class="line-text">Masz <p style="color: orange; margin: 0 15px; font-weight: bold;">{{count}}</p> zadania na dziś</h3>
             {% elif count == 1 %}
-            <h3 class="center">MASZ <p style="color: orange; margin: 0 15px; font-weight: bold;">{{count}}</p> ZADANIE NA DZIŚ</h3>
+            <h3 class="line-text">Masz <p style="color: orange; margin: 0 15px; font-weight: bold;">{{count}}</p> zadanie na dziś</h3>
             {% else %}
-            <h3 class="center">NIE MASZ ZADAŃ NA DZIŚ :)</h3>
+            <h3 class="line-text">NIE MASZ ZADAŃ NA DZIŚ :)</h3>
             {% endif %}
+            </div>
+        <div class="panel-container">
+
 
         </div>
     </div>
@@ -101,6 +111,70 @@
             });
         });
     </script>
+<script src="{% static '/js/site.js' %}"></script>
+<script>
+                function getCookie(name) {
+                    let cookieValue = null;
+                    if (document.cookie && document.cookie !== "") {
+                        const cookies = document.cookie.split(";");
+                        for (let i = 0; i < cookies.length; i++) {
+                            const cookie = cookies[i].trim();
+                            // Does this cookie string begin with the name we want?
+                            if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+
+                var options = {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
+                };
+
+                function success(pos) {
+                    var crd = pos.coords;
+
+                    console.log(`Latitude : ${crd.latitude}`);
+                    console.log(`Longitude: ${crd.longitude}`);
+
+                    $.ajax({
+                        method: 'POST',
+                        url: "{% url 'vtodo' %}",
+                        contentType: 'application/json; charset=utf-8',
+                        data:
+                            JSON.stringify({
+                                'lon': crd.longitude,
+                                'lat': crd.latitude,
+                            }),
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRFToken": getCookie("csrftoken"),
+                        },
+                        success: function (data) {
+                            var lati = crd.latitude;
+                            var long = crd.longitude;
+                            console.log("it worked!");
+                            sendNotification(lati, long);
+                        },
+                        error: function (data) {
+                            console.log("it didnt work");
+                        }
+                    });
+
+                }
+
+                function error(err) {
+                console.warn(`ERROR(${err.code}): ${err.message}`);
+                }
+
+                const watchPosition = navigator.geolocation.getCurrentPosition(success, error, options);
+
+            </script>
+    <script src="{% static '/js/registerSw.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script><script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
 {% endblock %}
