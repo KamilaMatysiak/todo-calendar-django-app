@@ -2,9 +2,6 @@ const pushForm = document.getElementById('send-push__form');
 const errorMsg = document.querySelector('.error');
 
 pushForm.addEventListener('submit', async function (e) {
-
-
-
     e.preventDefault();
     const input = this[0];
     const textarea = this[1];

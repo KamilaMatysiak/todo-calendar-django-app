@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.conf.urls.static import static
+from django.conf.urls import url
 from django.urls import path, include
 from . import views
 
@@ -7,7 +8,8 @@ from .views import send_push, home
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path('', views.location, name="location"),
+    url('^(?P<lat>\d+\.?\d*)_(?P<lon>\d+\.?\d*)$', views.location, name="location-2"),
+    path('', views.start, name="location"),
     path('send_push', send_push, name="send"),
     path('webpush/', include('webpush.urls')),
     path('', home),

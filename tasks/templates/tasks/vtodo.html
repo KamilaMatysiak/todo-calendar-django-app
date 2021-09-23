@@ -2,12 +2,12 @@
 {{form.media}}
 {% load avatar_tags %}
 {% load poll_extras %}
-{%load static%}
+{% load static%}
 {% load webpush_notifications %}
 
 {% block headcontent %}
     <title>vToDo - zadania</title>
-    {% webpush_header %}
+    {% comment %} {% webpush_header %} {% endcomment %}
 {% endblock%}
 
 {% block content %}
