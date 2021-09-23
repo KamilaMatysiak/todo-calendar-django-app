@@ -9,8 +9,6 @@ async function sendNotification(lat, lon) {
             }
         });
 
-        console.log(res.status);
-
 };
 
 /*

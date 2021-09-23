@@ -29,27 +29,18 @@ def location(request, lat, lon):
 
     """
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-    print(is_ajax)
     if is_ajax:
         if request.method == 'POST':
-            print('1')
-            print(lat)
-            print(lon)
             data = json.load(request)
             n_lat = data.get('lat')
             n_lon = data.get('lon')
             if n_lat != lat or n_lon != lon:
                 lat = n_lat
                 lon = n_lon
-                print('2')
-                print(lat)
-                print(lon)
                 return redirect('location-2', n_lat, n_lon)
         else:
             return HttpResponse(json.dumps([{'lat':lat, 'lon':lon}]))
 
-    print('lat:', lat)
-    print('lon:', lon)
 
     m = folium.Map(width='100%', height='100%',
             location=get_center_coordinates(lat, lon),
@@ -91,9 +82,9 @@ def location(request, lat, lon):
 
 def start(request):
     ip_ = get_ip_address(request)
-    print(ip_)
-    ip = '109.173.220.158'
-    country, city, lat, lon = get_geo(ip)
+    #print(ip_)
+    #ip = '109.173.220.158'
+    country, city, lat, lon = get_geo(ip_)
     return redirect('location-2', lat, lon)
 
 
@@ -117,5 +108,4 @@ def how_many_tasks(user, lat, lon):
                     nearest_task = x.title
     if not nearest_task:
         nearest_task = None
-    print('jest')
     return (str(a), nearest_task, str(round(y, 1)))
