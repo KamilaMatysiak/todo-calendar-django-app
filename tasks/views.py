@@ -5,6 +5,7 @@ from django.views.decorators.http import require_POST
 
 from .models import *
 from .forms import *
+from geolocation.views import *
 import datetime
 from django.urls import reverse_lazy
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalDeleteView, BSModalUpdateView
@@ -60,7 +61,13 @@ def task_list(request):
 
 
 def index(request):
-    return render(request, 'tasks/vtodo.html')
+    count = 0
+    tasks = [x for x in Task.objects.all() if x.user == request.user]
+    for x in tasks:
+        if x.date == datetime.date.today():
+            count = count+1
+    context = {"tasks": tasks, "count": count}
+    return render(request, 'tasks/vtodo.html', context)
 
 
 class AddTaskView(BSModalCreateView):

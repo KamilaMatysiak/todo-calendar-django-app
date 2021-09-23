@@ -39,6 +39,9 @@
         </div>
     </nav>
 
+
+
+
     <div id="content-sml">
             <div class="mobile-nav">
         <div><button id="sidebarCollapse" class="hamburger"><img src="{% static 'image/icons/hamburger.svg' %}"></button></div>
@@ -65,9 +68,18 @@
         </nav>
         <hr class="hr">
 
+    <br>
         <div class="panel-container">
-             {% webpush_button with_class="btn btn-outline-info" %}
-            <p>button fajny</p>
+            {% if count > 4 %}
+            <h3 class="center">MASZ <p style="color: orange; margin: 0 15px; font-weight: bold;">{{count}}</p> ZADAŃ NA DZIŚ</h3>
+            {% elif count > 1 %}
+            <h3 class="center">MASZ <p style="color: orange; margin: 0 15px; font-weight: bold;">{{count}}</p> ZADANIA NA DZIŚ</h3>
+            {% elif count == 1 %}
+            <h3 class="center">MASZ <p style="color: orange; margin: 0 15px; font-weight: bold;">{{count}}</p> ZADANIE NA DZIŚ</h3>
+            {% else %}
+            <h3 class="center">NIE MASZ ZADAŃ NA DZIŚ :)</h3>
+            {% endif %}
+
         </div>
     </div>
 </div>
