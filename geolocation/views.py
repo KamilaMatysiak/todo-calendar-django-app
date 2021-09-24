@@ -56,7 +56,7 @@ def location(request, lat, lon):
 
     color = {
         'H': 'red',
-        'M': 'orange',
+        'J': 'orange',
         'L': 'lightgray',
         'N': 'white'
     }
