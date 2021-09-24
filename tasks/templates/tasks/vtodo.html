@@ -2,7 +2,7 @@
 {{form.media}}
 {% load avatar_tags %}
 {% load poll_extras %}
-{% load static%}
+{% load static %}
 
 {% block headcontent %}
     <title>Strona Główna - vToDo</title>
@@ -103,7 +103,10 @@
             });
         });
     </script>
-<script src="{% static '/js/site.js' %}"></script>
+    <script src="{% static '/js/site.js' %}"></script>
+    <script src="{% static '/js/registerSW.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script><script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+
 <script>
 
                 function getCookie(name) {
@@ -168,7 +171,5 @@
                 const watchPosition = navigator.geolocation.getCurrentPosition(success, error, options);
 
             </script>
-    <script src="{% static '/js/registerSw.js' %}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script><script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
 {% endblock %}
