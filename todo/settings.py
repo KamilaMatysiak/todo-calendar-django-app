@@ -24,8 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '@&ivg06$5v6#yo+^*y9ixt^^a(7bncddv$p2p7k2d#+@iaoc)i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = getenv("IS_DEVELOPMENT", True)
-DEBUG = True
+DEBUG = getenv("IS_DEVELOPMENT", True)
+#DEBUG = True
 #ALLOWED_HOSTS = ['127.0.0.1', '192.168.100.100', 'localhost', '192.168.100.24', '192.168.18.191', 'vtodo.pl', 'vitodo.pl', 'h22.seohost.pl']
 #ALLOWED_HOSTS = getenv("APP_HOST")
 ALLOWED_HOSTS = ['*']

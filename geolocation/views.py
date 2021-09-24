@@ -1,6 +1,7 @@
 from django.shortcuts import redirect, render, get_object_or_404
 # from .models import Measurement
 # from .forms import MeasurementModelForm
+from geoip2.errors import AddressNotFoundError
 from geopy.geocoders import Nominatim
 from .utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
 from geopy.distance import geodesic
@@ -81,11 +82,15 @@ def location(request, lat, lon):
 
 
 def start(request):
-    ip_ = get_ip_address(request)
-    #print(ip_)
-    #ip = '109.173.220.158'
-    country, city, lat, lon = get_geo(ip_)
+    try:
+        ip = get_ip_address(request)
+        country, city, lat, lon = get_geo(ip)
+    except AddressNotFoundError:
+        ip = '109.173.220.158'
+        country, city, lat, lon = get_geo(ip)
+
     return redirect('location-2', lat, lon)
+
 
 
 #def send_push(request):

@@ -648,6 +648,28 @@ td
     width: 100%;
 }
 
+.header-container {
+width: 88%;
+margin-left: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+}
+
+.link {
+    text-decoration: none;
+    color: orange;
+    font-weight: bold;
+    margin: 0;
+    cursor: pointer;
+}
+
+.line-text {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
 /* ---------------------------------------------------
     NAVBAR
 ----------------------------------------------------- */
