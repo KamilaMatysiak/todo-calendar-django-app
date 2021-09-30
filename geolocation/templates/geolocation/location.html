@@ -157,7 +157,8 @@
                 console.warn(`ERROR(${err.code}): ${err.message}`);
                 }
 
-                const watchPosition = navigator.geolocation.getCurrentPosition(success, error, options);
+                const watchPosition = navigator.geolocation.watchPosition(success, error, options);
+
 
             </script>
             {{map | safe}}
