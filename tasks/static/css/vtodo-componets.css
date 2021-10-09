@@ -403,7 +403,7 @@ text-decoration: none;
    padding-bottom: 10px;
 }
 
-#add-category {
+.add-category {
     cursor: pointer;
 }
 /*-----------------------------------------------------

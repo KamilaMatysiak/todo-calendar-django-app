@@ -22,7 +22,7 @@
             <ul class="menu-buttons">
                 <li class="active"><a class="active" href=#>WSZYSTKIE</a></li>
                     {% for cat in categories %}
-                        <li><a href="{% url 'category' cat.title %}"> {{cat}} </a></li>
+                        <li><a href="{% url 'category' cat.id %}"> {{cat}} </a></li>
                     {% endfor %}
                 <li class="add-category"><a>+ Dodaj kategorię</a></li>
             </ul>
@@ -43,7 +43,7 @@
                     <ul class="list-unstyled">
                         <li><a href="{% url 'list'%}">WSZYSTKIE</a></li>
                         {% for cat in categories %}
-                            <li><a href="{% url 'category' cat.title %}"> {{cat}} </a></li>
+                            <li><a href="{% url 'category' cat.id %}"> {{cat}} </a></li>
                         {% endfor %}
 
                     </ul>

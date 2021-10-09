@@ -53,10 +53,10 @@ def task_list(request):
     context = {"categories": categories, "tasks": tasks, 'form': form}
     return render(request, 'tasks/task-list.html', context)
 
-def categoryView(request, title):
-    category = Category.objects.get(title=title)
+def categoryView(request, pk):
+    category = Category.objects.get(id=pk)
     categories = [x for x in Category.objects.all() if x.user == request.user]
-    tasks = [x for x in Task.objects.all() if x.user == request.user and x.category is not None and x.category.title == category.title]
+    tasks = [x for x in Task.objects.all() if x.user == request.user and x.category is not None and x.category.id == category.id]
 
     form = TaskModelForm()
 
@@ -160,8 +160,8 @@ class AddCategoryView(BSModalCreateView):
 
 class EditCategoryView(BSModalUpdateView):
     model = Category
-    template_name = 'tasks/update_category.html'
-    form_class = TaskModelForm
+    template_name = 'tasks/edit_cat.html'
+    form_class = CategoryModelForm
     success_message = "Nazwa kategorii zmieniona pomyślnie"
     success_url = reverse_lazy('list')
 

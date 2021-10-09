@@ -28,7 +28,7 @@
                     {% if category == cat.title %}
                         <li class="active"><a class="active" href=#> {{cat}} </a></li>
                     {% else %}
-                        <li><a href="{% url 'category' cat.title %}"> {{cat}} </a></li>
+                        <li><a href="{% url 'category' cat.pk %}"> {{cat}} </a></li>
                     {% endif %}
                     {% endfor %}
                     <li class="add-category"><a>+ Dodaj kategorię</a></li>
@@ -55,7 +55,7 @@
                         {% if category == cat.title %}
                             <li class="active"><a class="active" href=#> {{cat}} </a></li>
                         {%else%}
-                            <li><a href="{% url 'category' cat.title %}"> {{cat}} </a></li>
+                            <li><a href="{% url 'category' cat.pk %}"> {{cat}} </a></li>
                         {% endif %}
                         {% endfor %}
                         <li class="add-category"><a>+ Dodaj kategorię</a></li>
@@ -78,8 +78,8 @@
         <nav class="navbar">
             <div class="left">
                 <h1>{{category.title}}</h1>
-                    <button class="button category-edit small-button" data-toggle="modal" data-form-url=""><img src="{% static 'image/icons/outline-edit-icon.svg'%}" alt="Edytuj"></button>
-                    <button type="button" class="delete-category button category-edit small-button" data-form-url="{% url 'delete_cat' category.title %}">
+                    <button class="button category-edit small-button" data-toggle="modal" data-form-url="{% url 'edit_cat' category.id %}"><img src="{% static 'image/icons/outline-edit-icon.svg'%}" alt="Edytuj"></button>
+                    <button type="button" class="delete-category button category-edit small-button" data-form-url="{% url 'delete_cat' category.id %}">
                         <img src="{% static 'image/icons/outline-delete-icon.svg'%}" alt="Usuń">
                     </button>
             </div>
