@@ -54,9 +54,9 @@ def task_list(request):
     return render(request, 'tasks/task-list.html', context)
 
 def categoryView(request, title):
-
+    category = Category.objects.get(title=title)
     categories = [x for x in Category.objects.all() if x.user == request.user]
-    tasks = [x for x in Task.objects.all() if x.user == request.user and x.category.title == title]
+    tasks = [x for x in Task.objects.all() if x.user == request.user and x.category is not None and x.category.title == category.title]
 
     form = TaskModelForm()
 
@@ -67,7 +67,7 @@ def categoryView(request, title):
             form.save()
         return redirect('/')
 
-    context = {"categories": categories, "tasks": tasks, 'form': form, 'category': title}
+    context = {"categories": categories, "tasks": tasks, 'form': form, 'category': category}
     return render(request, 'tasks/category_template.html', context)
 
 def index(request):
@@ -156,4 +156,17 @@ class AddCategoryView(BSModalCreateView):
     template_name = 'tasks/add_category.html'
     form_class = CategoryModelForm
     success_message = "Dodano kategorię"
+    success_url = reverse_lazy('list')
+
+class EditCategoryView(BSModalUpdateView):
+    model = Category
+    template_name = 'tasks/update_category.html'
+    form_class = TaskModelForm
+    success_message = "Nazwa kategorii zmieniona pomyślnie"
+    success_url = reverse_lazy('list')
+
+class DeleteCategoryView(BSModalDeleteView):
+    template_name = 'tasks/delete-category.html'
+    model = Category
+    success_message = "Pomyślnie usunięto zadanie"
     success_url = reverse_lazy('list')
