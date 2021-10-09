@@ -39,6 +39,7 @@ def task_list(request):
 
     """
     tasks = [x for x in Task.objects.all() if x.user == request.user]
+    categories = [x for x in Category.objects.all() if x.user == request.user]
     #tasks = Task.objects.all()
     form = TaskModelForm()
 
@@ -49,9 +50,25 @@ def task_list(request):
             form.save()
         return redirect('/')
 
-    context = {"tasks": tasks, 'form': form}
+    context = {"categories": categories, "tasks": tasks, 'form': form}
     return render(request, 'tasks/task-list.html', context)
 
+def categoryView(request, title):
+
+    categories = [x for x in Category.objects.all() if x.user == request.user]
+    tasks = [x for x in Task.objects.all() if x.user == request.user and x.category.title == title]
+
+    form = TaskModelForm()
+
+    if request.method == 'POST':
+        form = TaskModelForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+        return redirect('/')
+
+    context = {"categories": categories, "tasks": tasks, 'form': form, 'category': title}
+    return render(request, 'tasks/category_template.html', context)
 
 def index(request):
     return render(request, 'tasks/vtodo.html')
@@ -134,3 +151,9 @@ def finishTask(request):
 
     task.save()
     return HttpResponse('')
+
+class AddCategoryView(BSModalCreateView):
+    template_name = 'tasks/add_category.html'
+    form_class = CategoryModelForm
+    success_message = "Dodano kategorię"
+    success_url = reverse_lazy('list')

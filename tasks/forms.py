@@ -23,3 +23,10 @@ class TaskModelForm(BSModalModelForm):
             'time': ('Czas'),
             'priority': ('Priorytet'),
         }
+
+class CategoryModelForm(BSModalModelForm):
+
+    class Meta:
+        model = Category
+        fields = ['title']
+        labels = {'title': ('Nazwa kategorii:')}

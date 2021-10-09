@@ -20,10 +20,14 @@
         <nav class="sidebar menu">
             <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>LISTA ZADAŃ</h1></div>
             <ul class="menu-buttons">
-                <li class="active"><a class="active" href=#>WSZYSTKIE</a></li>
-                    {% for cat in categories %}
-                        <li><a href="{% url 'category' cat.title %}"> {{cat}} </a></li>
-                    {% endfor %}
+                <li><a href="{% url 'list'%}">WSZYSTKIE</a></li>
+                {% for cat in categories %}
+                {% if category == cat.title %}
+                    <li class="active"><a class="active" href=#> {{cat}} </a></li>
+                {% else %}
+                    <li><a href="{% url 'category' cat.title %}"> {{cat}} </a></li>
+                {% endif %}
+                {% endfor %}
                 <li class="add-category"><a>+ Dodaj kategorię</a></li>
             </ul>
         </nav>
@@ -43,9 +47,13 @@
                     <ul class="list-unstyled">
                         <li><a href="{% url 'list'%}">WSZYSTKIE</a></li>
                         {% for cat in categories %}
+                        {% if category == cat.title %}
+                            <li class="active"><a class="active" href=#> {{cat}} </a></li>
+                        {%else%}
                             <li><a href="{% url 'category' cat.title %}"> {{cat}} </a></li>
+                        {% endif %}
                         {% endfor %}
-
+                        <li class="add-category"><a>+ Dodaj kategorię</a></li>
                     </ul>
                 </li>
                 <li><a href="{% url 'location' %}"><img src="{%static 'image/icons/mobile/map-icon-black.svg' %}"> Mapa</a></li>
@@ -64,7 +72,7 @@
         </div>
         <nav class="navbar">
             <div class="left">
-                <h1>WSZYSTKIE</h1>
+                <h1>{{category}}</h1>
             </div>
             <div class="right">
                 <div class="modal fade" tabindex="-1" role="dialog" id="modal">

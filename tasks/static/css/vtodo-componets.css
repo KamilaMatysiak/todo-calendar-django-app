@@ -397,6 +397,9 @@ text-decoration: none;
     background: #eee;
 }
 
+#add-category {
+    cursor: pointer;
+}
 /*-----------------------------------------------------
     SIDEBAR MOBILE
 ------------------------------------------------------*/
