@@ -18,10 +18,11 @@ class EventModelForm(BSModalModelForm):
         fields = ['title', 'description', 'date_start', 'time_start', 'time_end', 'date_end']
         widgets = {
             #'x': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl"}),
-            'date_start': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl", "minDate": datetime.now().strftime("%m-%d-%Y")}).start_of('event'),
-            'date_end': DatePickerInput(options={"locale": "pl"}).end_of('event'),
-            'time_start': TimePickerInput(),
+            'date_start': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl", "useCurrent": False}),
+            'date_end': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl", "useCurrent": False}),
             'time_end': TimePickerInput(),
+            'time_start': TimePickerInput(),
+
         }
         labels = {
             'title': ('Nazwa spotkania'),

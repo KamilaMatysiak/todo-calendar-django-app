@@ -14,7 +14,9 @@
 
       <div class="modal-body">
         {% for field in form %}
-          <div class="form-group{% if field.errors %} invalid{% endif %}">
+          <div class="form-group{% if field.errors %} invalid{% endif %} {% if field.id_for_label == id_date_start %} date {%endif%}">
+
+
 
             {{ field | as_crispy_field }}
             {% for error in field.errors %}
@@ -30,3 +32,12 @@
       </div>
 
     </form>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#id_date_start").on("dp.change", function (e) {
+                $('#id_date_end').data("DatePicker").minDate(e.date);
+                $('#id_date_end').data("DatePicker").date(e.date);
+            });
+        });
+    </script>
