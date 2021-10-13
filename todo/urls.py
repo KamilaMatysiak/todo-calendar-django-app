@@ -26,6 +26,7 @@ urlpatterns = [
     path('', include('pwa.urls')),
     path('register/', user_views.SignUpView.as_view(), name='register'),
     path('profile/', user_views.profile, name='profile'),
+    path('changepass', user_views.change_password, name="change"),
     path('avatar/', include('avatar.urls')),
     path('login/', user_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),

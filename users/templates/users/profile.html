@@ -64,7 +64,7 @@
                     <p>Data urodzenia:</p>
                     <p>Adres e-mail: <b>{{user.email}}</b></p>
                     <p>Numer telefonu:</p>
-                    <p>Hasło: <b>********</b> <button class="button inverse borderless">ZMIEŃ HASŁO</button></p>
+                    <p>Hasło: <b>********</b> <a href="{% url 'change' %}"><button class="button inverse borderless">ZMIEŃ HASŁO</button></a></p>
                 </div>
                 <button class="button add">Edytuj konto</button>
                 <button class="button inverse borderless" style="margin-top: 15px; color:#eb5757">Usuń konto</button>
@@ -75,11 +75,9 @@
     <script type="text/javascript">
     $(document).ready(function() {
 
-        $("#add-task").modalForm({
-            formURL: "{% url 'add_task' %}"
-        });
 
-        $(".delete-task").each(function () {
+
+        $(".delete-account").each(function () {
             $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
         });
     });
