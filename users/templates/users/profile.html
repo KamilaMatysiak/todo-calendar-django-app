@@ -42,7 +42,11 @@
             <ul class="list-unstyled"><li><a href="{% url 'logout' %}"><img src="{%static 'image/icons/mobile/logout.svg' %}"> Wyloguj się</a></li></ul>
         </div>
     </nav>
-
+                <div class="modal fade" tabindex="-1" role="dialog" id="modal">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content"></div>
+                  </div>
+                </div>
     <div id="content-sml">
         <a id="logout" href="{% url 'logout' %}"><img src="{%static 'image/icons/mobile/logout.svg' %}"> Wyloguj się</a>
         <div class="mobile-nav">
@@ -64,10 +68,10 @@
                     <p>Data urodzenia:</p>
                     <p>Adres e-mail: <b>{{user.email}}</b></p>
                     <p>Numer telefonu:</p>
-                    <p>Hasło: <b>********</b> <a href="{% url 'change' %}"><button class="button inverse borderless">ZMIEŃ HASŁO</button></a></p>
+                    <p>Hasło: <b>********</b> <button class="button inverse borderless" id="change-password">ZMIEŃ HASŁO</button></p>
                 </div>
                 <button class="button add">Edytuj konto</button>
-                <button class="button inverse borderless" style="margin-top: 15px; color:#eb5757">Usuń konto</button>
+                <button class="button inverse borderless delete-account" style="margin-top: 15px; color:#eb5757">Usuń konto</button>
             </div>
         </div>
     </div>
@@ -75,7 +79,9 @@
     <script type="text/javascript">
     $(document).ready(function() {
 
-
+        $("#change-password").modalForm({
+            formURL: "{% url 'change' %}"
+        });
 
         $(".delete-account").each(function () {
             $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});

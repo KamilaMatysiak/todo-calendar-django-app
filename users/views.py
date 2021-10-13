@@ -1,4 +1,4 @@
-from bootstrap_modal_forms.generic import BSModalCreateView, BSModalLoginView
+from bootstrap_modal_forms.generic import BSModalCreateView, BSModalLoginView, BSModalUpdateView
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -29,15 +29,19 @@ class LoginView(BSModalLoginView):
 
 def change_password(request):
     if request.method == 'POST':
+        print("post")
         form = PasswordChangeForm(request.user, request.POST)
         if form.is_valid():
             user = form.save()
             update_session_auth_hash(request, user)
             messages.success(request, _('Your password was successfully updated!'))
+            print("form-valid");
             return redirect('profile/')
         else:
+            print("form not-valid")
             messages.error(request, _('Please correct the error below.'))
     else:
+        print("not-post");
         form = PasswordChangeForm(request.user)
     return render(request, 'users/change_password.html', {
         'form': form
