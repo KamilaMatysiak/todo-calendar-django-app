@@ -95,11 +95,48 @@
         });
         </script>
     <script type="text/javascript">
+        function validate() {
+            var start = $('#id_date_start').data("DateTimePicker");
+            var end = $('#id_date_end').data("DateTimePicker");
+            var tstart = $('#id_time_start').data("DateTimePicker");
+            var tend = $('#id_time_end').data("DateTimePicker");
+
+            var time = "23:59";
+            var maxTime = moment(time, 'HH:mm');
+            console.log(maxTime);
+
+            end.minDate(start.date());
+
+            if(end.date().isBefore(start.date())) {
+                end.date(start.date());
+            }
+
+            if(end.date().isSame(start.date())) {
+                if(tend.date().isBefore(tstart.date())) {
+                    tend.date(tstart.date());
+                }
+                if(tend.date().isAfter(maxTime)) {
+                    tend.date('23:59');
+                }
+            }
+}
+
         $(document).ready(function() {
             $("#id_date_start").on("dp.change", function (e) {
-                $('#id_date_end').data("DateTimePicker").minDate(e.date);
-                $('#id_date_end').data("DateTimePicker").date(e.date);
-            });
+                validate();
+                });
+
+            $("#id_time_start").on("dp.change", function (e) {
+               validate();
+               });
+
+            $("#id_date_end").on("dp.change", function (e) {
+               validate();
+               });
+
+            $("#id_time_end").on("dp.change", function (e) {
+               validate();
+               });
         });
     </script>
 
