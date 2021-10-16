@@ -22,6 +22,7 @@ class TaskModelForm(BSModalModelForm):
             'date': ('Data'),
             'time': ('Czas'),
             'priority': ('Priorytet'),
+            'category': ('Kategoria'),
         }
 
 class CategoryModelForm(BSModalModelForm):

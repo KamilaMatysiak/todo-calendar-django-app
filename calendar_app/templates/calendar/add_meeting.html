@@ -34,10 +34,21 @@
     </form>
 
     <script type="text/javascript">
-        $(function () {
+        $(document).ready(function() {
             $("#id_date_start").on("dp.change", function (e) {
                 $('#id_date_end').data("DateTimePicker").minDate(e.date);
                 $('#id_date_end').data("DateTimePicker").date(e.date);
+            });
+
+            $("#id_time_start").on("dp.change", function (e) {
+                if ($('#id_date_start').date == $('#id_date_end').date) {
+                    $('#id_time_end').data("DateTimePicker").minDate(e.date);
+                    $('#id_time_end').data("DateTimePicker").date(e.date);
+                } else {
+                    $('#id_time_end').data("DateTimePicker").minDate(null);
+                }
+
+                $('#id_date_end').data("DateTimePicker").minDate($('#id_date_start').date);
             });
         });
     </script>
