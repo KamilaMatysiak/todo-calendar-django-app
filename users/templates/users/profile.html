@@ -71,7 +71,7 @@
                     <p>Hasło: <b>********</b> <button class="button inverse borderless" id="change-password">ZMIEŃ HASŁO</button></p>
                 </div>
                 <button class="button add">Edytuj konto</button>
-                <button class="button inverse borderless delete-account" style="margin-top: 15px; color:#eb5757">Usuń konto</button>
+                <button class="button inverse borderless delete-account" style="margin-top: 15px; color:#eb5757" data-form-url="{% url 'deleteac' user.id %}">Usuń konto</button>
             </div>
         </div>
     </div>

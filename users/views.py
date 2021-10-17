@@ -1,4 +1,4 @@
-from bootstrap_modal_forms.generic import BSModalCreateView, BSModalLoginView, BSModalUpdateView
+from bootstrap_modal_forms.generic import BSModalCreateView, BSModalLoginView, BSModalUpdateView, BSModalDeleteView
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -9,6 +9,8 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext as _
+from django.http import Http404
+from .models import UserProfile
 
 from .forms import UserRegisterForm, CustomAuthenticationForm
 
@@ -26,7 +28,7 @@ class LoginView(BSModalLoginView):
     success_message = 'Zalogowano'
     success_url = reverse_lazy('index')
 
-
+@login_required
 def change_password(request):
     if request.method == 'POST':
         print("post")
@@ -41,11 +43,25 @@ def change_password(request):
             print("form not-valid")
             messages.error(request, _('Please correct the error below.'))
     else:
-        print("not-post");
+        print("not-post")
         form = PasswordChangeForm(request.user)
     return render(request, 'users/change_password.html', {
         'form': form
     })
+
+class DeleteUserView(BSModalDeleteView):
+    template_name = 'users/delete_user.html'
+    model = User
+    success_message = "Usunięto konto"
+    success_url = reverse_lazy('vtodo')
+
+    def get_object(self, queryset=None):
+        """ Hook to ensure object is owned by request.user. """
+        obj = super(DeleteUserView, self).get_object()
+        if not obj == self.request.user:
+            raise Http404
+        return obj
+
 
 
 @login_required
