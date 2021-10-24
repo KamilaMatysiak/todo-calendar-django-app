@@ -3,16 +3,18 @@ from datetime import datetime, date, time
 from django.forms import CheckboxInput
 from django.contrib.auth import get_user_model
 
-
 # Create your models here.
 User = get_user_model()
 
 
+class Category(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=1)
+    title = models.CharField(max_length=30, primary_key=False)
+
+    def __str__(self):
+        return f"{self.title}"
 
 # Create your models here.
-
-
-
 class Task(models.Model):
     """A model for creating new task. Stores:
      user,
@@ -49,10 +51,13 @@ class Task(models.Model):
     )
     complete = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, default=1)
 
     def __str__(self):
         """Returns title of task"""
         return f"{self.title}"
 
     class Meta:
-        ordering=['complete', 'priority','date','title','localization']
+        ordering = ['complete', 'priority', 'date', 'title', 'localization']
+
+

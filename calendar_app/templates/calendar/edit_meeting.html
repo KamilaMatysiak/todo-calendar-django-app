@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
-{{form.media}}
-{%load static%}
+{% load bootstrap4 %}
 {% load crispy_forms_tags %}
+
+{%load static%}
 
 {% block content %}
 
@@ -22,21 +23,17 @@
                 </div>
             </div>
 
-            <form method="POST" action="">
-                {% csrf_token %}
+
                 <nav class="navbar">
+
                     <div class="left">
-                        <form >
-                            <input type="button" class="borderless close" value="X" style="position: absolute; top: 20px; left: 25px;" onclick="history.back()">
-                        </form>
+                        <input type="button" class="borderless close" value="X" style="position: absolute; top: 20px; left: 25px;" onclick="history.back()">
                     </div>
 
                     <div class="right">
-                        <!-- Create book button -->
-                        <button id="save-changes" class="button add" type="submit" name="Update Meeting">ZAPISZ</button>
-                        <!--<form action="" method="post"> -->
-                        <button id="delete-event" data-form-url="{% url 'delete_meeting' id %}" class="button delete delete-event" type="button" name="button">USUŃ</button>
-
+                        <form method="POST" action="">
+                            <button id="delete-event" data-form-url="{% url 'delete_meeting' id %}" class="button delete delete-event" type="button" name="button">Usuń spotkanie</button>
+                        </form>
                         <div class="avatar">
                             <a href="{% url 'profile' %}">
                             {% if user.avatar == None %}
@@ -53,6 +50,9 @@
 
                 <div class="panel-container">
                     <div class="panel">
+                        <form method="POST" action="">
+                            {% csrf_token %}
+                                        {{form.media}}
                         <div class="navbar"><h2>Edytuj spotkanie:</h2></div>
                         <hr class="hr">
                         <div class="modal-body">
@@ -65,7 +65,12 @@
                                 </div>
                             {% endfor %}
                         </div>
-                                            <!--</form> -->
+                              <div class="modal-footer">
+                        <button class="borderless inverse" onclick="history.back()">Anuluj</button>
+                        <button class="button add" type="submit" name="Update Meeting">Zapisz zmiany</button>
+                              </div>
+
+            </form>
                     </div>
 
 
@@ -75,7 +80,7 @@
                         <button class="button add" style="width: 50%; align-self: center;">DODAJ ZADANIA</button>
                     </div>
                 </div>
-            </form>
+            <!--</form>-->
 
 
         </div>
@@ -89,6 +94,52 @@
             });
         });
         </script>
+    <script type="text/javascript">
+        function validate() {
+            var start = $('#id_date_start').data("DateTimePicker");
+            var end = $('#id_date_end').data("DateTimePicker");
+            var tstart = $('#id_time_start').data("DateTimePicker");
+            var tend = $('#id_time_end').data("DateTimePicker");
+
+            var time = "23:59";
+            var maxTime = moment(time, 'HH:mm');
+            console.log(maxTime);
+
+            end.minDate(start.date());
+
+            if(end.date().isBefore(start.date())) {
+                end.date(start.date());
+            }
+
+            if(end.date().isSame(start.date())) {
+                if(tend.date().isBefore(tstart.date())) {
+                    tend.date(tstart.date());
+                }
+                if(tend.date().isAfter(maxTime)) {
+                    tend.date('23:59');
+                }
+            }
+}
+
+        $(document).ready(function() {
+            $("#id_date_start").on("dp.change", function (e) {
+                validate();
+                });
+
+            $("#id_time_start").on("dp.change", function (e) {
+               validate();
+               });
+
+            $("#id_date_end").on("dp.change", function (e) {
+               validate();
+               });
+
+            $("#id_time_end").on("dp.change", function (e) {
+               validate();
+               });
+        });
+    </script>
+
         <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
 {% endblock %}

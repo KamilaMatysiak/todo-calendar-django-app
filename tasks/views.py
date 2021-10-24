@@ -36,7 +36,8 @@ def test(request):
 @login_required
 def task_list(request):
     tasks = [x for x in Task.objects.all() if x.user == request.user]
-    # tasks = Task.objects.all()
+    categories = [x for x in Category.objects.all() if x.user == request.user]
+    #tasks = Task.objects.all()
     form = TaskModelForm()
 
     if request.method == 'POST':
@@ -46,9 +47,25 @@ def task_list(request):
             form.save()
         return redirect('/')
 
-    context = {"tasks": tasks, 'form': form}
+    context = {"categories": categories, "tasks": tasks, 'form': form}
     return render(request, 'tasks/task-list.html', context)
 
+def categoryView(request, pk):
+    category = Category.objects.get(id=pk)
+    categories = [x for x in Category.objects.all() if x.user == request.user]
+    tasks = [x for x in Task.objects.all() if x.user == request.user and x.category is not None and x.category.id == category.id]
+
+    form = TaskModelForm()
+
+    if request.method == 'POST':
+        form = TaskModelForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+        return redirect('/')
+
+    context = {"categories": categories, "tasks": tasks, 'form': form, 'category': category}
+    return render(request, 'tasks/category_template.html', context)
 
 def index(request):
     count = 0
@@ -178,3 +195,25 @@ def send_push(request):
         return JsonResponse(status=200, data={"message": "Web push successful"})
     except TypeError:
         return JsonResponse(status=500, data={"message": "An error occurred"})
+
+
+
+        
+class AddCategoryView(BSModalCreateView):
+    template_name = 'tasks/add_category.html'
+    form_class = CategoryModelForm
+    success_message = "Dodano kategorię"
+    success_url = reverse_lazy('list')
+
+class EditCategoryView(BSModalUpdateView):
+    model = Category
+    template_name = 'tasks/edit_cat.html'
+    form_class = CategoryModelForm
+    success_message = "Nazwa kategorii zmieniona pomyślnie"
+    success_url = reverse_lazy('list')
+
+class DeleteCategoryView(BSModalDeleteView):
+    template_name = 'tasks/delete-category.html'
+    model = Category
+    success_message = "Pomyślnie usunięto zadanie"
+    success_url = reverse_lazy('list')

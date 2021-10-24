@@ -4,13 +4,14 @@
 {% load static %}
 
 {% block headcontent %}
-   <title>Lista zadań - vToDo</title>
+    <title>Lista zadań - vToDo</title>
 {% endblock %}
 
 {% block content %}
 <div class="wrapper">
     <nav id="sidebar">
         <nav class="sidebar main">
+
             <a href="{% url 'vtodo' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div></a>
             <a href="{% url 'date' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
             <div class="sidebar-btn active"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div>
@@ -18,14 +19,22 @@
             <div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>
         </nav>
         <nav class="sidebar menu">
+                        <div class="scroll">
             <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>LISTA ZADAŃ</h1></div>
             <ul class="menu-buttons">
-                <li class="active"><a class="active" href=#>WSZYSTKIE</a></li>
+
+                    <li><a href="{% url 'list'%}">WSZYSTKIE</a></li>
                     {% for cat in categories %}
-                        <li><a href="{% url 'category' cat.id %}"> {{cat}} </a></li>
+                    {% if category == cat.title %}
+                        <li class="active"><a class="active" href=#> {{cat}} </a></li>
+                    {% else %}
+                        <li><a href="{% url 'category' cat.pk %}"> {{cat}} </a></li>
+                    {% endif %}
                     {% endfor %}
-                <li class="add-category"><a>+ Dodaj kategorię</a></li>
+                    <li class="add-category"><a>+ Dodaj kategorię</a></li>
+
             </ul>
+                            </div>
         </nav>
     </nav>
 
@@ -43,9 +52,13 @@
                     <ul class="list-unstyled">
                         <li><a href="{% url 'list'%}">WSZYSTKIE</a></li>
                         {% for cat in categories %}
-                            <li><a href="{% url 'category' cat.id %}"> {{cat}} </a></li>
+                        {% if category == cat.title %}
+                            <li class="active"><a class="active" href=#> {{cat}} </a></li>
+                        {%else%}
+                            <li><a href="{% url 'category' cat.pk %}"> {{cat}} </a></li>
+                        {% endif %}
                         {% endfor %}
-
+                        <li class="add-category"><a>+ Dodaj kategorię</a></li>
                     </ul>
                 </li>
                 <li><a href="{% url 'location' %}"><img src="{%static 'image/icons/mobile/map-icon-black.svg' %}"> Mapa</a></li>
@@ -64,7 +77,11 @@
         </div>
         <nav class="navbar">
             <div class="left">
-                <h1>WSZYSTKIE</h1>
+                <h1>{{category.title}}</h1>
+                    <button class="button category-edit small-button" data-toggle="modal" data-form-url="{% url 'edit_cat' category.id %}"><img src="{% static 'image/icons/outline-edit-icon.svg'%}" alt="Edytuj"></button>
+                    <button type="button" class="delete-category button category-edit small-button" data-form-url="{% url 'delete_cat' category.id %}">
+                        <img src="{% static 'image/icons/outline-delete-icon.svg'%}" alt="Usuń">
+                    </button>
             </div>
             <div class="right">
                 <div class="modal fade" tabindex="-1" role="dialog" id="modal">
@@ -137,7 +154,16 @@
             $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
         });
 
+        $(".delete-category").each(function () {
+            $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
+        });
+
         $(".task-edit").each(function () {
+              $(this).modalForm({
+                formURL: $(this).data("form-url")});
+        });
+
+        $(".category-edit").each(function () {
               $(this).modalForm({
                 formURL: $(this).data("form-url")});
         });
