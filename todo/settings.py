@@ -129,6 +129,10 @@ USE_L10N = False
 
 USE_TZ = True
 
+SECURE_SSL_REDIRECT = True
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
@@ -153,6 +157,7 @@ mimetypes.add_type('image/svg+xml', '.svg', True)
 STATICFILE_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
 
 WEBPUSH_SETTINGS = {
     "VAPID_PUBLIC_KEY": """BBhw6SWqTPBLfnLuRZIOt-3KKOabs3zLbuwKXlIpK-pf1FYD22-dClSsCfx9GcfseNM-GUVHh07FoE_Mhkd4FAQ""",
