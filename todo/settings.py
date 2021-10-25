@@ -28,6 +28,12 @@ DEBUG = getenv("IS_DEVELOPMENT", True)
 #DEBUG = True
 #ALLOWED_HOSTS = ['127.0.0.1', '192.168.100.100', 'localhost', '192.168.100.24', '192.168.18.191', 'vtodo.pl', 'vitodo.pl', 'h22.seohost.pl']
 #ALLOWED_HOSTS = getenv("APP_HOST")
+
+SECURE_SSL_REDIRECT = getenv("COOKIES", False)
+SESSION_COOKIE_SECURE = getenv("COOKIES", False)
+CSRF_COOKIE_SECURE = getenv("COOKIES", False)
+
+
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -129,9 +135,7 @@ USE_L10N = False
 
 USE_TZ = True
 
-SECURE_SSL_REDIRECT = True
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
