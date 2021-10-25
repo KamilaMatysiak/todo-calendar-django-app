@@ -375,13 +375,14 @@ text-decoration: none;
 
 .menu-buttons li {
     padding: 10px 15px;
-
 }
 
 .menu-buttons li a {
     color: #2F3045;
     text-decoration: none;
     font-weight: 600;
+    display: flex;
+    flex: 1;
 }
 
 .menu-buttons .active {
