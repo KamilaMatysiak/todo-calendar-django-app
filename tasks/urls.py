@@ -17,7 +17,7 @@ urlpatterns = [
     path('delete_cat/<str:pk>', views.DeleteCategoryView.as_view(), name="delete_cat"),
     path('task-list/finish', views.finishTask, name="finish-task"),
     path('send_push', views.send_push),
-    path('task-list/<str:pk>', views.categoryView, name="category")
+    path('task-list/<str:pk>', views.categoryView, name="category"),
     path('test', views.test, name="test"),
     path('serviceworker.js', TemplateView.as_view(template_name='serviceworker.js', content_type='application/x'
                                                                                                   '-javascript')),
