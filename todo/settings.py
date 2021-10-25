@@ -120,7 +120,7 @@ AUTHENTICATION_BACKENDS = ['social_core.backends.google.GoogleOAuth2']
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "36685183395"
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
-
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
