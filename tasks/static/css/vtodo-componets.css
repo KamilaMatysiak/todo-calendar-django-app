@@ -79,6 +79,10 @@ text-decoration: none;
     max-width: 150px;
 }
 
+.warning {
+    color: #E47676;
+}
+
 /*---------------------
         EVENTS
 ----------------------*/
