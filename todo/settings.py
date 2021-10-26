@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'avatar',
     'pwa',
     'webpush',
+    'health_check',
+
 ]
 
 MIDDLEWARE = [
