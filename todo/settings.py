@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'tasks',
     'users.apps.UsersConfig',
     'crispy_forms',
@@ -51,7 +52,12 @@ INSTALLED_APPS = [
     'pwa',
     'webpush',
     'social_django',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
