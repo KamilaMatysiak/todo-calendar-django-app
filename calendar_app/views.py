@@ -152,6 +152,21 @@ class AddEventView(BSModalCreateView):
 
         obj = form.save(commit=False)
         obj.user = self.request.user
+
+        # TODO: SocialToken matching query does not exist
+        # from google.oauth2.credentials import Credentials
+        # from allauth.socialaccount.models import SocialToken
+        #
+        # social_token = SocialToken.objects.get(account__user=self.request.user)
+        # print(f"{social_token = }")
+        # print(f"{social_token.__dict__ = }")
+        # creds = Credentials(token=social_token.token,
+        #                     refresh_token=social_token.token_secret,
+        #                     client_id=social_token.app.client_id,
+        #                     client_secret=social_token.app.secret)
+        # service = build('calendar', 'v3', credentials=creds)
+        # calendar = service.calendars().get(calendarId='primary').execute()
+
         print("start: ", obj.date_start, "\n end: ", obj.date_end)
         create_event(start_date_str=obj.date_start, summary=obj.description, end_date_str=obj.date_end,
                      start_time_str=obj.time_start, end_time_str=obj.time_end)
