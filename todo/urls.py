@@ -33,6 +33,7 @@ urlpatterns = [
     path('login/', user_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     path('', include('tasks.urls')),
+    url('', include('social_django.urls', namespace='social')),
     path('location/', include('geolocation.urls')),
     path('calendar/', include('calendar_app.urls')),
     url(r'^webpush/', include('webpush.urls')),
