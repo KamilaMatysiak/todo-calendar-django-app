@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'avatar',
     'pwa',
     'webpush',
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -79,6 +80,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -116,10 +119,13 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTHENTICATION_BACKENDS = ['social_core.backends.google.GoogleOAuth2']
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.google.GoogleOAuth',
+]
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "36685183395"
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "228316449016-s0210ihiktgnnaifeej15m87blo7rb2d.apps.googleusercontent.com"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 # Internationalization
