@@ -38,3 +38,4 @@ django-webpush~=0.3.3
 social-auth-app-django==5.0.0
 django-allauth==0.45.0
 datefinder==0.7.1
+google-api-python-client==2.27.0
