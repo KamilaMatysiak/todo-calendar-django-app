@@ -65,7 +65,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 ]
 
-SITE_ID = 1
+SITE_ID = 2
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -135,11 +135,12 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend'
+    'allauth.account.auth_backends.AuthenticationBackend',
     'social_core.backends.google.GoogleOAuth2',
     'social_core.backends.google.GoogleOAuth',
 ]
 
+SCOPES = ['https://www.googleapis.com/auth/calendar']
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -151,6 +152,24 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/calendar',
+]
+
+SOCIAL_AUTH_PIPELINE = (
+  'social_core.pipeline.social_auth.social_details',
+  'social_core.pipeline.social_auth.social_uid',
+  'social_core.pipeline.social_auth.auth_allowed',
+  'social_core.pipeline.social_auth.social_user',
+  'social_core.pipeline.user.get_username',
+  'social_core.pipeline.social_auth.associate_by_email',
+  'social_core.pipeline.user.create_user',
+  'social_core.pipeline.social_auth.associate_user',
+  'social_core.pipeline.social_auth.load_extra_data',
+  'social_core.pipeline.user.user_details',
+)
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "228316449016-s0210ihiktgnnaifeej15m87blo7rb2d.apps.googleusercontent.com"
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"

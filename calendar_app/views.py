@@ -101,7 +101,7 @@ def home(request, year, month, day):
                   })
 
 
-def create_event(start_date_str, end_date_str, start_time_str, end_time_str, summary, description=None, location=None, attendees=None):
+def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, summary, description=None, location=None, attendees=None):
     if attendees is None:
         attendees = []
 
@@ -128,6 +128,7 @@ def create_event(start_date_str, end_date_str, start_time_str, end_time_str, sum
                 {'method': 'email', 'minutes': 24 * 60},
                 {'method': 'popup', 'minutes': 10}, ], }, }
     event = service.events().insert(calendarId="primary", body=event).execute()
+
 
 def current_date(request):
     """Shows current date in dd / mm / yyyy format
@@ -161,20 +162,24 @@ class AddEventView(BSModalCreateView):
         # credentials = getCredentials()
         # print(f"{credentials = }")
         # print(f"{credentials.__dict__ = }")
-        # social_token = SocialToken.objects.create(account__user=self.request.user)
-        # print(f"{social_token = }")
-        # social_token = SocialToken.objects.get(account__user=self.request.user)
-        # print(f"{social_token = }")
-        # print(f"{social_token.__dict__ = }")
-        # creds = Credentials(token=social_token.token,
-        #                     refresh_token=social_token.token_secret,
-        #                     client_id=social_token.app.client_id,
-        #                     client_secret=social_token.app.secret)
-        # service = build('calendar', 'v3', credentials=creds)
-        # calendar = service.calendars().get(calendarId='primary').execute()
-
+        social_token = SocialToken.objects.get(account__user=self.request.user)
+        print(f"{social_token = }")
+        print(f"{social_token.__dict__ = }")
+        creds = Credentials(token=social_token.token,
+                            refresh_token=social_token.token_secret,
+                            client_id=social_token.app.client_id,
+                            client_secret=social_token.app.secret)
+        print(f"{creds = }")
+        print(f"{creds.__dict__ = }")
+        service = build('calendar', 'v3', credentials=creds)
+        calendar = service.calendars().get(calendarId='primary')
+        print(f"{calendar = }")
         print("start: ", obj.date_start, "\n end: ", obj.date_end)
-        create_event(start_date_str=obj.date_start, summary=obj.description, end_date_str=obj.date_end,
+        # TODO: googleapiclient.errors.HttpError: <HttpError 403 when requesting
+        #  https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json returned
+        #  "Request had insufficient authentication scopes.".
+        #  Details: "[{'message': 'Insufficient Permission', 'domain': 'global', 'reason': 'insufficientPermissions'}]">
+        create_event(service=service, start_date_str=obj.date_start, summary=obj.description, end_date_str=obj.date_end,
                      start_time_str=obj.time_start, end_time_str=obj.time_end)
         return super(AddEventView, self).form_valid(form)
 
