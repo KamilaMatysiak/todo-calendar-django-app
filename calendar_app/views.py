@@ -154,9 +154,15 @@ class AddEventView(BSModalCreateView):
         obj.user = self.request.user
 
         # TODO: SocialToken matching query does not exist
-        # from google.oauth2.credentials import Credentials
-        # from allauth.socialaccount.models import SocialToken
-        #
+        from google.oauth2.credentials import Credentials
+        from allauth.socialaccount.models import SocialToken
+
+        print(f"{obj.user = }")
+        # credentials = getCredentials()
+        # print(f"{credentials = }")
+        # print(f"{credentials.__dict__ = }")
+        # social_token = SocialToken.objects.create(account__user=self.request.user)
+        # print(f"{social_token = }")
         # social_token = SocialToken.objects.get(account__user=self.request.user)
         # print(f"{social_token = }")
         # print(f"{social_token.__dict__ = }")
