@@ -10,9 +10,9 @@ from .models import *
 from .forms import *
 from django.urls import reverse_lazy
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalDeleteView, BSModalUpdateView
+from django.http import Http404
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
-
 
 months = {
     1: "Styczeń",
@@ -182,16 +182,25 @@ class DeleteEventView(BSModalDeleteView):
     success_message = "Pomyślnie usunięto spotkanie"
     success_url = reverse_lazy('date')
 
+    def get_object(self, queryset=None):
+        obj = super(DeleteEventView, self).get_object()
+        if not obj.user == self.request.user:
+            raise Http404
+        return obj
+
 
 def edit_meeting(request, pk):
     meeting = Meeting.objects.get(id=pk)
     form = EventModelForm(instance=meeting)
+    if not meeting.user == request.user:
+        raise Http404
 
     if request.method == 'POST':
         form = EventModelForm(request.POST, instance=meeting, request=request)
         if form.is_valid():
             form.save()
             return redirect('/calendar')
+
 
 
     context = {'form': form, 'id': pk}

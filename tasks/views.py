@@ -11,6 +11,7 @@ from django.contrib.auth.models import User
 from geopy.geocoders import Nominatim
 from .utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
 from geopy.distance import geodesic
+from django.http import Http404
 from django.conf.urls.static import static
 from django.http.response import JsonResponse, HttpResponse
 from django.views.decorators.http import require_GET, require_POST
@@ -115,6 +116,12 @@ class EditTaskView(BSModalUpdateView):
     success_message = "Pomyślnie zedytowano zadanie"
     success_url = reverse_lazy('list')
 
+    def get_object(self, queryset=None):
+        obj = super(EditTaskView, self).get_object()
+        if not obj.user == self.request.user:
+            raise Http404
+        return obj
+
 
 class DeleteTaskView(BSModalDeleteView):
     template_name = 'tasks/delet.html'
@@ -122,6 +129,11 @@ class DeleteTaskView(BSModalDeleteView):
     success_message = "Pomyślnie usunięto zadanie"
     success_url = reverse_lazy('list')
 
+    def get_object(self, queryset=None):
+        obj = super(DeleteTaskView, self).get_object()
+        if not obj.user == self.request.user:
+            raise Http404
+        return obj
 
 def updateTask(request, pk):
     """
@@ -212,8 +224,20 @@ class EditCategoryView(BSModalUpdateView):
     success_message = "Nazwa kategorii zmieniona pomyślnie"
     success_url = reverse_lazy('list')
 
+    def get_object(self, queryset=None):
+        obj = super(EditCategoryView, self).get_object()
+        if not obj.user == self.request.user:
+            raise Http404
+        return obj
+
 class DeleteCategoryView(BSModalDeleteView):
     template_name = 'tasks/delete-category.html'
     model = Category
     success_message = "Pomyślnie usunięto zadanie"
     success_url = reverse_lazy('list')
+
+    def get_object(self, queryset=None):
+        obj = super(DeleteCategoryView, self).get_object()
+        if not obj.user == self.request.user:
+            raise Http404
+        return obj
