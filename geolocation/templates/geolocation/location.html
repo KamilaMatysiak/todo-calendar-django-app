@@ -5,23 +5,24 @@
 {% load crispy_forms_tags %}
 {% load avatar_tags %}
 {% load poll_extras %}
-{%load static%}
+{% load static %}
 
 <html>
 <head>
-    <title>vToDo - zadania</title>
+    <title>Lokalizacja - vToDo</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+
     {% comment %} <script src="{% static '/js/geolocation.js' %}" type="text/javascript"></script>   {% endcomment %}
 </head>
 <body>
 <div class="wrapper">
     <nav id="sidebar" class="small">
         <nav class="sidebar main">
-            <div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div>
+            <a href="{% url 'vtodo' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div></a>
             <a href="{% url 'date' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
             <a href="{% url 'list' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div></a>
             <a href="{% url 'location' %}"><div class="sidebar-btn active"><img id="map" src="{%static 'image/icons/map.svg' %}"></div></a>
@@ -66,8 +67,7 @@
         <!-- Create book button -->
 
     <div class="avatar">
-        {% avatar user %}
-            </a>
+         <a href="{% url 'profile' %}">{% avatar user %}</a>
             </div>
         </div>
     </nav>
@@ -92,58 +92,64 @@
   </div>
 </div> {% endcomment %}
 
-        <div style="width: 90%; height: 80vh; margin: auto;">
 
+
+        <div style="width: 90%; height: 80vh; margin: auto;">
             <script>
                 function getCookie(name) {
                     let cookieValue = null;
                     if (document.cookie && document.cookie !== "") {
                         const cookies = document.cookie.split(";");
                         for (let i = 0; i < cookies.length; i++) {
-                        const cookie = cookies[i].trim();
-                        // Does this cookie string begin with the name we want?
-                        if (cookie.substring(0, name.length + 1) === (name + "=")) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
+                            const cookie = cookies[i].trim();
+                            // Does this cookie string begin with the name we want?
+                            if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
                         }
                     }
                     return cookieValue;
                 }
                 
                 var options = {
-                enableHighAccuracy: true,
-                timeout: 5000,
-                maximumAge: 0
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0
                 };
 
                 function success(pos) {
-                var crd = pos.coords;
+                    var crd = pos.coords;
 
-                console.log(`Latitude : ${crd.latitude}`);
-                console.log(`Longitude: ${crd.longitude}`);
-                
-                $.ajax({
-                    method: 'POST',
-                    url: '',
-                    contentType: 'application/json; charset=utf-8',
-                    data: 
-                        JSON.stringify({
-                            'lon': crd.longitude,
-                            'lat': crd.latitude,
-                        }),
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest",
-                        "X-CSRFToken": getCookie("csrftoken"),
-                    },
-                    success: function (data) {   
-                        
-                        console.log("it worked!");
-                    },
-                    error: function (data) {
-                        console.log("it didnt work");
-                    }
-                });
+                    console.log(`Latitude : ${crd.latitude}`);
+                    console.log(`Longitude: ${crd.longitude}`);
+                    
+                    $.ajax({
+                        method: 'POST',
+                        url: "{% url 'location-2' lat lon %}",
+                        contentType: 'application/json; charset=utf-8',
+                        data: 
+                            JSON.stringify({
+                                'lon': crd.longitude,
+                                'lat': crd.latitude,
+                            }),
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest",
+                            "X-CSRFToken": getCookie("csrftoken"),
+                        },
+                        success: function (data) {
+                            var lati = crd.latitude;
+                            var long = crd.longitude;
+
+                            if(lati != '{{lat}}' || long != '{{lon}}') {
+                            window.location.assign("/location/" + lati + "_" + long);
+                            }
+                            console.log("it worked!");
+                        },
+                        error: function (data) {
+                            console.log("it didnt work");
+                        }
+                    });
 
                 }
 
@@ -151,27 +157,13 @@
                 console.warn(`ERROR(${err.code}): ${err.message}`);
                 }
 
-                const watchPosition = navigator.geolocation.getCurrentPosition(success, error, options);
+                const watchPosition = navigator.geolocation.watchPosition(success, error, options);
 
-                
 
             </script>
             {{map | safe}}
+
 </div>
-{% comment %} <form action="" method="POST" autocomplete="off">
-    {% csrf_token %}
-    {{form | crispy}}
-    <button type="submit" class="btn btn-primary"> confirm </button>
-</form> {% endcomment %}
-
-{% comment %} {% if request.POST and distance is not None %}
-    <script>
-        $(window).on('load',function(){
-            $('#exampleModal').modal('show')
-        })
-    </script>
-{% endif %} {% endcomment %}
-
     </div>
 
 
@@ -194,7 +186,8 @@
             });
         });
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script><script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+    <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
 </body>
 </html>

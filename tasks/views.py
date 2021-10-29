@@ -1,44 +1,41 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.conf import settings
 from .models import *
 from .forms import *
-import datetime
-from django.urls import reverse_lazy
+from geolocation.views import *
+from django.urls import reverse_lazy, reverse
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalDeleteView, BSModalUpdateView
+from webpush import send_user_notification
+from django.contrib.auth.models import User
 from geopy.geocoders import Nominatim
 from .utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
 from geopy.distance import geodesic
 from django.http import Http404
+from django.conf.urls.static import static
+from django.http.response import JsonResponse, HttpResponse
+from django.views.decorators.http import require_GET, require_POST
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
+from django.template import loader
+import datetime
 import folium
+import json
 
 
 # Create your views here.
 
 def homepage(request):
-    """
-    Show homepage
-    Args:
-        request: request to return .html file
-
-    Returns: .html file of homepage.
-
-    """
     return render(request, 'tasks/index.html')
+
 
 def test(request):
     return render(request, 'tasks/components.html')
-    
+
+
 @login_required
 def task_list(request):
-    """
-    Shows all tasks of specific user
-    Args:
-        request: request to return .html file
-
-    Returns: .html of all tasks.
-
-    """
     tasks = [x for x in Task.objects.all() if x.user == request.user]
     categories = [x for x in Category.objects.all() if x.user == request.user]
     #tasks = Task.objects.all()
@@ -72,7 +69,26 @@ def categoryView(request, pk):
     return render(request, 'tasks/category_template.html', context)
 
 def index(request):
-    return render(request, 'tasks/vtodo.html')
+    count = 0
+    tasks = [x for x in Task.objects.all() if x.user == request.user]
+    for x in tasks:
+        if x.date == datetime.date.today():
+            count = count+1
+
+    webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
+    vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
+    user = request.user
+
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    print(is_ajax)
+    if is_ajax:
+        if request.method == 'POST':
+            data = json.load(request)
+            lat = data.get('lat')
+            lon = data.get('lon')
+
+    context = {"tasks": tasks, "count": count, user: user, 'vapid_key': vapid_key}
+    return render(request, 'tasks/vtodo.html', context)
 
 
 class AddTaskView(BSModalCreateView):
@@ -146,7 +162,7 @@ def updateTask(request, pk):
 
     context = {'form': form, 'id': pk}
 
-    return render(request, 'tasks/update_task.html', context)	
+    return render(request, 'tasks/update_task.html', context)
 
 
 def finishTask(request):
@@ -164,6 +180,37 @@ def finishTask(request):
     task.save()
     return HttpResponse('')
 
+@require_POST
+@csrf_exempt
+def send_push(request):
+    print("Inicjuję probę!")
+    try:
+        print("1")
+        body = request.body
+        data = json.loads(body)
+        print("data: ", data)
+        if 'lat' not in data or 'lon' not in data or 'id' not in data:
+            return JsonResponse(status=400, data={"message": "Invalid data format"})
+        print("2")
+        user_id = data['id']
+        user = get_object_or_404(User, pk=user_id)
+        data_tasks = how_many_tasks(user, float(data['lat']), float(data['lon']))
+        print("DATA_TASKS", data_tasks)
+        if data_tasks[1] != None:
+            payload = {'head': 'Zadań w okolicy: ' + data_tasks[0], 'body': 'Najbliższe zadanie: ' + data_tasks[1] + ' - ' +
+                data_tasks[2] + 'km stąd'}
+        else:
+            payload = {'head': 'Brak zadań w okolicy'}
+        print(payload)
+        send_user_notification(user=user, payload=payload, ttl=1000)
+
+        return JsonResponse(status=200, data={"message": "Web push successful"})
+    except TypeError:
+        return JsonResponse(status=500, data={"message": "An error occurred"})
+
+
+
+        
 class AddCategoryView(BSModalCreateView):
     template_name = 'tasks/add_category.html'
     form_class = CategoryModelForm

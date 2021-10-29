@@ -25,7 +25,7 @@
 
                     <li><a href="{% url 'list'%}">WSZYSTKIE</a></li>
                     {% for cat in categories %}
-                    {% if category == cat.title %}
+                    {% if category.title == cat.title %}
                         <li class="active"><a class="active" href=#> {{cat}} </a></li>
                     {% else %}
                         <li><a href="{% url 'category' cat.pk %}"> {{cat}} </a></li>

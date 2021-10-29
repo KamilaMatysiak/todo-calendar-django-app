@@ -18,7 +18,7 @@ text-decoration: none;
 .button {
     display: inline-block;
     border: none;
-    padding: 10px 20px;
+    padding: 10px 15px;
     min-height: 40px;
     text-decoration: none;
     border-radius: 4px;
@@ -45,7 +45,7 @@ text-decoration: none;
 .delete {
     background: #eb5757;
     color: white;
-    padding: 0.8rem 1.5rem;
+    padding: 0.6rem 1.5rem;
 
 }
 
@@ -77,6 +77,10 @@ text-decoration: none;
 
 .nonflex {
     max-width: 150px;
+}
+
+.warning {
+    color: #E47676;
 }
 
 /*---------------------
@@ -375,13 +379,14 @@ text-decoration: none;
 
 .menu-buttons li {
     padding: 10px 15px;
-
 }
 
 .menu-buttons li a {
     color: #2F3045;
     text-decoration: none;
     font-weight: 600;
+    display: flex;
+    flex: 1;
 }
 
 .menu-buttons .active {
@@ -655,6 +660,28 @@ td
 
 #content.active {
     width: 100%;
+}
+
+.header-container {
+width: 88%;
+margin-left: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+}
+
+.link {
+    text-decoration: none;
+    color: orange;
+    font-weight: bold;
+    margin: 0;
+    cursor: pointer;
+}
+
+.line-text {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
 
 /* ---------------------------------------------------

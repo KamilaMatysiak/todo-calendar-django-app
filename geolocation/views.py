@@ -1,15 +1,26 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import redirect, render, get_object_or_404
 # from .models import Measurement
 # from .forms import MeasurementModelForm
+from geoip2.errors import AddressNotFoundError
 from geopy.geocoders import Nominatim
 from .utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
 from geopy.distance import geodesic
 import folium
 from tasks.models import Task
+from django.conf import settings
+from django.conf.urls.static import static
+from django.http.response import JsonResponse, HttpResponse
+from django.views.decorators.http import require_GET, require_POST
+from django.shortcuts import get_object_or_404
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
+from webpush import send_user_notification
 import json
+from django.http import HttpResponse
+from django.urls import reverse
+from django.template import loader
 
-
-def location(request):
+def location(request, lat, lon):
     """Shows a map with starting point of user, based on users location. Also shows the locations of tasks and their priorities.
 
     Args:
@@ -18,105 +29,88 @@ def location(request):
         .html file with a map of user starting point and places with task assigned to them
 
     """
-
-    # distance = None
-    # destination = None
-
-    #nie odkomentowuj bo on psuje wszystko
-    #obj = get_object_or_404(Measurement, id=1)
-    # form = MeasurementModelForm(request.POST or None)
-    geolocator = Nominatim(user_agent='measurements')
-    ip_ = get_ip_address(request)
-    print(ip_)
-    ip = '109.173.220.158'
-    country, city, lat, lon = get_geo(ip)
-    location = geolocator.geocode(city)
-
-    # koordynanty
-    l_lat = lat
-    l_lon = lon
-    pointA = (l_lat, l_lon)
-
-    # inicjowanie mapy
-    m = folium.Map(width='100%', height='100%', location=get_center_coordinates(l_lat, l_lon), zoom_start=8)
-    # znacznik lokalizacji początkowej
-    folium.Marker([l_lat, l_lon], tooltip='twoja lokalizacja',
-                  popup="kod pocztowy: " + city['postal_code'] + " miasto: " + city['city'],
-                  icon=folium.Icon('green')).add_to(m)
-
-    # if form.is_valid():
-        # instance = form.save(commit=False)
-        # destination_ = form.cleaned_data.get('destination')
-        # destination = geolocator.geocode(destination_)
-
-        # destination coordinates
-        # d_lat = destination.latitude
-        # d_lon = destination.longitude
-        # pointB = (d_lat, d_lon)
-
-        # distance calculation
-        # distance = round(geodesic(pointA, pointB).km, 2)
-
-        # initial folium map
-    # m = folium.Map(width='100%', height='100%',
-    #                 location=get_center_coordinates(lat, lon),
-    #                 zoom_start=10)
-                    # ,
-                    # zoom_start=get_zoom(distance))
-        # location marker
-    
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
     if is_ajax:
         if request.method == 'POST':
             data = json.load(request)
-            a_lat = data.get('lat')
-            a_lon = data.get('lon')
-            print(a_lat)
-            print(a_lon)
+            n_lat = data.get('lat')
+            n_lon = data.get('lon')
+            if n_lat != lat or n_lon != lon:
+                lat = n_lat
+                lon = n_lon
+                return redirect('location-2', n_lat, n_lon)
+        else:
+            return HttpResponse(json.dumps([{'lat':lat, 'lon':lon}]))
 
-            m = folium.Map(width='100%', height='100%',
-                    location=get_center_coordinates(a_lat, a_lon),
-                    zoom_start=10)
-            
-            folium.Marker([a_lat, a_lon], tooltip='twoja lokalizacja',
-                    popup="TUTAJ JESTEŚ",
-                    icon=folium.Icon('green')).add_to(m)
 
+    m = folium.Map(width='100%', height='100%',
+            location=get_center_coordinates(lat, lon),
+            zoom_start=10)
+
+    folium.Marker([lat, lon], tooltip='twoja lokalizacja',
+            popup="Twoja lokalizacja",
+            icon=folium.Icon('green')).add_to(m)
 
         # destination  marker
     tasks = (x for x in Task.objects.all() if x.user == request.user)
 
     color = {
         'H': 'red',
-        'M': 'orange',
+        'J': 'orange',
         'L': 'lightgray',
         'N': 'white'
-    } 
+    }
 
     for x in tasks:
         if x.l_lon and x.l_lat:
-            folium.Marker([x.l_lat, x.l_lon], tooltip='cel podróży',
+            folium.Marker([x.l_lat, x.l_lon], tooltip=x.title,
                     popup=x.localization,
                     icon=folium.Icon(color[x.priority], icon="cloud")).add_to(m)
 
-        # draw the line between location and destination
-        # line = folium.PolyLine(locations=[pointA, pointB], weight=2, color='blue')
-        # m.add_child(line)
-
-        # folium map modification
-        # instance.location = location
-        # instance.distance = distance
-        # instance.save()
 
     m = m._repr_html_()
     # distance = None
 
     context = {
-        # 'distance': distance,
-        # 'destination': destination,
-        # 'form': form,
+        'lat': lat,
+        'lon': lon,
         'map': m,
     }
 
-    return render(request, 'geolocation/location.html', context)
+    t = loader.get_template('geolocation/location.html')
+    return HttpResponse(t.render(context, request))
 
+
+def start(request):
+    try:
+        ip = get_ip_address(request)
+        country, city, lat, lon = get_geo(ip)
+    except AddressNotFoundError:
+        ip = '109.173.220.158'
+        country, city, lat, lon = get_geo(ip)
+
+    return redirect('location-2', lat, lon)
+
+
+
+#def send_push(request):
+#    payload = {"head": "Welcome!", "body": "Hello World"}
+#    user = request.user
+#    print(user)
+#    send_user_notification(user=user, payload=payload, ttl=1000)
+
+def how_many_tasks(user, lat, lon):
+    a = 0
+    y = 5
+    nearest_task = None
+    for x in Task.objects.all():
+        if x.user == user and x.l_lat and x.l_lon:
+            distance = geodesic((lat, lon), (x.l_lat, x.l_lon)).km
+            if distance <= 5:
+                a += 1
+                if distance < y:
+                    y = distance
+                    nearest_task = x.title
+    if not nearest_task:
+        nearest_task = None
+    return (str(a), nearest_task, str(round(y, 1)))
