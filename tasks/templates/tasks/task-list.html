@@ -94,7 +94,15 @@
                         <input type="checkbox" onclick='taskFinish(this,"{{task.id}}")'>
                     {% endif %}
                         <div class="task-content">
-                            <h1>{{task}}</h1><div class="task-info"><p id="date">{{task.date |timeuntil | split_timeuntil}}</p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
+                            <h1>{{task}}</h1><div class="task-info"><p id="date">
+                            {% if task|to_datetime|is_expired and not task.complete %}
+                                <p class="warning"><b>Spóźnienie</b></p>
+                            {% elif task.complete %}
+                                <p><b>Zakończone</b></p>
+                            {% else %}
+                                {{task |to_datetime |timeuntil}}
+                            {% endif %}
+                            </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
                         </div>
                         <div class="important-tag">
                             {% if task.priority == "H" %}

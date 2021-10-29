@@ -1,13 +1,18 @@
 import locale
 
+import datefinder
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 import calendar
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
+
 from .models import *
 from .forms import *
 from django.urls import reverse_lazy
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalDeleteView, BSModalUpdateView
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+
 
 months = {
     1: "Styczeń",
@@ -23,6 +28,7 @@ months = {
     11: "Listopad",
     12: "Grudzień"
 }
+timezone = 'Europe/Warsaw'
 
 
 @login_required
@@ -95,6 +101,34 @@ def home(request, year, month, day):
                   })
 
 
+def create_event(start_date_str, end_date_str, start_time_str, end_time_str, summary, description=None, location=None, attendees=None):
+    if attendees is None:
+        attendees = []
+
+    full_start_datetime = datetime.combine(start_date_str, start_time_str)
+    full_end_datetime = datetime.combine(end_date_str, end_time_str)
+
+
+    event = {
+        'summary': summary,
+        'location': location,
+        'description': description,
+        'start': {
+            'dateTime': full_start_datetime.strftime("%Y-%m-%dT%H:%M:%S"),
+            'timeZone': timezone,
+        },
+        'end': {
+            'dateTime': full_end_datetime.strftime("%Y-%m-%dT%H:%M:%S"),
+            'timeZone': timezone,
+        },
+        'attendees': attendees,
+        'reminders': {
+            'useDefault': False,
+            'overrides': [
+                {'method': 'email', 'minutes': 24 * 60},
+                {'method': 'popup', 'minutes': 10}, ], }, }
+    event = service.events().insert(calendarId="primary", body=event).execute()
+
 def current_date(request):
     """Shows current date in dd / mm / yyyy format
 
@@ -115,9 +149,31 @@ class AddEventView(BSModalCreateView):
     success_url = reverse_lazy('date')
 
     def form_valid(self, form):
+
         obj = form.save(commit=False)
         obj.user = self.request.user
+
+        # TODO: SocialToken matching query does not exist
+        # from google.oauth2.credentials import Credentials
+        # from allauth.socialaccount.models import SocialToken
+        #
+        # social_token = SocialToken.objects.get(account__user=self.request.user)
+        # print(f"{social_token = }")
+        # print(f"{social_token.__dict__ = }")
+        # creds = Credentials(token=social_token.token,
+        #                     refresh_token=social_token.token_secret,
+        #                     client_id=social_token.app.client_id,
+        #                     client_secret=social_token.app.secret)
+        # service = build('calendar', 'v3', credentials=creds)
+        # calendar = service.calendars().get(calendarId='primary').execute()
+
+        print("start: ", obj.date_start, "\n end: ", obj.date_end)
+        create_event(start_date_str=obj.date_start, summary=obj.description, end_date_str=obj.date_end,
+                     start_time_str=obj.time_start, end_time_str=obj.time_end)
         return super(AddEventView, self).form_valid(form)
+
+
+
 
 
 class DeleteEventView(BSModalDeleteView):

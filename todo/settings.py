@@ -28,6 +28,12 @@ DEBUG = getenv("IS_DEVELOPMENT", True)
 #DEBUG = True
 #ALLOWED_HOSTS = ['127.0.0.1', '192.168.100.100', 'localhost', '192.168.100.24', '192.168.18.191', 'vtodo.pl', 'vitodo.pl', 'h22.seohost.pl']
 #ALLOWED_HOSTS = getenv("APP_HOST")
+
+SECURE_SSL_REDIRECT = getenv("COOKIES", False)
+SESSION_COOKIE_SECURE = getenv("COOKIES", False)
+CSRF_COOKIE_SECURE = getenv("COOKIES", False)
+
+
 ALLOWED_HOSTS = ['*']
 
 # Application definition
@@ -39,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'tasks',
     'users.apps.UsersConfig',
     'crispy_forms',
@@ -50,7 +57,14 @@ INSTALLED_APPS = [
     'avatar',
     'pwa',
     'webpush',
+    'health_check',
+    'social_django',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -79,6 +93,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
         },
     },
@@ -116,6 +132,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.google.GoogleOAuth',
+]
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "228316449016-s0210ihiktgnnaifeej15m87blo7rb2d.apps.googleusercontent.com"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -128,6 +153,8 @@ USE_I18N = True
 USE_L10N = False
 
 USE_TZ = True
+
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
@@ -153,6 +180,7 @@ mimetypes.add_type('image/svg+xml', '.svg', True)
 STATICFILE_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
+
 
 WEBPUSH_SETTINGS = {
     "VAPID_PUBLIC_KEY": """BBhw6SWqTPBLfnLuRZIOt-3KKOabs3zLbuwKXlIpK-pf1FYD22-dClSsCfx9GcfseNM-GUVHh07FoE_Mhkd4FAQ""",

@@ -21,6 +21,7 @@ from django.conf.urls.static import static
 from users import views as user_views
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
+from . import views
 
 
 urlpatterns = [
@@ -32,9 +33,12 @@ urlpatterns = [
     path('login/', user_views.LoginView.as_view(), name='login'),
     path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
     path('', include('tasks.urls')),
+    url('', include('social_django.urls', namespace='social')),
     path('location/', include('geolocation.urls')),
     path('calendar/', include('calendar_app.urls')),
     url(r'^webpush/', include('webpush.urls')),
+    url(r'^health/', views.health, name='health'),
+    url(r'^ht/', include('health_check.urls')),
 
     path('serviceworker.js', TemplateView.as_view(template_name='serviceworker.js',
                     content_type='application/javascript'), name='serviceworker.js'),
