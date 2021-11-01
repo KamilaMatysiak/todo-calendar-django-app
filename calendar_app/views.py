@@ -168,21 +168,15 @@ class AddEventView(BSModalCreateView):
                                 refresh_token=social_token.token_secret,
                                 client_id=social_token.app.client_id,
                                 client_secret=social_token.app.secret,
-                                token_uri="https://oauth2.googleapis.com/token",
-                                id_token=social_token.id,
                                 )
             print(f"{creds = }")
             print(f"{creds.__dict__ = }")
             service = build('calendar', 'v3', credentials=creds)
-            print(f"{service.calendarList().list().execute() = }")
-            calendar = service.calendars().get(calendarId='primary')
-            print(f"{calendar = }")
-            print(f"{calendar.__dict__ = }")
+            # print(f"{service.calendars().get(calendarId='primary').execute() = }")
+            # calendar = service.calendars().get(calendarId='primary')
+            # print(f"{calendar = }")
+            # print(f"{calendar.__dict__ = }")
             print("start: ", obj.date_start, "\n end: ", obj.date_end)
-            # TODO: googleapiclient.errors.HttpError: <HttpError 403 when requesting
-            #  https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json returned
-            #  "Request had insufficient authentication scopes.".
-            #  Details: "[{'message': 'Insufficient Permission', 'domain': 'global', 'reason': 'insufficientPermissions'}]">
             create_event(service=service, start_date_str=obj.date_start, summary=obj.description, end_date_str=obj.date_end,
                          start_time_str=obj.time_start, end_time_str=obj.time_end)
         except Exception as e:
