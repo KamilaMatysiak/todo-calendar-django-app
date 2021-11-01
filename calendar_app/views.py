@@ -1,6 +1,7 @@
 import locale
 
 import datefinder
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 import calendar
@@ -108,7 +109,6 @@ def create_event(service, start_date_str, end_date_str, start_time_str, end_time
     full_start_datetime = datetime.combine(start_date_str, start_time_str)
     full_end_datetime = datetime.combine(end_date_str, end_time_str)
 
-
     event = {
         'summary': summary,
         'location': location,
@@ -163,15 +163,21 @@ class AddEventView(BSModalCreateView):
             social_token = SocialToken.objects.get(account__user=self.request.user)
             print(f"{social_token = }")
             print(f"{social_token.__dict__ = }")
+            # TODO: creds could be invalid
             creds = Credentials(token=social_token.token,
                                 refresh_token=social_token.token_secret,
                                 client_id=social_token.app.client_id,
-                                client_secret=social_token.app.secret)
+                                client_secret=social_token.app.secret,
+                                token_uri="https://oauth2.googleapis.com/token",
+                                id_token=social_token.id,
+                                )
             print(f"{creds = }")
             print(f"{creds.__dict__ = }")
             service = build('calendar', 'v3', credentials=creds)
+            print(f"{service.calendarList().list().execute() = }")
             calendar = service.calendars().get(calendarId='primary')
             print(f"{calendar = }")
+            print(f"{calendar.__dict__ = }")
             print("start: ", obj.date_start, "\n end: ", obj.date_end)
             # TODO: googleapiclient.errors.HttpError: <HttpError 403 when requesting
             #  https://www.googleapis.com/calendar/v3/calendars/primary/events?alt=json returned
@@ -180,7 +186,7 @@ class AddEventView(BSModalCreateView):
             create_event(service=service, start_date_str=obj.date_start, summary=obj.description, end_date_str=obj.date_end,
                          start_time_str=obj.time_start, end_time_str=obj.time_end)
         except Exception as e:
-            print(e)
+            print(f"Error is '{e}'")
         return super(AddEventView, self).form_valid(form)
 
 

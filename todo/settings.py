@@ -140,7 +140,9 @@ AUTHENTICATION_BACKENDS = [
     'social_core.backends.google.GoogleOAuth',
 ]
 
-SCOPES = ['https://www.googleapis.com/auth/calendar']
+SCOPES = ['https://www.googleapis.com/auth/calendar',
+          'https://www.googleapis.com/auth/calendar.events',
+          ]
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -156,6 +158,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/userinfo.profile',
     'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/calendar.events',
 ]
 
 SOCIAL_AUTH_PIPELINE = (
