@@ -1,6 +1,7 @@
 import locale
 
 import datefinder
+from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 import calendar
@@ -101,13 +102,12 @@ def home(request, year, month, day):
                   })
 
 
-def create_event(start_date_str, end_date_str, start_time_str, end_time_str, summary, description=None, location=None, attendees=None):
+def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, summary, description=None, location=None, attendees=None):
     if attendees is None:
         attendees = []
 
     full_start_datetime = datetime.combine(start_date_str, start_time_str)
     full_end_datetime = datetime.combine(end_date_str, end_time_str)
-
 
     event = {
         'summary': summary,
@@ -128,6 +128,7 @@ def create_event(start_date_str, end_date_str, start_time_str, end_time_str, sum
                 {'method': 'email', 'minutes': 24 * 60},
                 {'method': 'popup', 'minutes': 10}, ], }, }
     event = service.events().insert(calendarId="primary", body=event).execute()
+
 
 def current_date(request):
     """Shows current date in dd / mm / yyyy format
@@ -154,22 +155,32 @@ class AddEventView(BSModalCreateView):
         obj.user = self.request.user
 
         # TODO: SocialToken matching query does not exist
-        # from google.oauth2.credentials import Credentials
-        # from allauth.socialaccount.models import SocialToken
-        #
-        # social_token = SocialToken.objects.get(account__user=self.request.user)
-        # print(f"{social_token = }")
-        # print(f"{social_token.__dict__ = }")
-        # creds = Credentials(token=social_token.token,
-        #                     refresh_token=social_token.token_secret,
-        #                     client_id=social_token.app.client_id,
-        #                     client_secret=social_token.app.secret)
-        # service = build('calendar', 'v3', credentials=creds)
-        # calendar = service.calendars().get(calendarId='primary').execute()
+        from google.oauth2.credentials import Credentials
+        from allauth.socialaccount.models import SocialToken
 
-        print("start: ", obj.date_start, "\n end: ", obj.date_end)
-        create_event(start_date_str=obj.date_start, summary=obj.description, end_date_str=obj.date_end,
-                     start_time_str=obj.time_start, end_time_str=obj.time_end)
+        print(f"{obj.user = }")
+        try:
+            social_token = SocialToken.objects.get(account__user=self.request.user)
+            print(f"{social_token = }")
+            print(f"{social_token.__dict__ = }")
+            # TODO: creds could be invalid
+            creds = Credentials(token=social_token.token,
+                                refresh_token=social_token.token_secret,
+                                client_id=social_token.app.client_id,
+                                client_secret=social_token.app.secret,
+                                )
+            print(f"{creds = }")
+            print(f"{creds.__dict__ = }")
+            service = build('calendar', 'v3', credentials=creds)
+            # print(f"{service.calendars().get(calendarId='primary').execute() = }")
+            # calendar = service.calendars().get(calendarId='primary')
+            # print(f"{calendar = }")
+            # print(f"{calendar.__dict__ = }")
+            print("start: ", obj.date_start, "\n end: ", obj.date_end)
+            create_event(service=service, start_date_str=obj.date_start, summary=obj.description, end_date_str=obj.date_end,
+                         start_time_str=obj.time_start, end_time_str=obj.time_end)
+        except Exception as e:
+            print(f"Error is '{e}'")
         return super(AddEventView, self).form_valid(form)
 
 
