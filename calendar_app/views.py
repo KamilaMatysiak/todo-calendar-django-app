@@ -158,29 +158,29 @@ class AddEventView(BSModalCreateView):
         from google.oauth2.credentials import Credentials
         from allauth.socialaccount.models import SocialToken
 
-        print(f"{obj.user = }")
+        print(obj.user, "   ")
         try:
             social_token = SocialToken.objects.get(account__user=self.request.user)
-            print(f"{social_token = }")
-            print(f"{social_token.__dict__ = }")
+            print(social_token,"   ")
+            print(social_token.__dict__, "   ")
             # TODO: creds could be invalid
             creds = Credentials(token=social_token.token,
                                 refresh_token=social_token.token_secret,
                                 client_id=social_token.app.client_id,
                                 client_secret=social_token.app.secret,
                                 )
-            print(f"{creds = }")
-            print(f"{creds.__dict__ = }")
+            print(creds, "= ,")
+            print(creds.__dict__, "=  ")
             service = build('calendar', 'v3', credentials=creds)
-            # print(f"{service.calendars().get(calendarId='primary').execute() = }")
+            # print(service.calendars().get(calendarId='primary').execute(), "=  ")
             # calendar = service.calendars().get(calendarId='primary')
-            # print(f"{calendar = }")
-            # print(f"{calendar.__dict__ = }")
+            # print(calendar)
+            # print(calendar.__dict__, "=  ")
             print("start: ", obj.date_start, "\n end: ", obj.date_end)
             create_event(service=service, start_date_str=obj.date_start, summary=obj.description, end_date_str=obj.date_end,
                          start_time_str=obj.time_start, end_time_str=obj.time_end)
         except Exception as e:
-            print(f"Error is '{e}'")
+            print("Error is", e)
         return super(AddEventView, self).form_valid(form)
 
 
