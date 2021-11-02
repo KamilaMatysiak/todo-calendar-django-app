@@ -9,7 +9,7 @@ from django.utils.translation import ugettext, ugettext_lazy as _
 
 class UserRegisterForm(PopRequestMixin, CreateUpdateAjaxMixin, UserCreationForm):
     password1 = forms.CharField(max_length=16, widget=forms.PasswordInput(
-        attrs={'class': 'form-control', 'placeholder': 'Podaj hasło'}),
+        attrs={'class': 'form-control', 'placeholder': 'Podaj hasło', 'data-toggle': 'password'}),
                                 label="Hasło")
     password2 = forms.CharField(max_length=16, widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': 'Powtórz hasło'}),
@@ -27,14 +27,21 @@ class UserRegisterForm(PopRequestMixin, CreateUpdateAjaxMixin, UserCreationForm)
             'username': ('Nazwa użytkownika'),
             'email': ('E-mail'),
         }
+        help_texts = {
+            'username': None }
 
 class CustomAuthenticationForm(AuthenticationForm):
+
     class Meta:
         model = User
         fields = ['username', 'password']
         labels = {
             'username': ('Login'),
             'password': ('Hasło'),
+        }
+
+        widgets = {
+            'password': forms.PasswordInput(attrs={'placeholder':'********','autocomplete': 'off', 'data-toggle': 'password'})
         }
 
 class UserProfileForm(forms.ModelForm):

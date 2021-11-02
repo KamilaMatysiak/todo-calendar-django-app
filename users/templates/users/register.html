@@ -20,11 +20,7 @@
           </div>
     {% endfor %}
 
-    <div class="{% if form.non_field_errors %}is-invalid{% endif %} mb-2">
-      {% for error in form.non_field_errors %}
-        {{ error }}
-      {% endfor %}
-    </div>
+
   </div>
 
   <div class="modal-footer">
