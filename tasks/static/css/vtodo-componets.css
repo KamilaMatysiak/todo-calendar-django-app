@@ -802,6 +802,49 @@ PROFILE
     color: #F2994A;
 }
 
+.input-group-text {
+    font-weight: bold;
+}
+
+.input-group-text i {
+    cursor: pointer;
+}
+
+.input-group-text:hover {
+    color: black;
+}
+
+.linetext {
+   width: 100%;
+   text-align: center;
+   border-bottom: 0.5px solid rgba(0,0,0,0.12);
+   line-height: 0.1em;
+   margin: auto;
+}
+
+.linetext span {
+    background: #fff;
+    padding: 0 20px;
+}
+
+.googlebutton {
+    width: 100%;
+}
+
+.google {
+    width: 50%;
+    margin: 1em auto;
+    display: flex;
+    justify-content: center;
+    color: black;
+    font-size: 1em;
+    box-shadow: 0px 2px 2px rgba(0,0,0,0.12);
+    background: #fcfcfc;
+}
+.google img {
+    padding-right: 1em;
+}
+
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
@@ -809,6 +852,11 @@ PROFILE
     #sidebar, .menu {
         margin-left: -300px;
     }
+
+    .google {
+        width: 80%;
+    }
+
     #sidebar.active {
         margin-left: 0;
     }

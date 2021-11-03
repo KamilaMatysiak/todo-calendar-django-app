@@ -28,21 +28,15 @@ class UserRegisterForm(PopRequestMixin, CreateUpdateAjaxMixin, UserCreationForm)
             'email': ('E-mail'),
         }
         help_texts = {
-            'username': None }
+            'username': None
+        }
+
 
 class CustomAuthenticationForm(AuthenticationForm):
-
     class Meta:
         model = User
         fields = ['username', 'password']
-        labels = {
-            'username': ('Login'),
-            'password': ('Hasło'),
-        }
 
-        widgets = {
-            'password': forms.PasswordInput(attrs={'placeholder':'********','autocomplete': 'off', 'data-toggle': 'password'})
-        }
 
 class UserProfileForm(forms.ModelForm):
     class Meta:

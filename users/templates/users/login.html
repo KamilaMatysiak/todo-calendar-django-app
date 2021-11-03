@@ -2,7 +2,11 @@
 {% load bootstrap4 %}
 {% load crispy_forms_tags %}
 {% load static %}
+
 {% load socialaccount %}
+    <link rel="stylesheet" href=
+"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+<link rel="stylesheet" href="{% static 'css/vtodo-componets.css' %}">
 
 <form method="post" action="">
   {% csrf_token %}
@@ -17,8 +21,19 @@
     <div class="modal-body">
 
     {% for field in form %}
-          <div class="form-group{% if field.errors %} is-invalid{% endif %}">
-              {{ field | as_crispy_field }}
+          <div class="form-group{% if field.errors %} is-invalid{% endif %}" id="{% if field.name == 'password' %} pwd {% endif %}">
+
+              {% if field.name == 'password' %}
+              {{ field.label }}*
+              <div class="input-group mb-3">
+                <input type="password" id="password" class="form-control" aria-describedby="basic-addon2">
+                <div class="input-group-append">
+                  <a class="input-group-text" id="basic-addon2"><i class="bi bi-eye-slash" id="togglePassword"></i></a>
+                </div>
+              </div>
+              {% else %}
+                {{ field | as_crispy_field }}
+              {% endif %}
           </div>
     {% endfor %}
 
@@ -29,11 +44,27 @@
     </div>
 
   </div>
-  <div>
-    <a href="{% provider_login_url 'google' %}">Login With Google</a>
+        <p class="linetext"><span>lub</span></p>
+  <div class="googlebutton">
+    <a class="button google" href="{% provider_login_url 'google' %}"><img src="{% static 'image/icons/google-icon.svg' %}"> Zaloguj się przez Google</a>
   </div>
   <div class="modal-footer">
     <button type="submit" class="button add" formnovalidate="formnovalidate">Zaloguj</button>
   </div>
 
 </form>
+
+ <script>
+        const togglePassword = document
+            .querySelector('#togglePassword');
+
+        const password = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', () => {
+            const type = password
+                .getAttribute('type') === 'password' ?
+                'text' : 'password';
+            password.setAttribute('type', type);
+            togglePassword.classList.toggle('bi-eye');
+        });
+    </script>
