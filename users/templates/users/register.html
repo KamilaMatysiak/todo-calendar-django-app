@@ -15,25 +15,9 @@
   <div class="modal-body">
 
     {% for field in form %}
-          <script>
-              $("#onChange").on("change", function(e) {
-                if(e.target.name == 'username'){
-                  // console.log(e.target.name);
-                  const username = e.target.value;
-                  // console.log(username);
-
-                  const fetchURL = "/check_username/" + `${username}`;
-                  fetch(fetchURL)
-                  .then((response) => {return response.json();})
-                  .then((body) => {
-                    console.log(body);
-                    });
-                  // TODO: return result and show it on front end
-                }
-              });
-          </script>
-          <div id="onChange" class="form-group{% if field.errors %} is-invalid{% endif %}">
+          <div id="onChange" id="{% if field.name == 'username' %} username_field {% endif %}" class="form-group{% if field.errors%} is-invalid{% endif %}">
               {{ field | as_crispy_field }}
+              {% if field.name == 'username' %} <label id="usr_lbl" style="display: none;" class="invalid-feedback">Istnieje już użytkownik o takiej nazwie!</label> {% endif %}
           </div>
     {% endfor %}
 
@@ -49,3 +33,28 @@
     <button type="submit" class="button add" formnovalidate="formnovalidate">Zarejestruj</button>
   </div>
 </form>
+          <script>
+              $("#onChange").on("change", function(e) {
+                if(e.target.name == 'username'){
+                  const username = e.target.value;
+                  var usr = e.target
+
+                  const fetchURL = "/check_username/" + `${username}`;
+                  fetch(fetchURL)
+                  .then((response) => {return response.json();})
+                  .then((body) => {
+                    console.log(body);
+                    if(body.message == 'error') {
+                        usr.classList.add("is-invalid");
+                        document.getElementById("usr_lbl").style.display = "block";
+                        }
+                    else {
+                        usr.classList.remove("is-invalid");
+                        document.getElementById("usr_lbl").style.display = "None";
+                    }
+                    });
+
+
+                }
+              });
+          </script>
