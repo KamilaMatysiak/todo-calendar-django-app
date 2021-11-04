@@ -1,15 +1,15 @@
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalLoginView, BSModalUpdateView, BSModalDeleteView
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth import update_session_auth_hash, get_user_model
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext as _
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from .models import UserProfile
 
 from .forms import UserRegisterForm, CustomAuthenticationForm
@@ -67,3 +67,12 @@ class DeleteUserView(BSModalDeleteView):
 @login_required
 def profile(request):
     return render(request, 'users/profile.html')
+
+
+def username_ifunique(request, pk):
+    try:
+        user = get_object_or_404(get_user_model(), username=pk)
+        responce = pk
+    except Http404:
+        responce = "ok"
+    return HttpResponse(content={"message": responce})
