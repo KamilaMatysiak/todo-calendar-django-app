@@ -102,7 +102,7 @@ def home(request, year, month, day):
                   })
 
 
-def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, summary, description=None, location=None, attendees=None):
+def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, description, summary=None, location=None, attendees=None):
     if attendees is None:
         attendees = []
 
@@ -177,8 +177,12 @@ class AddEventView(BSModalCreateView):
             # print(calendar)
             # print(calendar.__dict__, "=  ")
             print("start: ", obj.date_start, "\n end: ", obj.date_end)
-            create_event(service=service, start_date_str=obj.date_start, summary=obj.description, end_date_str=obj.date_end,
-                         start_time_str=obj.time_start, end_time_str=obj.time_end)
+            create_event(service=service,
+                         start_date_str=obj.date_start,
+                         description=obj.title,
+                         end_date_str=obj.date_end,
+                         start_time_str=obj.time_start,
+                         end_time_str=obj.time_end)
         except Exception as e:
             print("Error is", e)
         return super(AddEventView, self).form_valid(form)
