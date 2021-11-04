@@ -9,7 +9,7 @@ from django.contrib.auth import update_session_auth_hash, get_user_model
 from django.contrib.auth.forms import PasswordChangeForm
 from django.shortcuts import render, redirect
 from django.utils.translation import ugettext as _
-from django.http import Http404, HttpResponse
+from django.http import Http404, JsonResponse
 from .models import UserProfile
 
 from .forms import UserRegisterForm, CustomAuthenticationForm
@@ -70,9 +70,12 @@ def profile(request):
 
 
 def username_ifunique(request, pk):
+    import json
+    response = {'message': ''}
     try:
         user = get_object_or_404(get_user_model(), username=pk)
-        responce = pk
+        response['message'] = 'error'
     except Http404:
-        responce = "ok"
-    return HttpResponse(content={"message": responce})
+        response['message'] = "ok"
+    print('respose', response)
+    return JsonResponse(response)

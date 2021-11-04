@@ -15,8 +15,30 @@
   <div class="modal-body">
 
     {% for field in form %}
+          <script>
+              $("#check_user").on("change", function(e) {
+
+              // console.log(e.target.name);
+              const username = e.target.value;
+              // console.log(username);
+
+              const fetchURL = "/check_username/" + `${username}`;
+              fetch(fetchURL)
+<!--              .then((response) => {response.json();console.log(response);})-->
+              .then((data) => {
+                console.log(data);
+                });
+
+              });
+          </script>
           <div class="form-group{% if field.errors %} is-invalid{% endif %}">
+            {% if field.name == 'username' %}
+              <div id="check_user">
               {{ field | as_crispy_field }}
+              </div>
+            {% else %}
+              {{ field | as_crispy_field }}
+            {% endif %}
           </div>
     {% endfor %}
 
