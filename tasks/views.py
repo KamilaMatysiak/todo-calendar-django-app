@@ -38,6 +38,10 @@ def test(request):
 def task_list(request):
     tasks = [x for x in Task.objects.all() if x.user == request.user]
     categories = [x for x in Category.objects.all() if x.user == request.user]
+    print(request.user)
+    for x in Category.objects.all():
+        print(x.user)
+    print(categories)
     #tasks = Task.objects.all()
     form = TaskModelForm()
 
@@ -54,6 +58,7 @@ def task_list(request):
 def categoryView(request, pk):
     category = Category.objects.get(id=pk)
     categories = [x for x in Category.objects.all() if x.user == request.user]
+    print(categories)
     tasks = [x for x in Task.objects.all() if x.user == request.user and x.category is not None and x.category.id == category.id]
 
     form = TaskModelForm()
@@ -216,6 +221,11 @@ class AddCategoryView(BSModalCreateView):
     form_class = CategoryModelForm
     success_message = "Dodano kategorię"
     success_url = reverse_lazy('list')
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        return super(AddCategoryView, self).form_valid(form)
 
 class EditCategoryView(BSModalUpdateView):
     model = Category
