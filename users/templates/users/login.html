@@ -21,19 +21,21 @@
     <div class="modal-body">
 
     {% for field in form %}
-          <div class="form-group{% if field.errors %} is-invalid{% endif %}" id="{% if field.name == 'password' %} pwd {% endif %}">
+          <div class="form-group{% if field.errors %} is-invalid{% endif %}">
 
               {% if field.name == 'password' %}
-              {{ field.label }}*
-              <div class="input-group mb-3">
-                <input type="password" id="password" class="form-control" aria-describedby="basic-addon2">
-                <div class="input-group-append">
-                  <a class="input-group-text" id="basic-addon2"><i class="bi bi-eye-slash" id="togglePassword"></i></a>
-                </div>
-              </div>
-              {% else %}
-                {{ field | as_crispy_field }}
-              {% endif %}
+
+                  {{ field.label }}*
+                  <div class="input-group mb-3">
+                    <input type="password" name="password" class="form-control" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                      <a class="input-group-text" id="basic-addon2"><i class="bi bi-eye-slash" id="togglePassword"></i></a>
+                    </div>
+                  </div>
+                    {{ field.errors }}
+                  {% else %}
+                    {{ field | as_crispy_field }}
+                  {% endif %}
           </div>
     {% endfor %}
 
@@ -57,10 +59,10 @@
  <script>
 
         document.querySelector('#togglePassword').addEventListener('click', () => {
-            const type = document.querySelector('#password')
+            const type = document.querySelector('[name="password"]')
                 .getAttribute('type') === 'password' ?
                 'text' : 'password';
-            document.querySelector('#password').setAttribute('type', type);
+            document.querySelector('[name="password"]').setAttribute('type', type);
             document.querySelector('#togglePassword').classList.toggle('bi-eye');
         });
     </script>
