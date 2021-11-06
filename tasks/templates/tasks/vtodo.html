@@ -69,16 +69,100 @@
 
         <div style="margin: 50px;">
               <h2>Witaj, {{user.username}}!</h2>
-            {% if count > 4 %}
-            <h3 class="line-text">Masz <p style="color: orange; margin: 0 15px; font-weight: bold;">{{count}}</p> zadań na dziś</h3>
-            {% elif count > 1 %}
-            <h3 class="line-text">Masz <p style="color: orange; margin: 0 15px; font-weight: bold;">{{count}}</p> zadania na dziś</h3>
-            {% elif count == 1 %}
-            <h3 class="line-text">Masz <p style="color: orange; margin: 0 15px; font-weight: bold;">{{count}}</p> zadanie na dziś</h3>
-            {% else %}
-            <h3 class="line-text">NIE MASZ ZADAŃ NA DZIŚ :)</h3>
-            {% endif %}
+
+
+            <a href="#today" data-toggle="collapse" aria-expanded="false"><h1>Na dziś ▾</h1></a>
+            <div id="today" class="collapse">
+            {% for task in today %}
+            <div class="task">
+                        <div class="task-content">
+                            <h1><b>{{task}}</b></h1><div class="task-info"><p id="date">
+                            {% if task|to_datetime|is_expired and not task.complete %}
+                                <p class="warning"><b>Spóźnienie</b></p>
+                            {% elif task.complete %}
+                                <p><b>Zakończone</b></p>
+                            {% else %}
+                                {{task |to_datetime |timeuntil}}
+                            {% endif %}
+                            </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
+                        </div>
+                        <div class="important-tag">
+                            {% if task.priority == "H" %}
+                                <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
+                            {% elif task.priority == "J" %}
+                                <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
+                            {% elif task.priority == "L" %}
+                                <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
+                            {% else %}
+                            <div style="width: 15px; height: 15px;"></div>
+                            {% endif %}
+                        </div>
             </div>
+            {% endfor %}
+            </div>
+
+            <a href="#important" data-toggle="collapse" aria-expanded="false"><h1>Ważne ▾</h1></a>
+            <div id="important" class="collapse">
+            {% for task in high %}
+            <div class="task">
+                        <div class="task-content">
+                            <h1><b>{{task}}</b></h1><div class="task-info"><p id="date">
+                            {% if task|to_datetime|is_expired and not task.complete %}
+                                <p class="warning"><b>Spóźnienie</b></p>
+                            {% elif task.complete %}
+                                <p><b>Zakończone</b></p>
+                            {% else %}
+                                {{task |to_datetime |timeuntil}}
+                            {% endif %}
+                            </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
+                        </div>
+                        <div class="important-tag">
+                            {% if task.priority == "H" %}
+                                <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
+                            {% elif task.priority == "J" %}
+                                <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
+                            {% elif task.priority == "L" %}
+                                <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
+                            {% else %}
+                            <div style="width: 15px; height: 15px;"></div>
+                            {% endif %}
+                        </div>
+            </div>
+            {% endfor %}
+            </div>
+
+            <a href="#late" data-toggle="collapse" aria-expanded="false"><h1>Spóźnione ▾</h1></a>
+            <div id="late" class="collapse">
+            {% for task in tasks %}
+            {% if task|to_datetime|is_expired and not task.complete %}
+            <div class="task">
+                        <div class="task-content">
+                            <h1><b>{{task}}</b></h1><div class="task-info"><p id="date">
+                            {% if task|to_datetime|is_expired and not task.complete %}
+                                <p class="warning"><b>Spóźnienie</b></p>
+                            {% elif task.complete %}
+                                <p><b>Zakończone</b></p>
+                            {% else %}
+                                {{task |to_datetime |timeuntil}}
+                            {% endif %}
+                            </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
+                        </div>
+                        <div class="important-tag">
+                            {% if task.priority == "H" %}
+                                <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
+                            {% elif task.priority == "J" %}
+                                <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
+                            {% elif task.priority == "L" %}
+                                <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
+                            {% else %}
+                            <div style="width: 15px; height: 15px;"></div>
+                            {% endif %}
+                        </div>
+            </div>
+            {%endif%}
+            {% endfor %}
+            </div>
+
         <div class="panel-container">
 
 

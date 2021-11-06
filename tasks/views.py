@@ -70,10 +70,18 @@ def categoryView(request, pk):
 
 def index(request):
     count = 0
+    today = []
+    priority = []
+    here = []
+
     tasks = [x for x in Task.objects.all() if x.user == request.user]
     for x in tasks:
         if x.date == datetime.date.today():
             count = count+1
+            today.append(x)
+        if x.priority == "H":
+            priority.append(x)
+
 
     webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
     vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
@@ -87,7 +95,12 @@ def index(request):
             lat = data.get('lat')
             lon = data.get('lon')
 
-    context = {"tasks": tasks, "count": count, user: user, 'vapid_key': vapid_key}
+    context = {"tasks": tasks,
+               "today": today,
+               "high": priority,
+               "here": here,
+               user: user,
+               'vapid_key': vapid_key}
     return render(request, 'tasks/vtodo.html', context)
 
 
