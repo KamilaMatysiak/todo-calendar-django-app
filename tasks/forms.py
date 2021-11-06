@@ -6,7 +6,11 @@ from bootstrap_datepicker_plus import DatePickerInput, TimePickerInput
 from django.contrib.auth.models import User
 
 class TaskModelForm(BSModalModelForm):
-    
+
+    def __init__(self, user, *args, **kwargs):
+        super(TaskModelForm, self).__init__(*args, **kwargs)
+        self.fields['category'].queryset = Category.objects.filter(user=user)
+
     with_who = forms.CharField(required=False, label="Kontakty")
     localization = forms.CharField(required=False, label="Lokalizacja")
     
