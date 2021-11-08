@@ -70,10 +70,55 @@
         <div style="margin: 50px;">
               <h2>Witaj, {{user.username}}!</h2>
 
-
-            <a href="#today" data-toggle="collapse" aria-expanded="false"><h1>Na dziś ▾</h1></a>
-            <div id="today" class="collapse">
-            {% for task in today %}
+            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Na dziś</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Ważne</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Spóźnione</a>
+              </li>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+              <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                  {% if not today%}
+                    <p>Nie masz zadań na dziś!</p>
+                  {% else %}
+                {% for task in today %}
+                    <div class="task">
+                                <div class="task-content">
+                                    <h1><b>{{task}}</b></h1><div class="task-info"><p id="date">
+                                    {% if task|to_datetime|is_expired and not task.complete %}
+                                        <p class="warning"><b>Spóźnienie</b></p>
+                                    {% elif task.complete %}
+                                        <p><b>Zakończone</b></p>
+                                    {% else %}
+                                        {{task |to_datetime |timeuntil}}
+                                    {% endif %}
+                                    </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
+                                </div>
+                                <div class="important-tag">
+                                    {% if task.priority == "H" %}
+                                        <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
+                                    {% elif task.priority == "J" %}
+                                        <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
+                                    {% elif task.priority == "L" %}
+                                        <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
+                                    {% else %}
+                                    <div style="width: 15px; height: 15px;"></div>
+                                    {% endif %}
+                                </div>
+                    </div>
+                    {% endfor %}
+                  {% endif %}
+              </div>
+              <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                  {% if not high%}
+                    <p>Wszystkie ważne zadania zostały wykonane!</p>
+                  {% else %}
+                  {% for task in high %}
             <div class="task">
                         <div class="task-content">
                             <h1><b>{{task}}</b></h1><div class="task-info"><p id="date">
@@ -99,41 +144,10 @@
                         </div>
             </div>
             {% endfor %}
-            </div>
-
-            <a href="#important" data-toggle="collapse" aria-expanded="false"><h1>Ważne ▾</h1></a>
-            <div id="important" class="collapse">
-            {% for task in high %}
-            <div class="task">
-                        <div class="task-content">
-                            <h1><b>{{task}}</b></h1><div class="task-info"><p id="date">
-                            {% if task|to_datetime|is_expired and not task.complete %}
-                                <p class="warning"><b>Spóźnienie</b></p>
-                            {% elif task.complete %}
-                                <p><b>Zakończone</b></p>
-                            {% else %}
-                                {{task |to_datetime |timeuntil}}
-                            {% endif %}
-                            </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
-                        </div>
-                        <div class="important-tag">
-                            {% if task.priority == "H" %}
-                                <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
-                            {% elif task.priority == "J" %}
-                                <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
-                            {% elif task.priority == "L" %}
-                                <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
-                            {% else %}
-                            <div style="width: 15px; height: 15px;"></div>
-                            {% endif %}
-                        </div>
-            </div>
-            {% endfor %}
-            </div>
-
-            <a href="#late" data-toggle="collapse" aria-expanded="false"><h1>Spóźnione ▾</h1></a>
-            <div id="late" class="collapse">
-            {% for task in tasks %}
+                  {% endif %}
+              </div>
+              <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                {% for task in tasks %}
             {% if task|to_datetime|is_expired and not task.complete %}
             <div class="task">
                         <div class="task-content">
@@ -159,9 +173,12 @@
                             {% endif %}
                         </div>
             </div>
-            {%endif%}
+                  
+                  {%endif%}
             {% endfor %}
+              </div>
             </div>
+
 
         <div class="panel-container">
 

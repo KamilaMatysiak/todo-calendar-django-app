@@ -82,7 +82,6 @@ def index(request):
         if x.priority == "H":
             priority.append(x)
 
-
     webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
     vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
     user = request.user
