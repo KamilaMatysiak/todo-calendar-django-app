@@ -39,10 +39,10 @@ def task_list(request):
     tasks = [x for x in Task.objects.all() if x.user == request.user]
     categories = [x for x in Category.objects.all() if x.user == request.user]
     #tasks = Task.objects.all()
-    form = TaskModelForm()
+    form = TaskModelForm(request.user)
 
     if request.method == 'POST':
-        form = TaskModelForm(request.POST)
+        form = TaskModelForm(request.user, request.POST)
 
         if form.is_valid():
             form.save()
@@ -56,10 +56,10 @@ def categoryView(request, pk):
     categories = [x for x in Category.objects.all() if x.user == request.user]
     tasks = [x for x in Task.objects.all() if x.user == request.user and x.category is not None and x.category.id == category.id]
 
-    form = TaskModelForm()
+    form = TaskModelForm(request.user)
 
     if request.method == 'POST':
-        form = TaskModelForm(request.POST)
+        form = TaskModelForm(request.user, request.POST)
 
         if form.is_valid():
             form.save()
@@ -108,6 +108,11 @@ class AddTaskView(BSModalCreateView):
             obj.l_lon = destination.longitude
         return super(AddTaskView, self).form_valid(form)
 
+    def get_form_kwargs(self):
+        kwargs = super(AddTaskView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
 
 class EditTaskView(BSModalUpdateView):
     model = Task
@@ -121,6 +126,11 @@ class EditTaskView(BSModalUpdateView):
         if not obj.user == self.request.user:
             raise Http404
         return obj
+
+    def get_form_kwargs(self):
+        kwargs = super(EditTaskView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
 
 class DeleteTaskView(BSModalDeleteView):
@@ -216,6 +226,11 @@ class AddCategoryView(BSModalCreateView):
     form_class = CategoryModelForm
     success_message = "Dodano kategorię"
     success_url = reverse_lazy('list')
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        return super(AddCategoryView, self).form_valid(form)
 
 class EditCategoryView(BSModalUpdateView):
     model = Category
