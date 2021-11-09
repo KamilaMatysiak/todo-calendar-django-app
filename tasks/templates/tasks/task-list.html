@@ -13,9 +13,9 @@
         <nav class="sidebar main">
             <a href="{% url 'vtodo' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div></a>
             <a href="{% url 'date' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
-            <div class="sidebar-btn active"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div>
+            <a href="#"><div class="sidebar-btn active"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div></a>
             <a href="{% url 'location' %}"><div class="sidebar-btn"><img id="map" src="{%static 'image/icons/map.svg' %}"></div></a>
-            <div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>
+            <!--<div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>-->
         </nav>
         <nav class="sidebar menu">
             <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>LISTA ZADAŃ</h1></div>
@@ -49,7 +49,7 @@
                     </ul>
                 </li>
                 <li><a href="{% url 'location' %}"><img src="{%static 'image/icons/mobile/map-icon-black.svg' %}"> Mapa</a></li>
-                <li><a href="#"><img src="{%static 'image/icons/mobile/set-icon-black.svg' %}"> Ustawienia</a></li>
+                <!--<div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>-->
             </ul>
             <ul class="list-unstyled"><li><a href="{% url 'logout' %}"><img src="{%static 'image/icons/mobile/logout.svg' %}"> Wyloguj się</a></li></ul>
         </div>
