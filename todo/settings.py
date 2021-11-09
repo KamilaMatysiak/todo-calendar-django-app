@@ -65,7 +65,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 ]
 # TODO: get id from db or check how to get the correct one
-SITE_ID = 1
+SITE_ID = 3
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -140,15 +140,14 @@ AUTHENTICATION_BACKENDS = [
     'social_core.backends.google.GoogleOAuth',
 ]
 
-SCOPES = ['https://www.googleapis.com/auth/calendar',
-          'https://www.googleapis.com/auth/calendar.events',
-          ]
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
             'profile',
             'email',
             'https://www.googleapis.com/auth/calendar',
+            'https://www.googleapis.com/auth/contacts.readonly',
+            # 'https://www.googleapis.com/auth/people.readonly',
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',
