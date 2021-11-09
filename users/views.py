@@ -11,8 +11,7 @@ from django.shortcuts import render, redirect
 from django.utils.translation import ugettext as _
 from django.http import Http404
 from .models import UserProfile
-
-from .forms import UserRegisterForm, CustomAuthenticationForm
+from .forms import UserRegisterForm, CustomAuthenticationForm, UserProfileForm
 
 
 class SignUpView(BSModalCreateView):
@@ -62,8 +61,21 @@ class DeleteUserView(BSModalDeleteView):
             raise Http404
         return obj
 
+class EditUserView(BSModalUpdateView):
+    model = UserProfile
+    template_name = 'users/edit_profile.html'
+    form_class = UserProfileForm
+    success_message = "Pomyślnie zedytowano konto"
+    success_url = reverse_lazy('profile')
 
 
 @login_required
 def profile(request):
-    return render(request, 'users/profile.html')
+    userProfile, costam = UserProfile.objects.get_or_create(user=request.user)
+    print(userProfile)
+    print(costam)
+    #if userProfile == None:
+     #   userProfile = UserProfile.objects.create(user=request.user, firstname=None, birthdate=None, phonenumber=None)
+
+
+    return render(request, 'users/profile.html', {'userProfile': userProfile})
