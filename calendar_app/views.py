@@ -156,6 +156,12 @@ def build_credentials(token):
                        )
 
 
+def construct_service(user):
+    social_token = SocialToken.objects.get(account__user=user)
+    creds = build_credentials(social_token)
+    return build('calendar', 'v3', credentials=creds)
+
+
 class AddEventView(BSModalCreateView):
     template_name = 'calendar/add_meeting.html'
     form_class = EventModelForm
@@ -169,10 +175,7 @@ class AddEventView(BSModalCreateView):
 
         print(obj.user, "   ")
         try:
-            social_token = SocialToken.objects.get(account__user=self.request.user)
-            # TODO: creds could be invalid
-            creds = build_credentials(social_token)
-            service = build('calendar', 'v3', credentials=creds)
+            service = construct_service(obj.user)
             print("start: ", obj.date_start, "\n end: ", obj.date_end)
             create_event(service=service,
                          start_date_str=obj.date_start,
@@ -220,9 +223,7 @@ def import_google_calendar_data(request):
     response = {}
     user = request.user
     try:
-        social_token = SocialToken.objects.get(account__user=user)
-        creds = build_credentials(social_token)
-        service = build('calendar', 'v3', credentials=creds)
+        service = construct_service(user)
 
         events_result = service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z',
                                               maxResults=10, singleEvents=True,
