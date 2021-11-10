@@ -6,14 +6,17 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 import calendar
 from datetime import datetime, date, timedelta
+import requests as api_reqs
 
 from .models import *
 from .forms import *
 from django.urls import reverse_lazy
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalDeleteView, BSModalUpdateView
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
+from google.oauth2.credentials import Credentials
+from allauth.socialaccount.models import SocialToken
 
 months = {
     1: "Styczeń",
@@ -77,7 +80,7 @@ def home(request, year, month, day):
     # current_year = now.year
     time = datetime.now().time()
     meetings = [x for x in Meeting.objects.all() if x.user == request.user]
-    #meetings = Meeting.objects.all()
+    # meetings = Meeting.objects.all()
     form = EventModelForm()
     return render(request,
                   'calendar/home.html',
@@ -102,7 +105,7 @@ def home(request, year, month, day):
                   })
 
 
-def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, summary, description=None,
+def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, description, summary=None,
                  location=None, attendees=None):
     if attendees is None:
         attendees = []
@@ -144,6 +147,14 @@ def current_date(request):
     return redirect('home', now.year, now.month, now.day)
 
 
+def build_credentials(token):
+    return Credentials(token=token.token,
+                       refresh_token=token.token_secret,
+                       client_id=token.app.client_id,
+                       client_secret=token.app.secret,
+                       )
+
+
 class AddEventView(BSModalCreateView):
     template_name = 'calendar/add_meeting.html'
     form_class = EventModelForm
@@ -155,28 +166,12 @@ class AddEventView(BSModalCreateView):
         obj = form.save(commit=False)
         obj.user = self.request.user
 
-        # TODO: SocialToken matching query does not exist
-        from google.oauth2.credentials import Credentials
-        from allauth.socialaccount.models import SocialToken
-
         print(obj.user, "   ")
         try:
             social_token = SocialToken.objects.get(account__user=self.request.user)
-            print(social_token,"   ")
-            print(social_token.__dict__, "   ")
             # TODO: creds could be invalid
-            creds = Credentials(token=social_token.token,
-                                refresh_token=social_token.token_secret,
-                                client_id=social_token.app.client_id,
-                                client_secret=social_token.app.secret,
-                                )
-            print(creds, "= ,")
-            print(creds.__dict__, "=  ")
+            creds = build_credentials(social_token)
             service = build('calendar', 'v3', credentials=creds)
-            # print(service.calendars().get(calendarId='primary').execute(), "=  ")
-            # calendar = service.calendars().get(calendarId='primary')
-            # print(calendar)
-            # print(calendar.__dict__, "=  ")
             print("start: ", obj.date_start, "\n end: ", obj.date_end)
             create_event(service=service,
                          start_date_str=obj.date_start,
@@ -190,7 +185,32 @@ class AddEventView(BSModalCreateView):
         return super(AddEventView, self).form_valid(form)
 
 
+@login_required
+def retrieve_google_contacts(request):
+    import xml.etree.ElementTree as ET
 
+    user = request.user
+    response = {}
+    try:
+        social_token = SocialToken.objects.get(account__user=user)
+
+        url = 'https://www.google.com/m8/feeds/contacts/default/full' + '?access_token=' + social_token.token + '&max-results=100'
+        data = api_reqs.get(url, headers={'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.30 (KHTML, like Gecko) Ubuntu/11.04 Chromium/12.0.742.112 Chrome/12.0.742.112 Safari/534.30"})
+        contacts_xml = ET.fromstring(data.text)
+        result = []
+
+        for entry in contacts_xml.findall('{http://www.w3.org/2005/Atom}entry'):
+            for address in entry.findall('{http://schemas.google.com/g/2005}email'):
+                email = address.attrib.get('address')
+                result.append(email)
+        response = {'msg': 'success',
+                    'data':  result}
+
+    except Exception as e:
+        print("Got next error when tried to get google contacts: ", e)
+        response = {'msg': 'error',
+                    'data': e}
+    return JsonResponse(response)
 
 
 class DeleteEventView(BSModalDeleteView):
@@ -217,8 +237,6 @@ def edit_meeting(request, pk):
         if form.is_valid():
             form.save()
             return redirect('/calendar')
-
-
 
     context = {'form': form, 'id': pk}
 
