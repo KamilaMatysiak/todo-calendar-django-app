@@ -132,6 +132,7 @@ def create_event(service, start_date_str, end_date_str, start_time_str, end_time
                 {'method': 'email', 'minutes': 24 * 60},
                 {'method': 'popup', 'minutes': 10}, ], }, }
     event = service.events().insert(calendarId="primary", body=event).execute()
+    print(event)
 
 
 def current_date(request):
@@ -176,7 +177,7 @@ class AddEventView(BSModalCreateView):
             create_event(service=service,
                          start_date_str=obj.date_start,
                          summary=obj.title,
-                         description=obj.title,
+                         description=obj.description,
                          end_date_str=obj.date_end,
                          start_time_str=obj.time_start,
                          end_time_str=obj.time_end)
