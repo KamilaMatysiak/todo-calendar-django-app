@@ -220,6 +220,8 @@ def retrieve_google_contacts(request):
 
 @login_required
 def import_google_calendar_data(request):
+    import re
+
     response = {}
     user = request.user
     try:
@@ -228,14 +230,34 @@ def import_google_calendar_data(request):
         events_result = service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z',
                                               maxResults=10, singleEvents=True,
                                               orderBy='startTime').execute()
-        print(events_result)
+        # print(events_result)
         events = events_result.get('items', [])
-        print(events)
+        # print(events)
+        for event in events:
+            print('\n', 20 * '*')
+            print(event)
+
+            date_start, time_start, _ = re.split(r"[TZ]", event['start'].get('dateTime', datetime.now))
+            date_end, time_end, _ = re.split(r"[TZ]", event['end'].get('dateTime', datetime.now))
+
+            meeting_kwargs = {
+                'user': user,
+                'title': event['summary'],
+                'description': event.get('description', 'brak opisu'),
+                'date_start': date_start,
+                'time_start': time_start,
+                'date_end': date_end,
+                'time_end': time_end
+            }
+
+            Meeting.objects.get_or_create(**meeting_kwargs)
+
         response = {'msg': 'success',
-                    'events': events}
+                    'data': events}
     except Exception as e:
         print('Got this exception: ', e)
-        response['msg'] = 'error'
+        response = {'msg': 'error',
+                    'data': e}
 
     return JsonResponse(response)
 
