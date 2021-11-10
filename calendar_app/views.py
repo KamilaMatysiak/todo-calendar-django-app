@@ -234,11 +234,9 @@ def import_google_calendar_data(request):
         events = events_result.get('items', [])
         # print(events)
         for event in events:
-            print('\n', 20 * '*')
-            print(event)
 
-            date_start, time_start, _ = re.split(r"[TZ]", event['start'].get('dateTime', datetime.now))
-            date_end, time_end, _ = re.split(r"[TZ]", event['end'].get('dateTime', datetime.now))
+            date_start, time_start, _ = re.split(r"[TZ]", event['start'].get('dateTime', datetime.now()))
+            date_end, time_end, _ = re.split(r"[TZ]", event['end'].get('dateTime', datetime.now()))
 
             meeting_kwargs = {
                 'user': user,
