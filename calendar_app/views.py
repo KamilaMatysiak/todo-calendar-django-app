@@ -196,7 +196,8 @@ def retrieve_google_contacts(request):
         social_token = SocialToken.objects.get(account__user=user)
 
         url = 'https://www.google.com/m8/feeds/contacts/default/full' + '?access_token=' + social_token.token + '&max-results=100'
-        data = api_reqs.get(url, headers={'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.30 (KHTML, like Gecko) Ubuntu/11.04 Chromium/12.0.742.112 Chrome/12.0.742.112 Safari/534.30"})
+        data = api_reqs.get(url, headers={
+            'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.30 (KHTML, like Gecko) Ubuntu/11.04 Chromium/12.0.742.112 Chrome/12.0.742.112 Safari/534.30"})
         contacts_xml = ET.fromstring(data.text)
         result = []
 
@@ -205,12 +206,36 @@ def retrieve_google_contacts(request):
                 email = address.attrib.get('address')
                 result.append(email)
         response = {'msg': 'success',
-                    'data':  result}
+                    'data': result}
 
     except Exception as e:
         print("Got next error when tried to get google contacts: ", e)
         response = {'msg': 'error',
                     'data': e}
+    return JsonResponse(response)
+
+
+@login_required
+def import_google_calendar_data(request):
+    response = {}
+    user = request.user
+    try:
+        social_token = SocialToken.objects.get(account__user=user)
+        creds = build_credentials(social_token)
+        service = build('calendar', 'v3', credentials=creds)
+
+        events_result = service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z',
+                                              maxResults=10, singleEvents=True,
+                                              orderBy='startTime').execute()
+        print(events_result)
+        events = events_result.get('items', [])
+        print(events)
+        response = {'msg': 'success',
+                    'events': events}
+    except Exception as e:
+        print('Got this exception: ', e)
+        response['msg'] = 'error'
+
     return JsonResponse(response)
 
 
