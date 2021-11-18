@@ -153,6 +153,11 @@ text-decoration: none;
     opacity: 0.5;
 }
 
+.small {
+min-width: 200px;
+    min-height: auto;
+}
+
 /*---------------------
         INPUT
 ----------------------*/
@@ -681,6 +686,92 @@ margin-left: 15px;
 .line-text {
     display: flex;
     justify-content: flex-start;
+    align-items: center;
+}
+
+/* ---------------------------------------------------
+    STRONA GŁÓWNA
+----------------------------------------------------- */
+
+.task-panel {
+    width: 90%;
+    margin: 2%;
+}
+
+.task-panel .task {
+    width: 100% !important;
+}
+
+.task-panel .task-content {
+    margin-left: 2%;
+}
+
+.nav-pills .nav-item {
+    width: 15%;
+    max-width: 200px;
+    border-radius: 0;
+}
+
+.nav-pills .nav-item .active {
+    background: #F2994A;
+    color: white;
+}
+
+.nav-pills .nav-item img {
+    width: 25px;
+    padding: 4px;
+    margin: 0 10px;
+}
+
+.active-icon {
+    display: none;
+}
+
+.nav-pills .nav-item .active .active-icon {
+    display: block;
+}
+
+.nav-pills .nav-item .active .icon {
+    display: none;
+}
+
+.nav-pills {
+    background: #e4e4e4;
+    width: 100%;
+    box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
+.nav-item a {
+    color: #a4a4a4;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.nav-item a:hover {
+    color: #545454;
+    background: #e2e2e2;
+}
+
+.all-tasks {
+    float: right;
+    justify-self: right;
+    color: #F2994A;
+    font-weight: 300;
+    cursor: pointer;
+}
+
+.all-tasks:hover {
+    font-weight: bold;
+    color: #F2994A;
+}
+
+.event-carousel {
+    width: 95%;
+    margin: 2%;
+    margin-bottom: 10vh;
+    display: flex;
+    justify-content: space-evenly;
     align-items: center;
 }
 

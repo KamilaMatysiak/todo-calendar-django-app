@@ -67,19 +67,46 @@
         </nav>
         <hr class="hr">
 
-        <div style="margin: 50px;">
-              <h2>Witaj, {{user.username}}!</h2>
+        <div class="task-panel">
+             <h2>Witaj, {{user.username}}!</h2>
+             <a class="all-tasks">Zobacz wszystkie</a>
+            <div class="event-carousel">
+            <div><</div>
+            <div class="event small blue"><div class="info"><h1>WYDARZENIE 5</h1><p>Opis spotkania</p></div><div class="date">gg:mm - gg:mm</div></div>
+            <div class="event small orange"><div class="info"><h1>WYDARZENIE 5</h1><p>Opis spotkania</p></div><div class="date">gg:mm - gg:mm</div></div>
+            <div class="event small green"><div class="info"><h1>WYDARZENIE 5</h1><p>Opis spotkania</p></div><div class="date">gg:mm - gg:mm</div></div>
+            <div class="event small purple"><div class="info"><h1>WYDARZENIE 5</h1><p>Opis spotkania</p></div><div class="date">gg:mm - gg:mm</div></div>
+            <div class="event small red"><div class="info"><h1>WYDARZENIE 5</h1><p>Opis spotkania</p></div><div class="date">gg:mm - gg:mm</div></div>
+            <div>></div>
+        </div>
+                    </div>
 
-            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <div class="task-panel">
+                <a class="all-tasks">Zobacz wszystkie</a>
+            <ul class="nav nav-pills " id="pills-tab" role="tablist">
               <li class="nav-item">
-                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">Na dziś</a>
+                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab"
+                   aria-controls="pills-home" aria-selected="true">
+                    <img class="icon" src="{% static 'image/icons/mainpage-calendar.svg' %}">
+                    <img class="active-icon" src="{% static 'image/icons/active-calendar.svg' %}">
+                    Na dziś
+                </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">Ważne</a>
+                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab"
+                   aria-controls="pills-profile" aria-selected="false">
+                    <img class="icon" src="{% static 'image/icons/mainpage-fire.svg' %}">
+                    <img class="active-icon" src="{% static 'image/icons/active-fire.svg' %}">
+                    Ważne</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Spóźnione</a>
+                <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab"
+                   aria-controls="pills-contact" aria-selected="false">
+                    <img class="icon" src="{% static 'image/icons/mainpage-late.svg' %}">
+                    <img class="active-icon" src="{% static 'image/icons/active-late.svg' %}">
+                    Spóźnione</a>
               </li>
+
             </ul>
             <div class="tab-content" id="pills-tabContent">
               <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
@@ -179,11 +206,6 @@
               </div>
             </div>
 
-
-        <div class="panel-container">
-
-
-        </div>
     </div>
 </div>
 
@@ -203,6 +225,10 @@
                 $('a[aria-expanded=true]').attr('aria-expanded', 'false');
             });
         });
+    </script>
+    <script>
+        document.getElementById("#fire-icon");
+        document.getElementByClass(".active");
     </script>
     <script src="{% static '/js/site.js' %}"></script>
     <script src="{% static '/js/registerSW.js' %}"></script>
