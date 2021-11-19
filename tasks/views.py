@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from .models import *
 from .forms import *
+from calendar_app.models import Meeting
 from geolocation.views import *
 from django.urls import reverse_lazy, reverse
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalDeleteView, BSModalUpdateView
@@ -71,8 +72,14 @@ def categoryView(request, pk):
 def index(request):
     count = 0
     today = []
+    today_events = []
     priority = []
     here = []
+
+    events = [x for x in Meeting.objects.all() if x.user == request.user]
+    for x in events:
+        if x.date_start == datetime.date.today() and x.time_end > datetime.datetime.now().time():
+            today_events.append(x)
 
     tasks = [x for x in Task.objects.all() if x.user == request.user]
     for x in tasks:
@@ -98,6 +105,7 @@ def index(request):
                "today": today,
                "high": priority,
                "here": here,
+               "events": today_events,
                user: user,
                'vapid_key': vapid_key}
     return render(request, 'tasks/vtodo.html', context)

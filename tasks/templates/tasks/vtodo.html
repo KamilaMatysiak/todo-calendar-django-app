@@ -71,13 +71,11 @@
              <h2>Witaj, {{user.username}}!</h2>
              <a class="all-tasks">Zobacz wszystkie</a>
             <div class="event-carousel">
-            <div><</div>
-            <div class="event small blue"><div class="info"><h1>WYDARZENIE 5</h1><p>Opis spotkania</p></div><div class="date">gg:mm - gg:mm</div></div>
-            <div class="event small orange"><div class="info"><h1>WYDARZENIE 5</h1><p>Opis spotkania</p></div><div class="date">gg:mm - gg:mm</div></div>
-            <div class="event small green"><div class="info"><h1>WYDARZENIE 5</h1><p>Opis spotkania</p></div><div class="date">gg:mm - gg:mm</div></div>
-            <div class="event small purple"><div class="info"><h1>WYDARZENIE 5</h1><p>Opis spotkania</p></div><div class="date">gg:mm - gg:mm</div></div>
-            <div class="event small red"><div class="info"><h1>WYDARZENIE 5</h1><p>Opis spotkania</p></div><div class="date">gg:mm - gg:mm</div></div>
-            <div>></div>
+            {% for meeting in events %}
+                        <a href="{% url 'edit_meeting' meeting.id %}">
+            <div class="event {{meeting.color}} {% if meeting.time_end < now %} passed {% endif%} small"><div class="info"><h1>{{meeting.title}}</h1></div><div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div></div>                    </a>
+
+            {% endfor %}
         </div>
                     </div>
 

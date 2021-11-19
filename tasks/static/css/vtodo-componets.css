@@ -768,10 +768,11 @@ margin-left: 15px;
 
 .event-carousel {
     width: 95%;
+    max-width: 95%;
     margin: 2%;
     margin-bottom: 10vh;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: left;
     align-items: center;
 }
 
@@ -934,6 +935,87 @@ PROFILE
 .google img {
     padding-right: 1em;
 }
+
+
+.radiobutton,
+.radiocontainer input {
+    width: 25px;
+    height: 25px;
+    border-radius: 90px;
+}
+
+.radiocontainer {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.radiocontainer input {
+    position: absolute;
+    opacity: 0%;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.radiobutton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  opacity: 100%;
+  z-index: 1;
+}
+
+.radiocontainer:hover input ~ .radiobutton{
+    opacity: 80%;
+    box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
+.mark {
+    position: relative;
+    display: inline-block;
+    margin: 3px 0;
+    width: 16px;
+    height: 16px;
+    background: none;
+    z-index: 0;
+}
+
+.mark::before {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    height: 50%;
+    width: 2px;
+    background-color: #fff;
+    content: "";
+    transform: translateX(10px) rotate(-45deg);
+    transform-origin: left bottom;
+}
+
+.mark::after {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 100%;
+    background-color: #fff;
+    content: "";
+    transform: translateX(10px) rotate(-45deg);
+    transform-origin: left bottom;
+}
+
+.radiocontainer input:checked ~ .mark {
+
+    z-index: 3;
+}
+
+
+
 
 /* ---------------------------------------------------
     MEDIAQUERIES
