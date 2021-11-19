@@ -57,12 +57,27 @@
                         <hr class="hr">
                         <div class="modal-body">
                             {% for field in form %}
+                                {%  if field.name == 'color' %}
+                                <label>{{field.label}}</label>
+                                <div class="center" style="justify-content: space-evenly; margin-bottom: 25px;">
+
+                                    {% for radio in field %}
+
+                                    <div class="radiocontainer">
+                                        {{radio.tag}}
+                                        <span class="{{radio.choice_label}} radiobutton" ></span>
+                                        <span class="mark"></span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
                                 <div class="form-group{% if field.errors %} invalid{% endif %}">
                                     {{ field | as_crispy_field }}
                                     {% for error in field.errors %}
                                       <p class="help-block">{{ error }}</p>
                                     {% endfor %}
                                 </div>
+                            {% endif %}
                             {% endfor %}
                         </div>
                               <div class="modal-footer">

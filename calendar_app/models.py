@@ -20,6 +20,7 @@ class Meeting(models.Model):
     time_start = models.TimeField(default=datetime.now)
     date_end = models.DateField(default=datetime.now)
     time_end = models.TimeField(default=datetime.now)
+    color = models.CharField(default="blue", max_length=50)
 
     def __str__(self):
         return self.title
