@@ -14,6 +14,8 @@ import os
 from pathlib import Path
 from os import getenv
 
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,14 +27,13 @@ SECRET_KEY = '@&ivg06$5v6#yo+^*y9ixt^^a(7bncddv$p2p7k2d#+@iaoc)i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = getenv("IS_DEVELOPMENT", True)
-#DEBUG = True
-#ALLOWED_HOSTS = ['127.0.0.1', '192.168.100.100', 'localhost', '192.168.100.24', '192.168.18.191', 'vtodo.pl', 'vitodo.pl', 'h22.seohost.pl']
-#ALLOWED_HOSTS = getenv("APP_HOST")
+# DEBUG = True
+# ALLOWED_HOSTS = ['127.0.0.1', '192.168.100.100', 'localhost', '192.168.100.24', '192.168.18.191', 'vtodo.pl', 'vitodo.pl', 'h22.seohost.pl']
+# ALLOWED_HOSTS = getenv("APP_HOST")
 
 SECURE_SSL_REDIRECT = getenv("COOKIES", False)
 SESSION_COOKIE_SECURE = getenv("COOKIES", False)
 CSRF_COOKIE_SECURE = getenv("COOKIES", False)
-
 
 ALLOWED_HOSTS = ['*']
 
@@ -64,9 +65,9 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 ]
-# TODO: get id from db or check how to get the correct one
-# Solution: Write custom Middleware
-SITE_ID = 3
+
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -76,7 +77,13 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.sites.middleware.CurrentSiteMiddleware',
+    'todo.middleware.DynamicSiteMiddleware'
 ]
+
+# TODO: get id from db or check how to get the correct one
+# Solution: Write custom Middleware
+SITE_ID = 3
 
 BOOTSTRAP4 = {
     'include_jquery': True,
@@ -119,16 +126,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
 
-   # {
-   #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-   # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    # },
 
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
-   # {
-   #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-   # },
+    # {
+    #     'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    # },
     {
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
@@ -163,16 +170,16 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 ]
 
 SOCIAL_AUTH_PIPELINE = (
-  'social_core.pipeline.social_auth.social_details',
-  'social_core.pipeline.social_auth.social_uid',
-  'social_core.pipeline.social_auth.auth_allowed',
-  'social_core.pipeline.social_auth.social_user',
-  'social_core.pipeline.user.get_username',
-  'social_core.pipeline.social_auth.associate_by_email',
-  'social_core.pipeline.user.create_user',
-  'social_core.pipeline.social_auth.associate_user',
-  'social_core.pipeline.social_auth.load_extra_data',
-  'social_core.pipeline.user.user_details',
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.social_auth.associate_by_email',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
 )
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "228316449016-s0210ihiktgnnaifeej15m87blo7rb2d.apps.googleusercontent.com"
@@ -192,14 +199,12 @@ USE_L10N = False
 
 USE_TZ = True
 
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 GEOIP_PATH = os.path.join(BASE_DIR, 'geoip')
 STATIC_URL = '/static/'
-#STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
+# STATIC_ROOT = os.path.join(BASE_DIR, '/static/')
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
     BASE_DIR / "static"
@@ -213,12 +218,11 @@ DATE_FORMAT = "d-m-Y"
 DATE_INPUT_FORMATS = ['%d-%m-%Y']
 TIME_FORMATS = ['%H:%M:%S']
 mimetypes.add_type('image/svg+xml', '.svg', True)
-#TIME_INPUT_FORMATS = '%H:%M'
+# TIME_INPUT_FORMATS = '%H:%M'
 
 STATICFILE_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]
-
 
 WEBPUSH_SETTINGS = {
     "VAPID_PUBLIC_KEY": """BBhw6SWqTPBLfnLuRZIOt-3KKOabs3zLbuwKXlIpK-pf1FYD22-dClSsCfx9GcfseNM-GUVHh07FoE_Mhkd4FAQ""",
