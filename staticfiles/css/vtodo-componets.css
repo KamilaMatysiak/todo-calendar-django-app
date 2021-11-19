@@ -79,6 +79,10 @@ text-decoration: none;
     max-width: 150px;
 }
 
+.warning {
+    color: #E47676;
+}
+
 /*---------------------
         EVENTS
 ----------------------*/
@@ -147,6 +151,11 @@ text-decoration: none;
 
 .passed {
     opacity: 0.5;
+}
+
+.small {
+min-width: 200px;
+    min-height: auto;
 }
 
 /*---------------------
@@ -681,6 +690,93 @@ margin-left: 15px;
 }
 
 /* ---------------------------------------------------
+    STRONA GŁÓWNA
+----------------------------------------------------- */
+
+.task-panel {
+    width: 90%;
+    margin: 2%;
+}
+
+.task-panel .task {
+    width: 100% !important;
+}
+
+.task-panel .task-content {
+    margin-left: 2%;
+}
+
+.nav-pills .nav-item {
+    width: 15%;
+    max-width: 200px;
+    border-radius: 0;
+}
+
+.nav-pills .nav-item .active {
+    background: #F2994A;
+    color: white;
+}
+
+.nav-pills .nav-item img {
+    width: 25px;
+    padding: 4px;
+    margin: 0 10px;
+}
+
+.active-icon {
+    display: none;
+}
+
+.nav-pills .nav-item .active .active-icon {
+    display: block;
+}
+
+.nav-pills .nav-item .active .icon {
+    display: none;
+}
+
+.nav-pills {
+    background: #e4e4e4;
+    width: 100%;
+    box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
+.nav-item a {
+    color: #a4a4a4;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.nav-item a:hover {
+    color: #545454;
+    background: #e2e2e2;
+}
+
+.all-tasks {
+    float: right;
+    justify-self: right;
+    color: #F2994A;
+    font-weight: 300;
+    cursor: pointer;
+}
+
+.all-tasks:hover {
+    font-weight: bold;
+    color: #F2994A;
+}
+
+.event-carousel {
+    width: 95%;
+    max-width: 95%;
+    margin: 2%;
+    margin-bottom: 10vh;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+/* ---------------------------------------------------
     NAVBAR
 ----------------------------------------------------- */
 
@@ -798,6 +894,129 @@ PROFILE
     color: #F2994A;
 }
 
+.input-group-text {
+    font-weight: bold;
+}
+
+.input-group-text i {
+    cursor: pointer;
+}
+
+.input-group-text:hover {
+    color: black;
+}
+
+.linetext {
+   width: 100%;
+   text-align: center;
+   border-bottom: 0.5px solid rgba(0,0,0,0.12);
+   line-height: 0.1em;
+   margin: auto;
+}
+
+.linetext span {
+    background: #fff;
+    padding: 0 20px;
+}
+
+.googlebutton {
+    width: 100%;
+}
+
+.google {
+    width: 50%;
+    margin: 1em auto;
+    display: flex;
+    justify-content: center;
+    color: black;
+    font-size: 1em;
+    box-shadow: 0px 2px 2px rgba(0,0,0,0.12);
+}
+.google img {
+    padding-right: 1em;
+}
+
+
+.radiobutton,
+.radiocontainer input {
+    width: 25px;
+    height: 25px;
+    border-radius: 90px;
+}
+
+.radiocontainer {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.radiocontainer input {
+    position: absolute;
+    opacity: 0%;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.radiobutton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  opacity: 100%;
+  z-index: 1;
+}
+
+.radiocontainer:hover input ~ .radiobutton{
+    opacity: 80%;
+    box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
+.mark {
+    position: relative;
+    display: inline-block;
+    margin: 3px 0;
+    width: 16px;
+    height: 16px;
+    background: none;
+    z-index: 0;
+}
+
+.mark::before {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    height: 50%;
+    width: 2px;
+    background-color: #fff;
+    content: "";
+    transform: translateX(10px) rotate(-45deg);
+    transform-origin: left bottom;
+}
+
+.mark::after {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 100%;
+    background-color: #fff;
+    content: "";
+    transform: translateX(10px) rotate(-45deg);
+    transform-origin: left bottom;
+}
+
+.radiocontainer input:checked ~ .mark {
+
+    z-index: 3;
+}
+
+
+
+
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
@@ -805,6 +1024,11 @@ PROFILE
     #sidebar, .menu {
         margin-left: -300px;
     }
+
+    .google {
+        width: 80%;
+    }
+
     #sidebar.active {
         margin-left: 0;
     }
