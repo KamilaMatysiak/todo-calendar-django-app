@@ -649,6 +649,9 @@ td
     border-radius: 90px;
 }
 
+.passed-day .pointer {
+    background: #c4c4c4;
+}
 
 /* ---------------------------------------------------
     CONTENT STYLE
