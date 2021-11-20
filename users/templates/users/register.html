@@ -3,6 +3,14 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
+<style>
+    .errorList {
+        list-style:none;
+        padding: 0;
+        color: red;
+        }
+
+</style>
 <form method="post" action="">
   {% csrf_token %}
 
@@ -20,38 +28,42 @@
   <div class="modal-body">
 
     {% for field in form %}
-          <div id="onChange" id="{% if field.name == 'username' %} username_field {% endif %}" class="form-group{% if field.errors%} is-invalid{% endif %}">
+          <div id="onChange" id="{% if field.name == 'username' %}  username_field {% endif %}" class="form-group{% if field.errors%} is-invalid{% endif %}">
               {% if field.name == 'password1' %}
 
                   {{ field.label }}*
-                  <div class="input-group mb-3">
-                    <input type="password" name="password" class="form-control" aria-describedby="basic-addon2">
+                  <div class="input-group mb-3 {% if field.errors%} is-invalid{% endif %}">
+                    <input id="{{ field.id_for_label }}" type="password" required name="password1" class="form-control {% if field.errors%} is-invalid{% endif %}" aria-describedby="basic-addon2">
                     <div class="input-group-append">
                       <a class="input-group-text" id="basic-addon2"><i class="bi bi-eye-slash" id="togglePassword"></i></a>
                     </div>
                   </div>
-                {{ field.errors }}
+                {% for error in field.errors %}
+              <p class="invalid-feedback"><strong>{{error}}</strong></p>
+                {% endfor %}
               {% elif field.name == 'password2' %}
 
                   {{ field.label }}*
-                  <div class="input-group mb-3">
-                    <input type="password" name="password2" class="form-control" aria-describedby="basic-addon22">
+                  <div class="input-group mb-3 {% if field.errors%} is-invalid{% endif %}">
+                    <input id="{{ field.id_for_label }}" type="password" name="password2" class="form-control {% if field.errors%} is-invalid{% endif %}" aria-describedby="basic-addon22">
                     <div class="input-group-append">
                       <a class="input-group-text" id="basic-addon22"><i class="bi bi-eye-slash" id="toggleRepeatPassword"></i></a>
                     </div>
                   </div>
-                    {{ field.errors }}
-                                {% else %}
+                                    {% for error in field.errors %}
+              <p class="invalid-feedback"><strong>{{error}}</strong></p>
+                {% endfor %}
+              {% else %}
               {{ field | as_crispy_field }}
+              {% endif %}
               {% if field.name == 'username' %}
-                          {% endif %}
-                <label id="usr_lbl" style="display: none;" class="invalid-feedback">Istnieje już użytkownik o takiej nazwie!</label>
+
+              <label id="usr_lbl" style="display: none;" class="invalid-feedback"><strong>Istnieje już użytkownik o takiej nazwie!</strong></label>
 
                {% endif %}
+
           </div>
     {% endfor %}
-
-
   </div>
 
   <div class="modal-footer">
@@ -87,10 +99,10 @@
  <script>
 
         document.querySelector('#togglePassword').addEventListener('click', () => {
-            const type = document.querySelector('[name="password"]')
+            const type = document.querySelector('[name="password1"]')
                 .getAttribute('type') === 'password' ?
                 'text' : 'password';
-            document.querySelector('[name="password"]').setAttribute('type', type);
+            document.querySelector('[name="password1"]').setAttribute('type', type);
             document.querySelector('#togglePassword').classList.toggle('bi-eye');
         });
 
