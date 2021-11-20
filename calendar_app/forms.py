@@ -16,7 +16,7 @@ class EventModelForm(BSModalModelForm):
             ('purple', 'purple'),
             ('green', 'green')]
 
-    color = forms.CharField(label="Kolor", widget=forms.RadioSelect(choices=COLORS))
+    color = forms.CharField(label="Kolor", widget=forms.RadioSelect(choices=COLORS), initial="blue")
 
     class Meta:
         model = Meeting

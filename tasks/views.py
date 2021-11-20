@@ -75,6 +75,7 @@ def index(request):
     today_events = []
     priority = []
     here = []
+    late = []
 
     events = [x for x in Meeting.objects.all() if x.user == request.user]
     for x in events:
@@ -83,11 +84,15 @@ def index(request):
 
     tasks = [x for x in Task.objects.all() if x.user == request.user]
     for x in tasks:
-        if x.date == datetime.date.today():
-            count = count+1
-            today.append(x)
-        if x.priority == "H":
-            priority.append(x)
+        if not x.complete:
+            if x.date == datetime.date.today():
+                count = count+1
+                today.append(x)
+                if not x.complete and x.time < datetime.datetime.now().time():
+                    late.append(x)
+            if x.priority == "H":
+                priority.append(x)
+
 
     webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
     vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
@@ -104,8 +109,9 @@ def index(request):
     context = {"tasks": tasks,
                "today": today,
                "high": priority,
+               "late": late,
                "here": here,
-               "events": today_events,
+               "events": today_events[:5],
                user: user,
                'vapid_key': vapid_key}
     return render(request, 'tasks/vtodo.html', context)
