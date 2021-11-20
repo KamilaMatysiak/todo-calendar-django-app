@@ -153,9 +153,9 @@ text-decoration: none;
     opacity: 0.5;
 }
 
-.small {
-min-width: 200px;
-    min-height: auto;
+.small-event {
+    width: 200px;
+    min-height: 135px;
 }
 
 /*---------------------
@@ -635,6 +635,21 @@ td
     font-weight: bold;
 }
 
+.pointer {
+    display: none;
+}
+
+.busy .pointer {
+    display: block;
+    width: 4px;
+    height: 4px;
+    margin: 0 auto;
+
+    background: #2F9CEB;
+    border-radius: 90px;
+}
+
+
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
@@ -692,6 +707,11 @@ margin-left: 15px;
 /* ---------------------------------------------------
     STRONA GŁÓWNA
 ----------------------------------------------------- */
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+}
 
 .task-panel {
     width: 90%;
@@ -767,12 +787,13 @@ margin-left: 15px;
 }
 
 .event-carousel {
-    width: 95%;
-    max-width: 95%;
-    margin: 2%;
-    margin-bottom: 10vh;
     display: flex;
-    justify-content: left;
+    width: 100%;
+    max-width: 100%;
+    overflow: auto;
+    flex-wrap: wrap;
+    margin-bottom: 10vh;
+    justify-content: flex-start;
     align-items: center;
 }
 
@@ -1168,7 +1189,22 @@ content: '+';
 
 .event {
  width: 100%;
- margin: 0;
+ margin: 5px 0;
+}
+
+.task-panel {
+    width: 95%;
+    margin: auto;
+}
+
+.event-carousel {
+    width: 100vw;
+    flex-direction: column;
+    justify-content: left;
+}
+
+.small-event{
+    width: 90vw;
 }
 
 #mobile-sidebar .week-label
@@ -1198,6 +1234,17 @@ td {
 #add-event
 {
     font-size: 0.7rem;
+}
+
+.nav-pills {
+    display: flex;
+}
+
+
+.nav-pills .nav-item {
+    width: 30vw;
+    max-width: auto;
+    margin: 0;
 }
 
 }

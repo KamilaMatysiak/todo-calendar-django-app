@@ -304,7 +304,6 @@ text-decoration: none;
 
 .small {
     width: 75px;
-    z-index: 100;
 }
 
 .main {
@@ -635,6 +634,21 @@ td
 .current a {
     font-weight: bold;
 }
+
+.pointer {
+    display: none;
+}
+
+.busy .pointer {
+    display: block;
+    width: 4px;
+    height: 4px;
+    margin: 0 auto;
+
+    background: #2F9CEB;
+    border-radius: 90px;
+}
+
 
 /* ---------------------------------------------------
     CONTENT STYLE
