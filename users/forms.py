@@ -4,7 +4,9 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.files.images import get_image_dimensions
 from users.models import UserProfile
+from bootstrap_modal_forms.forms import BSModalModelForm
 from django.utils.translation import ugettext, ugettext_lazy as _
+from bootstrap_datepicker_plus import DatePickerInput
 
 
 class UserRegisterForm(PopRequestMixin, CreateUpdateAjaxMixin, UserCreationForm):
@@ -32,13 +34,30 @@ class UserRegisterForm(PopRequestMixin, CreateUpdateAjaxMixin, UserCreationForm)
         }
 
 
+
 class CustomAuthenticationForm(AuthenticationForm):
     class Meta:
         model = User
         fields = ['username', 'password']
 
 
-class UserProfileForm(forms.ModelForm):
+
+class UserProfileForm(BSModalModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['firstname', 'birthdate', 'phonenumber']
+        labels = {
+            'firstname': ('Imię i nazwisko'),
+            'birthdate': ('Data urodzenia'),
+            'phonenumber': ('Numer telefonu')
+        }
+
+        widgets = {
+            'birthdate': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl"}),
+        }
+
+
+class UserAvatarForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['avatar']
