@@ -65,6 +65,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 ]
 # TODO: get id from db or check how to get the correct one
+# Solution: Write custom Middleware
 SITE_ID = 3
 
 MIDDLEWARE = [
@@ -140,15 +141,14 @@ AUTHENTICATION_BACKENDS = [
     'social_core.backends.google.GoogleOAuth',
 ]
 
-SCOPES = ['https://www.googleapis.com/auth/calendar',
-          'https://www.googleapis.com/auth/calendar.events',
-          ]
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
             'profile',
             'email',
             'https://www.googleapis.com/auth/calendar',
+            'https://www.googleapis.com/auth/contacts.readonly',
+            # 'https://www.googleapis.com/auth/people.readonly',
         ],
         'AUTH_PARAMS': {
             'access_type': 'online',
