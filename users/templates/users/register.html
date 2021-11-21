@@ -1,9 +1,22 @@
 
 {% load bootstrap4 %}
 {% load crispy_forms_tags %}
+{% load static %}
 
+<style>
+    .errorList {
+        list-style:none;
+        padding: 0;
+        color: red;
+        }
+
+</style>
 <form method="post" action="">
   {% csrf_token %}
+
+        <link rel="stylesheet" href=
+"https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css" />
+<link rel="stylesheet" href="{% static 'css/vtodo-componets.css' %}">
 
   <div class="modal-header">
     <h3 class="modal-title">Rejestracja</h3>
@@ -15,12 +28,42 @@
   <div class="modal-body">
 
     {% for field in form %}
-          <div class="form-group{% if field.errors %} is-invalid{% endif %}">
+          <div id="onChange" id="{% if field.name == 'username' %}  username_field {% endif %}" class="form-group{% if field.errors%} is-invalid{% endif %}">
+              {% if field.name == 'password1' %}
+
+                  {{ field.label }}*
+                  <div class="input-group mb-3 {% if field.errors%} is-invalid{% endif %}">
+                    <input id="{{ field.id_for_label }}" type="password" required name="password1" class="form-control {% if field.errors%} is-invalid{% endif %}" aria-describedby="basic-addon2">
+                    <div class="input-group-append">
+                      <a class="input-group-text" id="basic-addon2"><i class="bi bi-eye-slash" id="togglePassword"></i></a>
+                    </div>
+                  </div>
+                {% for error in field.errors %}
+              <p class="invalid-feedback"><strong>{{error}}</strong></p>
+                {% endfor %}
+              {% elif field.name == 'password2' %}
+
+                  {{ field.label }}*
+                  <div class="input-group mb-3 {% if field.errors%} is-invalid{% endif %}">
+                    <input id="{{ field.id_for_label }}" type="password" name="password2" class="form-control {% if field.errors%} is-invalid{% endif %}" aria-describedby="basic-addon22">
+                    <div class="input-group-append">
+                      <a class="input-group-text" id="basic-addon22"><i class="bi bi-eye-slash" id="toggleRepeatPassword"></i></a>
+                    </div>
+                  </div>
+                                    {% for error in field.errors %}
+              <p class="invalid-feedback"><strong>{{error}}</strong></p>
+                {% endfor %}
+              {% else %}
               {{ field | as_crispy_field }}
+              {% endif %}
+              {% if field.name == 'username' %}
+
+              <label id="usr_lbl" style="display: none;" class="invalid-feedback"><strong>Istnieje już użytkownik o takiej nazwie!</strong></label>
+
+               {% endif %}
+
           </div>
     {% endfor %}
-
-
   </div>
 
   <div class="modal-footer">
@@ -28,3 +71,46 @@
     <button type="submit" class="button add" formnovalidate="formnovalidate">Zarejestruj</button>
   </div>
 </form>
+          <script>
+              $("#onChange").on("change", function(e) {
+                if(e.target.name == 'username'){
+                  const username = e.target.value;
+                  var usr = e.target
+
+                  const fetchURL = "/check_username/" + `${username}`;
+                  fetch(fetchURL)
+                  .then((response) => {return response.json();})
+                  .then((body) => {
+                    console.log(body);
+                    if(body.message == 'error') {
+                        usr.classList.add("is-invalid");
+                        document.getElementById("usr_lbl").style.display = "block";
+                        }
+                    else {
+                        usr.classList.remove("is-invalid");
+                        document.getElementById("usr_lbl").style.display = "None";
+                    }
+                    });
+
+
+                }
+              });
+          </script>
+ <script>
+
+        document.querySelector('#togglePassword').addEventListener('click', () => {
+            const type = document.querySelector('[name="password1"]')
+                .getAttribute('type') === 'password' ?
+                'text' : 'password';
+            document.querySelector('[name="password1"]').setAttribute('type', type);
+            document.querySelector('#togglePassword').classList.toggle('bi-eye');
+        });
+
+        document.querySelector('#toggleRepeatPassword').addEventListener('click', () => {
+            const type2 = document.querySelector('[name="password2"]')
+                .getAttribute('type') === 'password' ?
+                'text' : 'password';
+            document.querySelector('[name="password2"]').setAttribute('type', type2);
+            document.querySelector('#toggleRepeatPassword').classList.toggle('bi-eye');
+        });
+    </script>

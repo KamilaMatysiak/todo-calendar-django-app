@@ -118,7 +118,8 @@ def home(request, year, month, day):
                   })
 
 
-def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, description, summary=None, location=None, attendees=None):
+def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, summary, description=None,
+                 location=None, attendees=None):
     if attendees is None:
         attendees = []
 
@@ -195,6 +196,7 @@ class AddEventView(BSModalCreateView):
             print("start: ", obj.date_start, "\n end: ", obj.date_end)
             create_event(service=service,
                          start_date_str=obj.date_start,
+                         summary=obj.title,
                          description=obj.title,
                          end_date_str=obj.date_end,
                          start_time_str=obj.time_start,

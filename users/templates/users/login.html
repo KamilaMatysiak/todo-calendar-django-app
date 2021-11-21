@@ -26,13 +26,15 @@
               {% if field.name == 'password' %}
 
                   {{ field.label }}*
-                  <div class="input-group mb-3">
-                    <input type="password" name="password" class="form-control" aria-describedby="basic-addon2">
+                  <div class="input-group mb-3 {% if field.errors%} is-invalid{% endif %}">
+                    <input type="password" name="password" class="form-control {% if field.errors%} is-invalid{% endif %}" aria-describedby="basic-addon2">
                     <div class="input-group-append">
                       <a class="input-group-text" id="basic-addon2"><i class="bi bi-eye-slash" id="togglePassword"></i></a>
                     </div>
                   </div>
-                    {{ field.errors }}
+              {% for error in field.errors %}
+              <p class="invalid-feedback"><strong>{{error}}</strong></p>
+                {% endfor %}
                   {% else %}
                     {{ field | as_crispy_field }}
                   {% endif %}
