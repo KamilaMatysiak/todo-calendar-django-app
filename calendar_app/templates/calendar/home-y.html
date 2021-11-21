@@ -20,12 +20,12 @@
     </nav>
         <nav class="sidebar menu">
             <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>KALENDARZ</h1></div>
-            <div class="calendar-module">
-                <div class="calendar-header">
-                    <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
-                    <div class="month-label"><p>{{month_name}} {{year}}</p></div>
-                    <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
-                </div>
+                <div class="calendar-module">
+                    <div class="calendar-header">
+                        <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
+                        <div class="month-label"><p>{{month_name}} {{year}}</p></div>
+                        <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
+                    </div>
 
                 <table class="labels">
                     <tr class="week-label">
@@ -40,19 +40,30 @@
                 </table>
 
                 <table class="month">
-                    {% for d, classes in days %}
-                        {% if d.0 == 0 %}
-                            <td class="noday"></td>
-                        {% else %}
-                            <td class="{{ classes }}"><a href="{% url 'home' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
-                        {% endif %}
-                        {% if d.1 == 6 %}<tr>{% endif %}
-                    {% endfor %}
-                </table>
-            </div>
-           <ul class="menu-buttons">
-                <li class="option-dropdown"><a>Połącz z Kalendarzem Google</a></li>
-           </ul>
+                                {% for d in days %}
+                                    {% if d.0 == 0 %}
+                                        <td class="noday"></td>
+                                    {% elif d.0 == day and month == current_month and d.0 == current_day%}
+                                        <td class="active-day current"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
+                                    {% elif d.0 == day %}
+                                        <td class="active-day"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
+                                    {% elif month == current_month and d.0 == current_day %}
+                                        <td class="current"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
+                                    {% elif month == current_month and d.0 < current_day %}
+                                        <td class="passed-day"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
+
+                                    {% elif d.1 == 6 %}
+                                        <td class="sunday"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td><tr>
+                                    {% else %}
+                                        <td class="day"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
+                                    {% endif %}
+                                    {% if d.1 == 6 %}<tr>{% endif %}
+                                {% endfor %}
+                                </table>
+                            </div>
+                           <ul class="menu-buttons">
+                                <li class="option-dropdown"><a>Połącz z Kalendarzem Google</a></li>
+                            </ul>
         </nav>
     </nav>
 
@@ -86,11 +97,22 @@
                                         <th class="sun"><p>Nd</p></th></tr>
                                 </table>
                                 <table class="month">
-                                {% for d, classes in days %}
+                                {% for d in daysy %}
                                     {% if d.0 == 0 %}
                                         <td class="noday"></td>
+                                    {% elif d.0 == day and month == current_month and d.0 == current_day%}
+                                        <td class="active-day current"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
+                                    {% elif d.0 == day %}
+                                        <td class="active-day"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
+                                    {% elif month == current_month and d.0 == current_day %}
+                                        <td class="current"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
+                                    {% elif month == current_month and d.0 < current_day %}
+                                        <td class="passed-day"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
+
+                                    {% elif d.1 == 6 %}
+                                        <td class="sunday"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td><tr>
                                     {% else %}
-                                        <td class="{{ classes }}"><a href="{% url 'home' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
+                                        <td class="day"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
                                     {% endif %}
                                     {% if d.1 == 6 %}<tr>{% endif %}
                                 {% endfor %}

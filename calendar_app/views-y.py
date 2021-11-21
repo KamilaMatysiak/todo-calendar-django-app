@@ -68,32 +68,15 @@ def home(request, year, month, day):
         next.append(next_month_range)
     else:
         next.append(day)
+    days = cal.itermonthdays2(year, month)
+    daysy = cal.itermonthdays2(year, month)
     now = datetime.now()
     day_name = date.strftime("%A")
     current_day = now.day
     current_month = now.month
     # current_year = now.year
-    meetings = [x for x in Meeting.objects.all() if x.user == request.user]
-    #days = [x for x in cal.itermonthdays2(year, month)]
-    days = []
-    for d in cal.itermonthdays2(year, month):
-        classes = ""
-        for m in meetings:
-            if m.date_start.day == d[0] and m.date_start.month == month and m.date_start.year == year:
-                classes += "busy "
-                break
-        if d[0] == day:
-            classes += "current "
-        if month == current_month and d[0] == current_day:
-            classes += "active-day "
-        if month == current_month and d[0] < current_day:
-            classes += "passed-day "
-        if classes == "":
-            classes = "day"
-        days.append([d, classes])
-
     time = datetime.now().time()
-
+    meetings = [x for x in Meeting.objects.all() if x.user == request.user]
     #meetings = Meeting.objects.all()
     form = EventModelForm()
     return render(request,
@@ -108,6 +91,7 @@ def home(request, year, month, day):
                       "next_month": next,
                       "month_name": month_name,
                       "days": days,
+                      "daysy": daysy,
                       "day_name": day_name,
                       "current_day": current_day,
                       "current_month": current_month,
@@ -118,8 +102,7 @@ def home(request, year, month, day):
                   })
 
 
-def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, summary, description=None,
-                 location=None, attendees=None):
+def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, description, summary=None, location=None, attendees=None):
     if attendees is None:
         attendees = []
 
@@ -196,7 +179,6 @@ class AddEventView(BSModalCreateView):
             print("start: ", obj.date_start, "\n end: ", obj.date_end)
             create_event(service=service,
                          start_date_str=obj.date_start,
-                         summary=obj.title,
                          description=obj.title,
                          end_date_str=obj.date_end,
                          start_time_str=obj.time_start,
