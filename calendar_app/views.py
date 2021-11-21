@@ -79,6 +79,42 @@ def home(request, year, month, day):
     meetings = [x for x in Meeting.objects.all() if x.user == request.user]
     #meetings = Meeting.objects.all()
     form = EventModelForm()
+
+    timetable = []
+    for i in range(24):
+        timetable.append((f"{i}"":00", []))
+        for j in range(15, 60, 15):
+            if j%30==0:
+                timetable.append((f"{i}:{j}", []))
+            else:
+                timetable.append(("", []))
+
+    for m in meetings:
+        if m.date_start.day == day and m.date_start.month == month and m.date_start.year == year:
+            interval = m.time_start.hour * 4 + m.time_start.minute // 15
+            timetable[interval][1].append(m)
+    max_width = 1
+    tutu = [["", []] for i in range(24 * 60 // 15)]
+
+    for index, (label, time_period) in enumerate(timetable):
+        tutu[index][0] = label
+        for event in time_period:
+            length = get_span(event)
+            tutu[index][1].append(event)
+            for j in range(1, length):
+                if (index+j) < len(tutu):
+                    tutu[index+j][1].append("busy")
+        if len(tutu[index][1]) > max_width:
+            max_width = len(tutu[index][1])
+
+    #print(timetable)
+    for x in tutu:
+        string = ""
+        for y in x[1]:
+            string += " " + str(y)
+        print(f"{x[0]}|{string}")
+    print("Maksymalna szerokosc to ",max_width)
+
     return render(request,
                   'calendar/home.html',
                   {
@@ -98,9 +134,14 @@ def home(request, year, month, day):
                       #   "current_year": current_year,
                       "time": time,
                       "meetings": meetings,
-                      "form": form
+                      "form": form,
+                      "timetable": timetable,
                   })
 
+def get_span(meeting):
+    diff = ((meeting.time_end.hour - meeting.time_start.hour) * 60
+            + (meeting.time_end.minute - meeting.time_start.minute)) // 15
+    return diff + 1
 
 def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, summary, description=None,
                  location=None, attendees=None):

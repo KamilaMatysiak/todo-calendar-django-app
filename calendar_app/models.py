@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.timezone import now
-from datetime import datetime, date, time
+from datetime import datetime, timedelta, time, date
 
 User = get_user_model()
 

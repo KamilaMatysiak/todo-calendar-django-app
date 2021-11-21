@@ -89,7 +89,7 @@ text-decoration: none;
 
 .event {
     width: 250px;
-    min-height: 250px;
+    min-height: 25px;
     color: white;
     font-family: sans-serif;
     padding: 5px;
@@ -99,7 +99,7 @@ text-decoration: none;
     align-items: flex-start;
     justify-content: flex-start;
     flex-direction: column;
-    
+
 }
 
     .blue {
@@ -129,6 +129,7 @@ text-decoration: none;
 
 .event h1 {
     font-size: 1.3rem;
+    text-align: left;
 }
 
 .event p {
@@ -631,6 +632,57 @@ td
 }
 
 /* ---------------------------------------------------
+    TIMETABLE
+----------------------------------------------------- */
+
+.timetable {
+    display: block;
+    width: 78vw;
+    max-height: 85vh !important;
+    height: 85vh;
+    padding: 0;
+    text-align: left;
+    overflow-y: auto;
+    overflow-x: auto;
+    table-layout: fixed;
+
+}
+
+.hour-span {
+    min-width: 50px;
+    height: 25px;
+    width: 50px !important;
+    max-width: 50px;
+        border-right: 1px solid #F2994A;
+}
+
+.hour-container{
+    min-width: 50px;
+    width: 35px;
+    max-width: 40px;
+    height: 100%;
+    max-height: 25px !important;
+    float: left;
+    text-align: right;
+
+}
+
+td {
+    width: 1px;
+    height: 1px;
+}
+
+.hour-container p {
+    margin-right: 10px;
+}
+
+.timetable .event {
+    min-height: 100%;
+}
+
+.timetable tr:nth-child(4n+1) {font-weight: bold;}
+
+/* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
 
@@ -672,7 +724,7 @@ margin-left: 15px;
 
 .link {
     text-decoration: none;
-    color: orange;
+    color: #F2994A;
     font-weight: bold;
     margin: 0;
     cursor: pointer;

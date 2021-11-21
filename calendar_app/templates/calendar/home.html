@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load poll_extras %}
 {% load avatar_tags %}
 
 {% block headcontent %}
@@ -158,15 +159,25 @@
         </nav>
         <hr>
 
-            {% for meeting in meetings %}
-                {% if meeting.date_start <= date %}
-                    {% if date <= meeting.date_end %}
-                        <a href="{% url 'edit_meeting' meeting.id %}">
-            <div class="event blue long"><div class="info"><h1>{{meeting.title}}</h1><p>{{meeting.description}}</p></div><div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div></div>                    </a>
-                    {% endif %}
-                {% endif %}
-            {% endfor %}
+        <div class="table-container">
+        <table class="timetable">
+        {% for hour, meetings in timetable %}
+                <tr>
+                    <td class="hour-span"><div class="hour-container"><p>{{hour}}</p></div></td>
+                    {% for meeting in meetings %}
+                    <td rowspan="{{meeting|get_meeting_span}}">
+                                           <a href="{% url 'edit_meeting' meeting.id %}">
+                        <div class="event blue {% if meeting|passed %} passed {% endif %}">
+                            <div class="info"><h1>{{meeting.title}}</h1><p>{{meeting.description}}</p></div>
+                            <div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div>
+                            </div></a>
+                    </td>{% endfor %}
 
+                </tr>
+
+        {% endfor %}
+        </table>
+            </div>
     </div>
 </div>
 
