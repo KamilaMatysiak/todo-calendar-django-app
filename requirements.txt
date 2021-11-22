@@ -41,6 +41,5 @@ django-allauth==0.45.0
 datefinder==0.7.1
 google-api-python-client==2.27.0
 google-auth-oauthlib==0.4.6
-django-phonenumber-field==6.0.0
-phonenumbers-field==8.12.37
+phonenumbers==8.12.37
 
