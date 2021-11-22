@@ -18,7 +18,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2.credentials import Credentials
 from allauth.socialaccount.models import SocialToken
 
-from custom_variables import colors_event, colors_calendar, months, timezone
+from .custom_variables import colors_event, colors_calendar, months, timezone
 
 
 @login_required
