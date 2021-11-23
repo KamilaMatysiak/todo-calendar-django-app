@@ -678,6 +678,7 @@ td {
 
 .timetable .event {
     min-height: 100%;
+    margin: 0 2px;
 }
 
 .timetable tr:nth-child(4n+1) {font-weight: bold;}
@@ -1047,7 +1048,7 @@ content: '+';
 
 .event {
  width: 100%;
- margin: 0;
+ margin: 2px;
 }
 
 #mobile-sidebar .week-label
@@ -1077,6 +1078,10 @@ td {
 #add-event
 {
     font-size: 0.7rem;
+}
+
+.timetable {
+    width: 100vw;
 }
 
 }
