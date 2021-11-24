@@ -7,7 +7,7 @@ from django.shortcuts import redirect, render
 import calendar
 from datetime import datetime, date, timedelta
 import requests as api_reqs
-
+from django.http import HttpResponseRedirect
 from .models import *
 from tasks.models import Task
 from .forms import *
@@ -312,8 +312,15 @@ class ConnectTaskView(BSModalUpdateView):
         kwargs['user'] = self.request.user
         return kwargs
 
+    def get_object(self):
+        obj = super(ConnectTaskView, self).get_object()
+        self.initial['tasks'] = Task.objects.filter(meeting=obj)
+        return obj
+
     def form_valid(self, form):
         tasks = Task.objects.filter(user=self.request.user, meeting=self.object)
+        if "tasks" not in form.cleaned_data:
+            form.cleaned_data["tasks"] = []
         for task in tasks:
             if task not in form.cleaned_data["tasks"]:
                 print("Nie znajduje sie")
@@ -323,9 +330,12 @@ class ConnectTaskView(BSModalUpdateView):
             print(task, "do something weird with it")
             task.meeting = self.object
             task.save()
-        return super(ConnectTaskView, self).form_valid(form)
+        return HttpResponseRedirect(self.get_success_url())
 
 
+    def form_invalid(self, form):
+        """If the form is invalid, render the invalid form."""
+        return self.form_valid(form)
 
 def delete_meeting(request, pk):
     """Deletes meeting from meeting list

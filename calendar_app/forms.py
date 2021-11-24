@@ -44,8 +44,9 @@ class ConnectTaskForm(BSModalModelForm):
     def __init__(self, user, *args, **kwargs):
         super(ConnectTaskForm, self).__init__(*args, **kwargs)
         self.fields['tasks'].queryset = Task.objects.filter(user=user)
+        #self.fields['tasks'].initial = Task.objects.filter(meeting=self.object)
 
-    tasks = forms.ModelMultipleChoiceField(queryset = None)
+    tasks = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple )
 
     class Meta:
         model = Meeting

@@ -164,6 +164,10 @@ text-decoration: none;
     opacity: 0.5;
 }
 
+.chosen{
+    background: rgba(0,0,0,0.2) !important;
+}
+
 .small-event {
     width: 200px;
     min-height: 135px;
@@ -732,13 +736,20 @@ margin-left: 15px;
     margin: 2%;
 }
 
-.task-panel .task {
+.task-panel-modal {
+    width: 100%;
+}
+
+
+.task-panel .task,
+.task-panel-modal .task {
     width: 100% !important;
 }
 
 .task-panel .task-content {
     margin-left: 2%;
 }
+
 
 .nav-pills .nav-item {
     width: 15%;
@@ -936,6 +947,17 @@ margin-left: 15px;
     border-radius: 4px;
     box-shadow: 0 4px 4px rgba(0,0,0,0.2);
 }
+
+.panel .navbar h2 {
+    font-size: 1.7rem;
+}
+
+.panel hr {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+
 .panel-container {
     display: flex;
     width: 100%;

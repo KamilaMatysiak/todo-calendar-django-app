@@ -13,16 +13,34 @@
       </div>
 
       <div class="modal-body">
+          <div class="task-panel-modal">
           {% for field in form %}
-      <div {class="form-group">
-          {{ field | as_crispy_field}}
-                    <div class="{% if field.errors %} invalid{% endif %}">
-          {% for error in field.errors %}
-            <p class="help-block">{{ error }}</p>
+            <div>
+
+                {% for checkbox in field %}
+
+                <div class="task">
+                    {{checkbox.tag}}
+                        <div class="task-content">
+                            <h1>{{checkbox.choice_label}}</h1>
+                        </div>
+                        <div class="important-tag">
+                            {% if checkbox.priority == "H" %}
+                                <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
+                            {% elif task.priority == "J" %}
+                                <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
+                            {% elif task.priority == "L" %}
+                                <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
+                            {% else %}
+                            <div style="width: 15px; height: 15px;"></div>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
           {% endfor %}
-        </div>
-      </div>
-    {% endfor %}
+          </div>
       </div>
 
       <div class="modal-footer">
@@ -31,4 +49,29 @@
       </div>
 
     </form>
+<script>
+    function clicked_checkboxes() {
+         var inputs = document.getElementsByTagName("input");
+        for(var i = 0; i < inputs.length; i++) {
+            if(inputs[i].type == "checkbox") {
+                if (inputs[i].checked == true)
+                {
+                    inputs[i].parentElement.classList.add("chosen");
+                }
+                else {
+                    inputs[i].parentElement.classList.remove("chosen");
+                }
+            }
+        }
+    }
+    $(document).ready(function() {
+       clicked_checkboxes();
+       var inputs = document.getElementsByTagName("input");
+       for(var i = 0; i < inputs.length; i++) {
+            if(inputs[i].type == "checkbox") {
+                inputs[i].addEventListener("click", clicked_checkboxes);
+            }
+        }
+    });
 
+</script>

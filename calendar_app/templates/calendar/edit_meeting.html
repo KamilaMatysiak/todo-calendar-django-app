@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
 {% load crispy_forms_tags %}
-
+{% load poll_extras %}
 {%load static%}
-
+{% load avatar_tags %}
 {% block content %}
 
     <div class="wrapper">
@@ -34,15 +34,7 @@
                         <form method="POST" action="">
                             <button id="delete-event" data-form-url="{% url 'delete_meeting' id %}" class="button delete delete-event" type="button" name="button">Usuń spotkanie</button>
                         </form>
-                        <div class="avatar">
-                            <a href="{% url 'profile' %}">
-                            {% if user.avatar == None %}
-                                <img alt="avatar" src="{%static 'image/avatar-test.png' %}" />
-                            {% else %}
-                                <img alt="avatar" src="user.avatar"/>
-                            {% endif %}
-                                </a>
-                        </div>
+                        <div class="avatar"><a href="{% url 'profile' %}">{% avatar user %}</a></div>
 
                     </div>
                 </nav>
@@ -90,14 +82,22 @@
 
 
                     <div class="panel">
-                        <div class="navbar"><h2>Menedżer zadań</h2><h2>{{count}}</h2></div>
+                        <div class="navbar"><h2>Menedżer zadań</h2><h2 style="color:#F2994A;">{{count}}</h2></div>
                         <hr class="hr">
-                        <button id="connect-task" class="button add" style="width: 50%; align-self: center;" data-toggle="modal" data-form-url="{% url 'connect_task' meeting.pk %}"> DODAJ ZADANIA</button>
+                        <button id="connect-task" class="button add" style="width: 50%; align-self: center; margin-bottom: 15px;" data-toggle="modal" data-form-url="{% url 'connect_task' meeting.pk %}"> DODAJ ZADANIA</button>
+                        <div style="background: #fdfdfd; box-shadow: inset 0 0 4px rgba(0,0,0,0.2);">
                         {% for task in tasks %}
                             {% if task.meeting == meeting %}
-                                <div class="task" style="width: 100%; margin: 15px  auto;">
+                                <div class="task" style="width: 98%; margin: 1%;">
                                 <div class="task-content" style="margin-left: 15px;">
                                     <h1><b>{{task}}</b></h1><div class="task-info"><p id="date">
+                                    {% if task|to_datetime|is_expired and not task.complete %}
+                                        <p class="warning"><b>Spóźnienie</b></p>
+                                    {% elif task.complete %}
+                                        <p><b>Zakończone</b></p>
+                                    {% else %}
+                                        {{task |to_datetime |timeuntil}}
+                                    {% endif %}
                                     </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
                                 </div>
                                 <div class="important-tag">
@@ -112,8 +112,10 @@
                                     {% endif %}
                                 </div>
                     </div>
+
                             {% endif %}
                         {% endfor %}
+                            </div>
                     </div>
                 </div>
             <!--</form>-->
