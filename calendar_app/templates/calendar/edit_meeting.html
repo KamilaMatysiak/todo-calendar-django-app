@@ -90,9 +90,30 @@
 
 
                     <div class="panel">
-                        <div class="navbar"><h2>Menedżer zadań</h2><h2>0</h2></div>
+                        <div class="navbar"><h2>Menedżer zadań</h2><h2>{{count}}</h2></div>
                         <hr class="hr">
-                        <button class="button add" style="width: 50%; align-self: center;">DODAJ ZADANIA</button>
+                        <button id="connect-task" class="button add" style="width: 50%; align-self: center;" data-toggle="modal" data-form-url="{% url 'connect_task' meeting.pk %}"> DODAJ ZADANIA</button>
+                        {% for task in tasks %}
+                            {% if task.meeting == meeting %}
+                                <div class="task" style="width: 100%; margin: 15px  auto;">
+                                <div class="task-content" style="margin-left: 15px;">
+                                    <h1><b>{{task}}</b></h1><div class="task-info"><p id="date">
+                                    </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
+                                </div>
+                                <div class="important-tag">
+                                    {% if task.priority == "H" %}
+                                        <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
+                                    {% elif task.priority == "J" %}
+                                        <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
+                                    {% elif task.priority == "L" %}
+                                        <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
+                                    {% else %}
+                                    <div style="width: 15px; height: 15px;"></div>
+                                    {% endif %}
+                                </div>
+                    </div>
+                            {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             <!--</form>-->
@@ -107,6 +128,12 @@
             $(".delete-event").each(function () {
                 $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
             });
+
+            $("#connect-task").each(function () {
+              $(this).modalForm({
+                formURL: $(this).data("form-url")});
+            });
+
         });
         </script>
     <script type="text/javascript">

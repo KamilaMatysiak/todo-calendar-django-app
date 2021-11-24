@@ -9,6 +9,7 @@ from datetime import datetime, date, timedelta
 import requests as api_reqs
 
 from .models import *
+from tasks.models import Task
 from .forms import *
 from django.urls import reverse_lazy
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalDeleteView, BSModalUpdateView
@@ -277,7 +278,9 @@ class DeleteEventView(BSModalDeleteView):
 
 
 def edit_meeting(request, pk):
+    count = 0
     meeting = Meeting.objects.get(id=pk)
+
     form = EventModelForm(instance=meeting)
     if not meeting.user == request.user:
         raise Http404
@@ -288,9 +291,40 @@ def edit_meeting(request, pk):
             form.save()
             return redirect('/calendar')
 
-    context = {'form': form, 'id': pk}
+    tasks = [x for x in Task.objects.all() if x.user == request.user]
+    for x in tasks:
+        if x.meeting == meeting:
+            count += 1
+
+    context = {'form': form, 'id': pk, 'meeting': meeting, 'tasks': tasks, 'count': count}
 
     return render(request, 'calendar/edit_meeting.html', context)
+
+class ConnectTaskView(BSModalUpdateView):
+    model = Meeting
+    template_name = 'calendar/connect_tasks.html'
+    form_class = ConnectTaskForm
+    success_message = "Podpięto zadania"
+    success_url = reverse_lazy('date')
+
+    def get_form_kwargs(self):
+        kwargs = super(ConnectTaskView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def form_valid(self, form):
+        tasks = Task.objects.filter(user=self.request.user, meeting=self.object)
+        for task in tasks:
+            if task not in form.cleaned_data["tasks"]:
+                print("Nie znajduje sie")
+                task.meeting = None
+                task.save()
+        for task in form.cleaned_data["tasks"]:
+            print(task, "do something weird with it")
+            task.meeting = self.object
+            task.save()
+        return super(ConnectTaskView, self).form_valid(form)
+
 
 
 def delete_meeting(request, pk):
