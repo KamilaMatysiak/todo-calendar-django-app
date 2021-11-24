@@ -81,10 +81,10 @@
                 </div>
 
                 <div class="data">
-                    <p>{{userProfile.firstname}}</p>
-                    <p>{{userProfile.birthdate}} </p>
-                    <p>{{user.email}}</p>
-                    <p>{{userProfile.phonenumber }}</p>
+                    <p>{% if userProfile.firstname == None %} (brak danych) {% else %}{{userProfile.firstname}}{% endif %}</p>
+                    <p>{% if userProfile.birthdate == None %} (brak danych) {% else %}{{userProfile.birthdate}}{% endif %} </p>
+                    <p>{% if user.email == None %} (brak danych) {% else %}<strong>{{user.email}}</strong>{% endif %}</p>
+                    <p>{% if userProfile.phonenumber == None %} (brak danych) {% else %}{{userProfile.phonenumber }}{% endif %}</p>
                     <p>******** <button class="button inverse borderless" id="change-password">ZMIEŃ HASŁO</button></p>
                 </div>
 
