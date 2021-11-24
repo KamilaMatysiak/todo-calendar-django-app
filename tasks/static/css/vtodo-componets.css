@@ -166,6 +166,7 @@ text-decoration: none;
 
 .chosen{
     background: rgba(0,0,0,0.2) !important;
+    box-shadow: none;
 }
 
 .small-event {
@@ -738,12 +739,33 @@ margin-left: 15px;
 
 .task-panel-modal {
     width: 100%;
+    max-height: 50vh !important;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
+.panel .task-panel-modal {
+    max-height: 80%;
+}
+
+#top {
+    width: 80%;
+    min-height: 0;
+    max-height: 60% !important;
+}
+
+#bottom {
+    width: 80%;
+    min-height: 0;
+    flex: 1;
+    max-height: 40% !important;
+}
 
 .task-panel .task,
 .task-panel-modal .task {
     width: 100% !important;
+    position: relative;
+
 }
 
 .task-panel .task-content {
@@ -964,6 +986,13 @@ margin-left: 15px;
     flex-wrap: wrap;
 }
 
+.inside {
+    flex-direction: column;
+    width: 49%;
+    padding: 1% 0;
+    margin 0 2%;
+}
+
 .profile-panel {
     width: 60%;
     margin: 15px auto;
@@ -1145,7 +1174,30 @@ PROFILE
     z-index: 3;
 }
 
+/*-----------------------------------------
+    CUSTOM CHECKBOX IN TASK LIST (connect)
+-------------------------------------------*/
 
+.task-panel-modal .task input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+}
+
+.task-panel-modal .task-content {
+
+    width: 100%;
+}
+
+.task-panel-modal  .task-content h1 {
+    margin-left: 15px;
+}
+
+.task-panel-modal .task:hover ~ .task-panel-modal .task-content {
+    background: #eee;
+}
 
 
 .profile-footer {
@@ -1379,4 +1431,7 @@ td {
     width: 40%
 }
 
+#top, #bottom, .inside {
+    width: 100vw;
+}
 }

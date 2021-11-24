@@ -80,12 +80,12 @@
             </form>
                     </div>
 
-
-                    <div class="panel">
+                    <div class="panel-container inside" style="flex-direction: column; width: 50%;padding: 1% 0;">
+                    <div class="panel" id="top">
                         <div class="navbar"><h2>Menedżer zadań</h2><h2 style="color:#F2994A;">{{count}}</h2></div>
                         <hr class="hr">
                         <button id="connect-task" class="button add" style="width: 50%; align-self: center; margin-bottom: 15px;" data-toggle="modal" data-form-url="{% url 'connect_task' meeting.pk %}"> DODAJ ZADANIA</button>
-                        <div style="background: #fdfdfd; box-shadow: inset 0 0 4px rgba(0,0,0,0.2);">
+                        <div class="task-panel-modal">
                         {% for task in tasks %}
                             {% if task.meeting == meeting %}
                                 <div class="task" style="width: 98%; margin: 1%;">
@@ -112,12 +112,20 @@
                                     {% endif %}
                                 </div>
                     </div>
-
                             {% endif %}
                         {% endfor %}
                             </div>
+
                     </div>
+                                                                            <div class="panel" id="bottom">
+                        <div class="navbar"><h2>Notatki</h2></div>
+                        <hr class="hr"><button id="add-note" class="button add" style="width: 50%; align-self: center; margin-bottom: 15px;" data-toggle="modal" data-form-url="{% url 'connect_task' meeting.pk %}">DODAJ NOTATKĘ</button>
+
+                                                            <div class="task-panel-modal"></div>
+                                                        </div>
+
                 </div>
+
             <!--</form>-->
 
 
