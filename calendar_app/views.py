@@ -171,23 +171,22 @@ class AddEventView(BSModalCreateView):
     success_url = reverse_lazy('date')
 
     def form_valid(self, form):
-
         obj = form.save(commit=False)
         obj.user = self.request.user
 
-        print(obj.user, "   ")
-        try:
-            service = construct_service(obj.user)
-            print("start: ", obj.date_start, "\n end: ", obj.date_end)
-            create_event(service=service,
-                         start_date_str=obj.date_start,
-                         summary=obj.title,
-                         description=obj.description,
-                         end_date_str=obj.date_end,
-                         start_time_str=obj.time_start,
-                         end_time_str=obj.time_end)
-        except Exception as e:
-            print("Error is", e)
+        if self.request.is_ajax():
+            try:
+                service = construct_service(obj.user)
+                print("start: ", obj.date_start, "\n end: ", obj.date_end)
+                create_event(service=service,
+                             start_date_str=obj.date_start,
+                             summary=obj.title,
+                             description=obj.description,
+                             end_date_str=obj.date_end,
+                             start_time_str=obj.time_start,
+                             end_time_str=obj.time_end)
+            except Exception as e:
+                print("Error is", e)
         return super(AddEventView, self).form_valid(form)
 
 
