@@ -191,6 +191,23 @@ class AddEventView(BSModalCreateView):
             print("Error is", e)
         return super(AddEventView, self).form_valid(form)
 
+class AddNoteView(BSModalCreateView):
+    template_name = 'calendar/add_note.html'
+    form_class = NoteModelForm
+    success_message = "Dodano notatkę"
+    success_url = reverse_lazy('date')
+
+    def get_object(self, quaryset=None):
+        print("something")
+        return super(AddNoteView, self).get_object()
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        meeting = Meeting.objects.get(pk=self.kwargs["meeting_pk"])
+        obj.meeting = meeting
+        print(self.kwargs)
+        return super(AddNoteView, self).form_valid(form)
 
 @login_required
 def retrieve_google_contacts(request):
@@ -296,7 +313,10 @@ def edit_meeting(request, pk):
         if x.meeting == meeting:
             count += 1
 
-    context = {'form': form, 'id': pk, 'meeting': meeting, 'tasks': tasks, 'count': count}
+    notes = [x for x in Notes.objects.all() if x.user == request.user]
+
+
+    context = {'form': form, 'id': pk, 'meeting': meeting, 'tasks': tasks, 'count': count, 'notes': notes}
 
     return render(request, 'calendar/edit_meeting.html', context)
 

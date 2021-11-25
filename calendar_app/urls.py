@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.current_date, name="date"),
     path('add_meeting', views.AddEventView.as_view(), name="add_meeting"),
     path('connect_task/<int:pk>', views.ConnectTaskView.as_view(), name="connect_task"),
+    path('add_note/<int:meeting_pk>', views.AddNoteView.as_view(), name="add_note"),
     path('retrieve_google_contacts', views.retrieve_google_contacts, name="retrieve_contacts"),
     path('import_google_calendar_data', views.import_google_calendar_data, name="import_calendar"),
     path('edit/<int:pk>', views.edit_meeting, name='edit_meeting'),

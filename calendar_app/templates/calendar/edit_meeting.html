@@ -119,9 +119,15 @@
                     </div>
                                                                             <div class="panel" id="bottom">
                         <div class="navbar"><h2>Notatki</h2></div>
-                        <hr class="hr"><button id="add-note" class="button add" style="width: 50%; align-self: center; margin-bottom: 15px;" data-toggle="modal" data-form-url="{% url 'connect_task' meeting.pk %}">DODAJ NOTATKĘ</button>
+                        <hr class="hr"><button id="add-note" class="button add" style="width: 50%; align-self: center; margin-bottom: 15px;" data-toggle="modal" data-form-url="{% url 'add_note' meeting.pk %}">DODAJ NOTATKĘ</button>
 
-                                                            <div class="task-panel-modal"></div>
+                                                            <div class="task-panel-modal" id="notes">
+                                                                {% for note in notes%}
+                                                                    {% if note.meeting == meeting %}
+                                                                <a  href=""><div class="note">{{note.text}}</div></a>
+                                                                    {% endif %}
+                                                                {% endfor %}
+                                                            </div>
                                                         </div>
 
                 </div>
@@ -139,7 +145,7 @@
                 $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
             });
 
-            $("#connect-task").each(function () {
+            $("#add-note").each(function () {
               $(this).modalForm({
                 formURL: $(this).data("form-url")});
             });

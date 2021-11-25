@@ -51,3 +51,10 @@ class ConnectTaskForm(BSModalModelForm):
     class Meta:
         model = Meeting
         fields = ['tasks']
+
+class NoteModelForm(BSModalModelForm):
+    class Meta:
+        model = Notes
+        fields = ['text']
+
+        labels = {"text": ("Wprowadź notatkę:")}

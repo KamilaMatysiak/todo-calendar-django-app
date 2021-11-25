@@ -744,6 +744,10 @@ margin-left: 15px;
     overflow-y: auto;
 }
 
+#notes {
+    max-height: 150px !important;
+}
+
 .panel .task-panel-modal {
     max-height: 80%;
 }
@@ -766,6 +770,14 @@ margin-left: 15px;
     width: 100% !important;
     position: relative;
 
+}
+
+.note {
+    background: #eee;
+    margin: 2px;
+    color: #333;
+    width: 100%;
+    padding: 15px;
 }
 
 .task-panel .task-content {
