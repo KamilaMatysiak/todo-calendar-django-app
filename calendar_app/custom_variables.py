@@ -50,4 +50,17 @@ colors_event = {'1': {'background': '#a4bdfc', 'foreground': '#1d1d1d', 'name': 
                 '10': {'background': '#51b749', 'foreground': '#1d1d1d', 'name': 'green'},
                 '11': {'background': '#dc2127', 'foreground': '#1d1d1d', 'name': 'red'},
                 }
+vtodo_colors_event = {
+    'cool gray': '1',
+    'light green': '2',
+    'purple': '3',
+    'pink': '4',
+    'yellow': '5',
+    'orange': '6',
+    'cyan': '7',
+    'grey': '8',
+    'blue': '9',
+    'green': '10',
+    'red': '11',
+}
 timezone = 'Europe/Warsaw'

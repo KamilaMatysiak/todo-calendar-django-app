@@ -18,7 +18,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2.credentials import Credentials
 from allauth.socialaccount.models import SocialToken
 
-from .custom_variables import colors_event, colors_calendar, months, timezone
+from .custom_variables import colors_event, colors_calendar, months, timezone, vtodo_colors_event
 
 
 @login_required
@@ -108,7 +108,7 @@ def home(request, year, month, day):
 
 
 def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, description, summary=None,
-                 location=None, attendees=None, calendarId='primary'):
+                 location=None, attendees=None, calendarId='primary', meeting_obj=None):
     if attendees is None:
         attendees = []
 
@@ -119,6 +119,8 @@ def create_event(service, start_date_str, end_date_str, start_time_str, end_time
         'summary': summary,
         'location': location,
         'description': description,
+        'status': 'confirmed',
+        'visibility': 'default',
         'start': {
             'dateTime': full_start_datetime.strftime("%Y-%m-%dT%H:%M:%S"),
             'timeZone': timezone,
@@ -132,7 +134,11 @@ def create_event(service, start_date_str, end_date_str, start_time_str, end_time
             'useDefault': False,
             'overrides': [
                 {'method': 'email', 'minutes': 24 * 60},
-                {'method': 'popup', 'minutes': 10}, ], }, }
+                {'method': 'popup', 'minutes': 10}, ],
+        },
+    }
+    if meeting_obj:
+        event['colorId'] = vtodo_colors_event.get(meeting_obj.color, 'blue')
     event = service.events().insert(calendarId=calendarId, body=event).execute()
     print(event)
 
@@ -174,6 +180,8 @@ class AddEventView(BSModalCreateView):
         obj = form.save(commit=False)
         obj.user = self.request.user
 
+        # print(f"{obj.__dict__}")
+        # print(f"{obj.color}")
         if self.request.is_ajax():
             try:
                 service = construct_service(obj.user)
@@ -185,7 +193,8 @@ class AddEventView(BSModalCreateView):
                              end_date_str=obj.date_end,
                              start_time_str=obj.time_start,
                              end_time_str=obj.time_end,
-                             calendarId=obj.user.email)
+                             calendarId=obj.user.email,
+                             meeting_obj=obj)
             except Exception as e:
                 print("Error is", e)
         return super(AddEventView, self).form_valid(form)
