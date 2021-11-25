@@ -236,6 +236,7 @@ def import_google_calendar_data(request):
                                               orderBy='startTime').execute()
         events = events_result.get('items', [])
         for event in events:
+            print(event)
             date_start, time_start, _ = re.split(r"[TZ]", event['start'].get('dateTime', datetime.now()))
             date_end, time_end, _ = re.split(r"[TZ]", event['end'].get('dateTime', datetime.now()))
 
@@ -247,7 +248,7 @@ def import_google_calendar_data(request):
                 'time_start': time_start,
                 'date_end': date_end,
                 'time_end': time_end,
-                'color': colors_event[event['colorId']].get('name', 'blue'),
+                'color': colors_event[event.get('colorId', '9')].get('name', 'blue'),
             }
 
             Meeting.objects.get_or_create(**meeting_kwargs)
