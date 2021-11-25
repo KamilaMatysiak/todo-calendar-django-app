@@ -108,7 +108,7 @@ def home(request, year, month, day):
 
 
 def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, description, summary=None,
-                 location=None, attendees=None):
+                 location=None, attendees=None, calendarId='primary'):
     if attendees is None:
         attendees = []
 
@@ -133,7 +133,7 @@ def create_event(service, start_date_str, end_date_str, start_time_str, end_time
             'overrides': [
                 {'method': 'email', 'minutes': 24 * 60},
                 {'method': 'popup', 'minutes': 10}, ], }, }
-    event = service.events().insert(calendarId="primary", body=event).execute()
+    event = service.events().insert(calendarId=calendarId, body=event).execute()
     print(event)
 
 
@@ -184,7 +184,8 @@ class AddEventView(BSModalCreateView):
                              description=obj.description,
                              end_date_str=obj.date_end,
                              start_time_str=obj.time_start,
-                             end_time_str=obj.time_end)
+                             end_time_str=obj.time_end,
+                             calendarId=obj.user.email)
             except Exception as e:
                 print("Error is", e)
         return super(AddEventView, self).form_valid(form)
