@@ -63,7 +63,7 @@ def home(request, year, month, day):
     current_month = now.month
     # current_year = now.year
     meetings = [x for x in Meeting.objects.all() if x.user == request.user]
-    #days = [x for x in cal.itermonthdays2(year, month)]
+    # days = [x for x in cal.itermonthdays2(year, month)]
     days = []
     for d in cal.itermonthdays2(year, month):
         classes = ""
@@ -83,7 +83,7 @@ def home(request, year, month, day):
 
     time = datetime.now().time()
 
-    #meetings = Meeting.objects.all()
+    # meetings = Meeting.objects.all()
     form = EventModelForm()
     return render(request,
                   'calendar/home.html',
@@ -107,40 +107,48 @@ def home(request, year, month, day):
                   })
 
 
-def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, description, summary=None,
-                 location=None, attendees=None, calendarId='primary', meeting_obj=None):
-    if attendees is None:
-        attendees = []
-
-    full_start_datetime = datetime.combine(start_date_str, start_time_str)
-    full_end_datetime = datetime.combine(end_date_str, end_time_str)
-
-    event = {
-        'summary': summary,
-        'location': location,
-        'description': description,
-        'status': 'confirmed',
-        'visibility': 'default',
-        'start': {
-            'dateTime': full_start_datetime.strftime("%Y-%m-%dT%H:%M:%S"),
-            'timeZone': timezone,
-        },
-        'end': {
-            'dateTime': full_end_datetime.strftime("%Y-%m-%dT%H:%M:%S"),
-            'timeZone': timezone,
-        },
-        'attendees': attendees,
-        'reminders': {
-            'useDefault': False,
-            'overrides': [
-                {'method': 'email', 'minutes': 24 * 60},
-                {'method': 'popup', 'minutes': 10}, ],
-        },
-    }
+def create_event(service, location=None, attendees=None, meeting_obj=None):
     if meeting_obj:
-        event['colorId'] = vtodo_colors_event.get(meeting_obj.color, 'blue')
-    event = service.events().insert(calendarId=calendarId, body=event).execute()
-    print(event)
+        if attendees is None:
+            attendees = []
+
+        start_date_str = meeting_obj.date_start
+        summary = meeting_obj.title
+        description = meeting_obj.description
+        end_date_str = meeting_obj.date_end
+        start_time_str = meeting_obj.time_start
+        end_time_str = meeting_obj.time_end
+        calendarId = meeting_obj.user.email
+
+        full_start_datetime = datetime.combine(start_date_str, start_time_str)
+        full_end_datetime = datetime.combine(end_date_str, end_time_str)
+
+        event = {
+            'summary': summary,
+            'location': location,
+            'description': description,
+            'status': 'confirmed',
+            'visibility': 'default',
+            'colorId': vtodo_colors_event.get(meeting_obj.color, 'blue'),
+            'start': {
+                'dateTime': full_start_datetime.strftime("%Y-%m-%dT%H:%M:%S"),
+                'timeZone': timezone,
+            },
+            'end': {
+                'dateTime': full_end_datetime.strftime("%Y-%m-%dT%H:%M:%S"),
+                'timeZone': timezone,
+            },
+            'attendees': attendees,
+            'reminders': {
+                'useDefault': False,
+                'overrides': [
+                    {'method': 'email', 'minutes': 24 * 60},
+                    {'method': 'popup', 'minutes': 10}, ],
+            },
+        }
+
+        event = service.events().insert(calendarId=calendarId, body=event).execute()
+        print(event)
 
 
 def current_date(request):
@@ -180,20 +188,11 @@ class AddEventView(BSModalCreateView):
         obj = form.save(commit=False)
         obj.user = self.request.user
 
-        # print(f"{obj.__dict__}")
-        # print(f"{obj.color}")
         if self.request.is_ajax():
             try:
                 service = construct_service(obj.user)
                 print("start: ", obj.date_start, "\n end: ", obj.date_end)
                 create_event(service=service,
-                             start_date_str=obj.date_start,
-                             summary=obj.title,
-                             description=obj.description,
-                             end_date_str=obj.date_end,
-                             start_time_str=obj.time_start,
-                             end_time_str=obj.time_end,
-                             calendarId=obj.user.email,
                              meeting_obj=obj)
             except Exception as e:
                 print("Error is", e)
