@@ -124,7 +124,7 @@
                         <div class="task-panel-modal" id="notes">
                             {% for note in notes%}
                                 {% if note.meeting == meeting %}
-                            <a  href=""><div class="note">{{note.text}}</div></a>
+                            <a class="edit_note"  data-toggle="modal" data-form-url="{% url 'edit_note' note.pk %}"><div class="note">{{note.text}}</div></a>
                                 {% endif %}
                             {% endfor %}
                         </div>
@@ -150,6 +150,11 @@
             });
 
             $("#add-note").each(function () {
+              $(this).modalForm({
+                formURL: $(this).data("form-url")});
+            });
+
+            $(".edit_note").each(function () {
               $(this).modalForm({
                 formURL: $(this).data("form-url")});
             });
