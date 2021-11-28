@@ -31,24 +31,36 @@ months = {
 }
 timezone = 'Europe/Warsaw'
 
-
-@login_required
-def home(request, year, month, day):
-    """Shows a map with starting point of user, based on users localization.
-        If user provide name of location,
-         then map will show both starting point and destination with a line connecting  them
-
-    Args:
-        request: request to return .html file
-    Returns:
-        .html file with a map of user starting point and places with task assigned to them
-
-    """
-    name = "usernaame"
-    locale.setlocale(locale.LC_ALL, "pl_PL")
-    cal = calendar.Calendar(firstweekday=0)
+def get_context(year, month, day, user):
+    meetings = [x for x in Meeting.objects.all() if x.user == user]
+    now = datetime.now()
+    current_day = now.day
+    current_month = now.month
     date = datetime(year, month, day).date()
+    weekday = date.weekday()
     month_name = months[month]
+    day_name = date.strftime("%A")
+    time = datetime.now().time()
+    cal = calendar.Calendar(firstweekday=0)
+    form = EventModelForm()
+
+    days = []
+    for d in cal.itermonthdays2(year, month):
+        classes = ""
+        for m in meetings:
+            if m.date_start.day == d[0] and m.date_start.month == month and m.date_start.year == year:
+                classes += "busy "
+                break
+        if d[0] == day:
+            classes += "current "
+        if month == current_month and d[0] == current_day:
+            classes += "active-day "
+        if month == current_month and d[0] < current_day:
+            classes += "passed-day "
+        if classes == "":
+            classes = "day"
+        days.append([d, classes])
+
     if month == 1:
         prev = [year - 1, 12]
         next = [year, month + 1]
@@ -68,23 +80,12 @@ def home(request, year, month, day):
         next.append(next_month_range)
     else:
         next.append(day)
-    days = cal.itermonthdays2(year, month)
-    daysy = cal.itermonthdays2(year, month)
-    now = datetime.now()
-    day_name = date.strftime("%A")
-    current_day = now.day
-    current_month = now.month
-    # current_year = now.year
-    time = datetime.now().time()
-    meetings = [x for x in Meeting.objects.all() if x.user == request.user]
-    #meetings = Meeting.objects.all()
-    form = EventModelForm()
 
     timetable = []
     for i in range(24):
         timetable.append((f"{i}"":00", []))
         for j in range(15, 60, 15):
-            if j%30==0:
+            if j % 30 == 0:
                 timetable.append((f"{i}:{j}", []))
             else:
                 timetable.append(("", []))
@@ -94,54 +95,81 @@ def home(request, year, month, day):
             interval = m.time_start.hour * 4 + m.time_start.minute // 15
             timetable[interval][1].append(m)
     max_width = 1
-    tutu = [["", []] for i in range(24 * 60 // 15)]
+    tt_width = [["", []] for i in range(24 * 60 // 15)]
 
     for index, (label, time_period) in enumerate(timetable):
-        tutu[index][0] = label
+        tt_width[index][0] = label
         for event in time_period:
             length = get_span(event)
-            tutu[index][1].append(event)
+            tt_width[index][1].append(event)
             for j in range(1, length):
-                if (index+j) < len(tutu):
-                    tutu[index+j][1].append("busy")
-        if len(tutu[index][1]) > max_width:
-            max_width = len(tutu[index][1])
+                if (index + j) < len(tt_width):
+                    tt_width[index + j][1].append("busy")
+        if len(tt_width[index][1]) > max_width:
+            max_width = len(tt_width[index][1])
 
-    #print(timetable)
-    for x in tutu:
+    # print(timetable)
+    for x in tt_width:
         string = ""
         for y in x[1]:
             string += " " + str(y)
-        print(f"{x[0]}|{string}")
-    print("Maksymalna szerokosc to ",max_width)
+        # print(f"{x[0]}|{string}")
+    print("Maksymalna szerokosc to ", max_width)
 
-    return render(request,
-                  'calendar/home.html',
-                  {
-                      "name": name,
-                      "year": year,
-                      "month": month,
-                      "day": day,
-                      "date": date,
-                      "prev_month": prev,
-                      "next_month": next,
-                      "month_name": month_name,
-                      "days": days,
-                      "daysy": daysy,
-                      "day_name": day_name,
-                      "current_day": current_day,
-                      "current_month": current_month,
-                      #   "current_year": current_year,
-                      "time": time,
-                      "meetings": meetings,
-                      "form": form,
-                      "timetable": timetable,
-                  })
+
+    current_week = []
+    for i in range(weekday, 0, -1):
+        week_day = date - timedelta(days=i)
+        events = Meeting.objects.filter(user=user, date_start=week_day)
+        current_week.append((week_day, events))
+
+    for i in range(7 - weekday):
+        week_day = date + timedelta(days=i)
+        events = Meeting.objects.filter(user=user, date_start=week_day)
+        current_week.append((week_day, events))
+
+    context = {
+        "now": now,
+        "current_day": current_day,
+        "current_month": current_month,
+        "date": date,
+        "month_name": month_name,
+        "day_name": day_name,
+        "time": time,
+        "cal": cal,
+        "days": days,
+        "year": year,
+        "month": month,
+        "day": day,
+        "prev_month": prev,
+        "next_month": next,
+        "meetings": meetings,
+        "form": form,
+        "timetable": timetable,
+        "week": current_week,
+    }
+
+    return context
+
+@login_required
+def home(request, year, month, day):
+    locale.setlocale(locale.LC_ALL, "pl_PL")
+    user = request.user
+    context = get_context(year, month, day, user)
+    return render(request, 'calendar/home.html', context)
+
+
+def weekView(request, year, month, day):
+    user = request.user
+    context = get_context(year, month, day, user)
+    return render(request, 'calendar/week.html', context)
+
 
 def get_span(meeting):
     diff = ((meeting.time_end.hour - meeting.time_start.hour) * 60
             + (meeting.time_end.minute - meeting.time_start.minute)) // 15
     return diff + 1
+
 
 def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, summary, description=None,
                  location=None, attendees=None):
@@ -173,14 +201,6 @@ def create_event(service, start_date_str, end_date_str, start_time_str, end_time
 
 
 def current_date(request):
-    """Shows current date in dd / mm / yyyy format
-
-    Args:
-        request: request to redirect
-    Returns:
-        redirection to 'home' with current year, month and day
-
-    """
     now = datetime.now()
     return redirect('home', now.year, now.month, now.day)
 
@@ -267,14 +287,6 @@ def edit_meeting(request, pk):
 
 
 def delete_meeting(request, pk):
-    """Deletes meeting from meeting list
-
-    Args:
-        request: POST request
-    Returns:
-        redirection to delete meeting
-
-    """
     item = Meeting.objects.get(id=pk)
     if request.method == 'POST':
         item.delete()
