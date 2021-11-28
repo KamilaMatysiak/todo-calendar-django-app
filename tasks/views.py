@@ -37,14 +37,14 @@ def test(request):
 
 @login_required
 def task_list(request):
-    tasks = [x for x in Task.objects.all() if x.user == request.user]
+    tasks = [x for x in Task.objects.all() if x.user == request.user and x.accepted == True]
+
     categories = [x for x in Category.objects.all() if x.user == request.user]
     #tasks = Task.objects.all()
     form = TaskModelForm(request.user)
 
     if request.method == 'POST':
         form = TaskModelForm(request.user, request.POST)
-
         if form.is_valid():
             form.save()
         return redirect('/')
@@ -78,6 +78,7 @@ def index(request):
     late = []
 
     events = [x for x in Meeting.objects.all() if x.user == request.user]
+    not_accepted_tasks = [x for x in Task.objects.all() if x.user == request.user and x.accepted == False]
     for x in events:
         if x.date_start == datetime.date.today() and x.time_end > datetime.datetime.now().time():
             today_events.append(x)
@@ -113,7 +114,8 @@ def index(request):
                "here": here,
                "events": today_events[:5],
                user: user,
-               'vapid_key': vapid_key}
+               'vapid_key': vapid_key, 
+               "to_accept": not_accepted_tasks}
     return render(request, 'tasks/vtodo.html', context)
 
 
@@ -132,6 +134,11 @@ class AddTaskView(BSModalCreateView):
             destination = geolocator.geocode(destination_)
             obj.l_lat = destination.latitude
             obj.l_lon = destination.longitude
+        print(obj.user)
+        if form.cleaned_data.get('for_who'):
+            obj.from_who = self.request.user
+            obj.user =  User.objects.get(id=form.cleaned_data.get('for_who'))
+            obj.accepted = False
         return super(AddTaskView, self).form_valid(form)
 
     def get_form_kwargs(self):

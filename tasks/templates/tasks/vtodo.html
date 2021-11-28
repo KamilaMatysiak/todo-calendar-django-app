@@ -70,6 +70,12 @@
         <div class="task-panel">
              <h2>Witaj, {{user.username}}!</h2>
             <br>
+            Zlecenia zadań:
+            {% for x in to_accept %}
+                Masz zadanie {{x.title}} od {{x.from_who}}!
+                Button
+            {%endfor%}
+
              <div class="heading"><h5>Spotkania na dziś:</h5>
                  <a class="all-tasks" href="{% url 'date' %}">Zobacz wszystkie</a></div>
             <div class="event-carousel">

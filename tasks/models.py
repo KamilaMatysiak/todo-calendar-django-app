@@ -52,6 +52,8 @@ class Task(models.Model):
     complete = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, default=1)
+    from_who = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, related_name='+')
+    accepted = models.BooleanField(default=True)
 
     def __str__(self):
         """Returns title of task"""
