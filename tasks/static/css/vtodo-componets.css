@@ -90,6 +90,28 @@ text-decoration: none;
     margin: 0 10px;
 }
 
+.order {
+    color: #2F9CEB;
+    float: right;
+}
+
+#from_who {
+    display: none;
+}
+
+.buttons {
+    display: flex;
+    width: 10%;
+    height: 100%;
+    padding: 0 2%;
+    justify-content: flex-end;
+    align-self: center;
+}
+
+.buttons form {
+    margin: auto;
+}
+
 /*---------------------
         EVENTS
 ----------------------*/

@@ -15,8 +15,11 @@
       <div class="modal-body">
         {% for field in form %}
           <div class="form-group{% if field.errors %} invalid{% endif %}">
-
-            {{ field | as_crispy_field }}
+            {% if field.name == "for_who" %}
+              <div id="from_who">{{ field | as_crispy_field }}</div>
+            {% else %}
+                {{ field | as_crispy_field }}
+              {% endif %}
             {% for error in field.errors %}
               <p class="help-block">{{ error }}</p>
             {% endfor %}
@@ -25,8 +28,17 @@
       </div>
     
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Anuluj</button>
+        <button type="button" class="btn order" id="order" onclick="showMore()">Zleć zadanie</button>
         <button type="submit" class="btn btn-primary">Dodaj</button>
       </div>
 
     </form>
+
+    <script>
+        function showMore() {
+            if(document.getElementById("from_who").style.display !== "none") {
+                document.getElementById("from_who").style.display = "block";
+                document.getElementById("order").style.display= "none";
+            }
+        }
+    </script>
