@@ -99,6 +99,19 @@ text-decoration: none;
     display: none;
 }
 
+.buttons {
+    display: flex;
+    width: 10%;
+    height: 100%;
+    padding: 0 2%;
+    justify-content: flex-end;
+    align-self: center;
+}
+
+.buttons form {
+    margin: auto;
+}
+
 /*---------------------
         EVENTS
 ----------------------*/
