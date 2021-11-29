@@ -143,7 +143,6 @@ class AddTaskView(BSModalCreateView):
                     print(id)
                     obj.user =  User.objects.get(id=id)
                     obj.accepted = False
-                    return super(AddTaskView, self).form_valid(form)
             else:
                 print("Nie ma takiego użytkownika")
                 raise Http404

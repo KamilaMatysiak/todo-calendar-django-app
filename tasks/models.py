@@ -2,18 +2,10 @@ from django.db import models
 from datetime import datetime, date, time
 from django.forms import CheckboxInput
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
 
 # Create your models here.
 User = get_user_model()
 
-
-def temporary_user_validation(user):
-    users = User.objects.all()
-    if user not in users:
-        raise ValidationError(
-            "Nie ma takiego użytkownika!"
-        )
 
 class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=1)
@@ -60,7 +52,7 @@ class Task(models.Model):
     complete = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, default=1)
-    from_who = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='+', validators=[temporary_user_validation])
+    from_who = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
     accepted = models.BooleanField(default=True)
 
     def __str__(self):
