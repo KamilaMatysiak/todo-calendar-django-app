@@ -90,6 +90,15 @@ text-decoration: none;
     margin: 0 10px;
 }
 
+.order {
+    color: #2F9CEB;
+    float: right;
+}
+
+#from_who {
+    display: none;
+}
+
 /*---------------------
         EVENTS
 ----------------------*/
