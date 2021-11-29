@@ -113,7 +113,10 @@ def profile(request):
                 userProfile.birthdate = new_birthdate
                 userProfile.save()
             if res.get('phoneNumbers', None):
-                print(res['phoneNumbers'])
+                phone = res['phoneNumbers'][0]['canonicalForm']
+                print(phone)
+                userProfile.phonenumber = phone
+                userProfile.save()
 
     return render(request, 'users/profile.html', {'userProfile': userProfile})
 
