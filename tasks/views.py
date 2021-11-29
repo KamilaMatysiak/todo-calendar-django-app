@@ -141,13 +141,13 @@ class AddTaskView(BSModalCreateView):
                     obj.from_who = self.request.user
                     id = x.id
                     print(id)
-                    obj.user =  User.objects.get(id=id)
+                    obj.user = User.objects.get(id=id)
                     obj.accepted = False
+                    break
             else:
                 print("Nie ma takiego użytkownika")
                 raise Http404
-        else:
-            return super(AddTaskView, self).form_valid(form)
+        return super(AddTaskView, self).form_valid(form)
 
     def get_form_kwargs(self):
         kwargs = super(AddTaskView, self).get_form_kwargs()
