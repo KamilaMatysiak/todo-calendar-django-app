@@ -86,6 +86,9 @@ MIDDLEWARE = [
 # Solution: Write custom Middleware
 SITE_ID = 3
 
+PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
+PHONENUMBER_DEFAULT_FORMAT = 'INTERNATIONAL'
+
 BOOTSTRAP4 = {
     'include_jquery': True,
 }
