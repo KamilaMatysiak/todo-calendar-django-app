@@ -165,6 +165,11 @@ text-decoration: none;
     opacity: 0.5;
 }
 
+.chosen{
+    background: rgba(0,0,0,0.2) !important;
+    box-shadow: none;
+}
+
 .small-event {
     width: 200px;
     min-height: 135px;
@@ -891,13 +896,53 @@ margin-left: 15px;
     margin: 2%;
 }
 
-.task-panel .task {
+.task-panel-modal {
+    width: 100%;
+    max-height: 50vh !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#notes {
+    max-height: 150px !important;
+}
+
+.panel .task-panel-modal {
+    max-height: 80%;
+}
+
+#top {
+    width: 80%;
+    min-height: 0;
+    max-height: 60% !important;
+}
+
+#bottom {
+    width: 80%;
+    min-height: 0;
+    flex: 1;
+    max-height: 40% !important;
+}
+
+.task-panel .task,
+.task-panel-modal .task {
     width: 100% !important;
+    position: relative;
+
+}
+
+.note {
+    background: #eee;
+    margin: 2px;
+    color: #333;
+    width: 100%;
+    padding: 15px;
 }
 
 .task-panel .task-content {
     margin-left: 2%;
 }
+
 
 .nav-pills .nav-item {
     width: 15%;
@@ -1095,10 +1140,28 @@ margin-left: 15px;
     border-radius: 4px;
     box-shadow: 0 4px 4px rgba(0,0,0,0.2);
 }
+
+.panel .navbar h2 {
+    font-size: 1.7rem;
+}
+
+.panel hr {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+
 .panel-container {
     display: flex;
     width: 100%;
     flex-wrap: wrap;
+}
+
+.inside {
+    flex-direction: column;
+    width: 49%;
+    padding: 1% 0;
+    margin 0 2%;
 }
 
 .profile-panel {
@@ -1282,7 +1345,30 @@ PROFILE
     z-index: 3;
 }
 
+/*-----------------------------------------
+    CUSTOM CHECKBOX IN TASK LIST (connect)
+-------------------------------------------*/
 
+.task-panel-modal .task input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 100%;
+    width: 100%;
+}
+
+.task-panel-modal .task-content {
+
+    width: 100%;
+}
+
+.task-panel-modal  .task-content h1 {
+    margin-left: 15px;
+}
+
+.task-panel-modal .task:hover ~ .task-panel-modal .task-content {
+    background: #eee;
+}
 
 
 .profile-footer {
@@ -1489,4 +1575,7 @@ td {
     width: 100vw;
 }
 
+#top, #bottom, .inside {
+    width: 100vw;
+}
 }
