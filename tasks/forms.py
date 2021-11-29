@@ -4,8 +4,17 @@ from .models import *
 from bootstrap_modal_forms.forms import BSModalModelForm
 from bootstrap_datepicker_plus import DatePickerInput, TimePickerInput
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+
+def temporary_user_validation(usernamw):
+    users = User.objects.filter(username=usernamw)
+    if len(users) == 0:
+        raise ValidationError(
+            "Nie ma takiego użytkownika!"
+        )
 
 class TaskModelForm(BSModalModelForm):
+
 
     def __init__(self, user, *args, **kwargs):
         super(TaskModelForm, self).__init__(*args, **kwargs)
@@ -13,7 +22,7 @@ class TaskModelForm(BSModalModelForm):
 
     with_who = forms.CharField(required=False, label="Kontakty")
     localization = forms.CharField(required=False, label="Lokalizacja")
-    for_who = forms.CharField(required=False, label="Zleć komuś")
+    for_who = forms.CharField(required=False, label="Zlecenie", validators=[temporary_user_validation])
     
     class Meta:
         model = Task
