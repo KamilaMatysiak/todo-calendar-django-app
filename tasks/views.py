@@ -289,3 +289,18 @@ class DeleteCategoryView(BSModalDeleteView):
         if not obj.user == self.request.user:
             raise Http404
         return obj
+
+def refuse_task(request, pk):
+    obj = get_object_or_404(Task, pk=pk)  # Get your current cat
+
+    if request.method == 'POST':         # If method is POST,
+        obj.delete()                     # delete the cat.
+    return redirect('vtodo')             # Finally, redirect to the homepage.
+
+
+def accept_task(request, pk):
+    obj = get_object_or_404(Task, pk=pk)
+    if request.method == 'POST':
+        obj.accepted = True
+        obj.save()
+    return redirect('vtodo')
