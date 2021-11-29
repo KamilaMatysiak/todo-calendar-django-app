@@ -31,8 +31,14 @@ months = {
 }
 timezone = 'Europe/Warsaw'
 
+def get_meetings(dict, date):
+    if date in dict:
+        return dict[date]
+    else:
+        return []
+
 def get_context(year, month, day, user):
-    meetings = [x for x in Meeting.objects.all() if x.user == user]
+    meetings = Meeting.objects.filter(user=user)
     now = datetime.now()
     current_day = now.day
     current_month = now.month
@@ -44,13 +50,20 @@ def get_context(year, month, day, user):
     cal = calendar.Calendar(firstweekday=0)
     form = EventModelForm()
 
+    all_events = {}
+    for m in meetings:
+        meeting_date = m.date_start
+        if meeting_date in all_events:
+            all_events[meeting_date].append(m)
+        else:
+            all_events[meeting_date] = [m]
+
     days = []
     for d in cal.itermonthdays2(year, month):
         classes = ""
-        for m in meetings:
-            if m.date_start.day == d[0] and m.date_start.month == month and m.date_start.year == year:
+        if d[0] != 0:
+            if get_meetings(all_events, datetime(year, month, d[0]).date()):
                 classes += "busy "
-                break
         if d[0] == day:
             classes += "current "
         if month == current_month and d[0] == current_day:
@@ -81,6 +94,7 @@ def get_context(year, month, day, user):
     else:
         next.append(day)
 
+    #stuff for day
     timetable = []
     for i in range(24):
         timetable.append((f"{i}"":00", []))
@@ -90,10 +104,9 @@ def get_context(year, month, day, user):
             else:
                 timetable.append(("", []))
 
-    for m in meetings:
-        if m.date_start.day == day and m.date_start.month == month and m.date_start.year == year:
-            interval = m.time_start.hour * 4 + m.time_start.minute // 15
-            timetable[interval][1].append(m)
+    for m in get_meetings(all_events, date):
+        interval = m.time_start.hour * 4 + m.time_start.minute // 15
+        timetable[interval][1].append(m)
     max_width = 1
     tt_width = [["", []] for i in range(24 * 60 // 15)]
 
@@ -117,18 +130,18 @@ def get_context(year, month, day, user):
     print("Maksymalna szerokosc to ", max_width)
 
 
+    #stuff for week
     current_week = []
     for i in range(weekday, 0, -1):
         week_day = date - timedelta(days=i)
-        events = Meeting.objects.filter(user=user, date_start=week_day)
-        current_week.append((week_day, events))
+        current_week.append((week_day, get_meetings(all_events, week_day)))
 
     for i in range(7 - weekday):
         week_day = date + timedelta(days=i)
-        events = Meeting.objects.filter(user=user, date_start=week_day)
-        current_week.append((week_day, events))
+        current_week.append((week_day, get_meetings(all_events, week_day)))
 
     context = {
+        "all_events": all_events,
         "now": now,
         "current_day": current_day,
         "current_month": current_month,
@@ -159,10 +172,28 @@ def home(request, year, month, day):
     return render(request, 'calendar/home.html', context)
 
 
+@login_required
 def weekView(request, year, month, day):
     user = request.user
     context = get_context(year, month, day, user)
     return render(request, 'calendar/week.html', context)
+
+
+@login_required
+def monthView(request, year, month, day):
+    user = request.user
+    context = get_context(year, month, day, user)
+    all_events = context["all_events"]
+    days = context["days"]
+    month_days = []
+    for day, _ in days:
+        if day[0] != 0:
+            date = datetime(year, month, day[0]).date()
+            month_days.append((day, get_meetings(all_events, date)))
+        else:
+            month_days.append((day, []))
+    context["month_days"] = month_days
+    return render(request, 'calendar/month.html', context)
 
 
 def get_span(meeting):

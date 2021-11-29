@@ -122,5 +122,11 @@ def get_dayname(date):
         "sobota": "Sobota",
         "niedziela": "Niedziela"
     }
-    day = days[date.strftime("%A")]
-    return day
+    return days[date.strftime("%A")]
+
+@register.simple_tag
+def get_meetings(dict, date):
+    if date in dict:
+        return dict[date]
+    else:
+        return []

@@ -23,9 +23,9 @@
             <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>KALENDARZ</h1></div>
                 <div class="calendar-module">
                     <div class="calendar-header">
-                        <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
+                        <div class="prev"><a href="{% url 'month' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
                         <div class="month-label"><p>{{month_name}} {{year}}</p></div>
-                        <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
+                        <div class="next"><a href="{% url 'month' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
                     </div>
 
                 <table class="labels">
@@ -45,7 +45,7 @@
                         {% if d.0 == 0 %}
                             <td class="noday"></td>
                         {% else %}
-                            <td class="{{ classes }}"><a href="{% url 'week' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
+                            <td class="{{ classes }}"><a href="{% url 'month' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
                         {% endif %}
                         {% if d.1 == 6 %}<tr>{% endif %}
                     {% endfor %}
@@ -72,9 +72,9 @@
                                 </li>
                             <div class="calendar-module">
                                 <div class="calendar-header">
-                                    <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
+                                    <div class="prev"><a href="{% url 'month' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
                                     <div class="month-label"><p>{{month_name}} {{year}}</p></div>
-                                    <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
+                                    <div class="next"><a href="{% url 'month' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
                                 </div>
                                 <table class="labels">
                                     <tr class="week-label">
@@ -91,7 +91,7 @@
                                     {% if d.0 == 0 %}
                                         <td class="noday"></td>
                                     {% else %}
-                                        <td class="{{ classes }}"><a href="{% url 'week' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
+                                        <td class="{{ classes }}"><a href="{% url 'month' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
                                     {% endif %}
                                     {% if d.1 == 6 %}<tr>{% endif %}
                                 {% endfor %}
@@ -119,7 +119,7 @@
 
         <nav class="navbar">
             <div class="left">
-                <h1>{{week|get_months}}</h1>
+                <h1>{{month_name}} {{year}}</h1>
             </div>
             <div class="right">
                 <div class="modal fade" tabindex="-1" role="dialog" id="modal">
@@ -129,9 +129,12 @@
                 </div>
 
                 <select class="button-select inverse" ONCHANGE="location = this.options[this.selectedIndex].value;">
-                  <option value="{% url 'week' year month day %}">TYDZIEŃ</option>
-                  <option value="{% url 'home' year month day %}">DZIEŃ</option>
                   <option value="{% url 'month' year month day %}">MIESIĄC</option>
+                  <option value="{% url 'home' year month day %}">DZIEŃ</option>
+                  <option value="{% url 'week' year month day %}">TYDZIEŃ</option>
+
+
+
                 </select>
 
                 <button id="add-event" class="button add" type="button" name="button">DODAJ SPOTKANIE</button>
@@ -142,18 +145,31 @@
         </nav>
         <hr>
 
-        <div style="width: 100%; display: flex; max-height: 80vh; overflow: auto;">
-        {% for day, meetings in week %}
-        <div class="week-row">
-            <a href="{% url 'home' day|get_year day|get_month day|get_day %}"><div class="weekdays"><h3>{{day|get_day}}</h3><p style="font-size: 0.9rem">{{day|get_dayname}}</p></div></a>
-            {% for meeting in meetings %}
-            <div style="margin-top: 0; "class="event blue {% if meeting|passed %} passed {% endif %} long" >
-                            <div class="info"><h1 style="font-size: 1rem;">{{meeting.title}}</h1><p style="font-size: 0.6rem;">{{meeting.description}}</p></div>
-                            <div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div>
-                            </div>
-            {% endfor %}
-            </div>
-            {% endfor %}
+        <div style="width: 100%;">
+            <table class="month-view">
+                    <tr class="week-label">
+                        <th class="mon"><p>Pon</p></th>
+                        <th class="tue"><p>Wt</p></th>
+                        <th class="wed"><p>Śr</p></th>
+                        <th class="thu"><p>Czw</p></th>
+                        <th class="fri"><p>Pt</p></th>
+                        <th class="sat"><p>Sob</p></th>
+                        <th class="sun"><p>Nd</p></th></tr>
+                {% for d, meetings_day in month_days %}
+                    {% if d.0 == 0 %}
+                        <td class="noday"><div class="empty-cell"></div></td>
+                    {% else %}
+                        <td class="day"><a href="{% url 'home' year month d.0 %}">
+                            <div class="container">
+                            <div class="pointer">{{d.0}}</div>
+                            {% for meeting in meetings_day %}
+                            <div  class="month-event blue">{{meeting.title}}</div>
+                            {% endfor %}
+                        </div></a></td>
+                    {% endif %}
+                    {% if d.1 == 6 %}<tr>{% endif %}
+                {% endfor %}
+            </table>
         </div>
     </div>
 </div>

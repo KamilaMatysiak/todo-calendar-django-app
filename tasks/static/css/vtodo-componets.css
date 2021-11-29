@@ -641,8 +641,6 @@ background: #333;
     display: flex;
     flex-direction: column;
     min-height: 80vh;
-    max-height: 85vh;
-    overflow: auto;
     width: 14%;
     border-left: 1px solid #c4c4c4;
 }
@@ -661,6 +659,51 @@ background: #333;
 
 .weekdays:hover {
     color: #aaa;
+}
+
+/* ---------------------------------------------------
+    MONTH VIEW
+----------------------------------------------------- */
+
+.month-view {
+    min-height: 80vh;
+    width: 98%;
+    margin: auto;
+    border: 1px solid rgba(0,0,0,0.12);
+}
+
+.month-view th {
+    text-align: center;
+    vertical-align: center;
+    font-size: 1.2rem;
+    height: 40px;
+}
+
+.month-view td {
+    border: 1px solid rgba(0,0,0,0.12);
+    width: 14%;
+    vertical-align: top;
+}
+
+.month-view td .pointer {
+    padding: 5px;
+    margin: 0;
+    color: #222;
+    font-weight: bold;
+}
+
+.month-view td .container {
+   height: 125px;
+   overflow-y: auto;
+   width: 100%;
+}
+
+.month-event {
+    border-radius: 25px;
+    font-size: 0.8rem;
+    color: white;
+    padding: 4px;
+    margin: 4px 0;
 }
 
 /* ---------------------------------------------------
