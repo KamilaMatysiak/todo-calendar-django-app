@@ -19,8 +19,11 @@ import json
 from django.http import HttpResponse
 from django.urls import reverse
 from django.template import loader
+from django.http import HttpResponse
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 
+@xframe_options_exempt
 def location(request, lat, lon):
     """Shows a map with starting point of user, based on users location. Also shows the locations of tasks and their priorities.
 
@@ -63,7 +66,7 @@ def location(request, lat, lon):
 
     for x in tasks:
         if x.l_lon and x.l_lat:
-            html = x.localization + "\n" + '<p><a href="task-list/update_task/'+str(x.pk)+'">Przejdź do wybranego zadania</a></p>'
+            html = x.localization + "\n" + '<p><a  href="/task-list/update_task/'+str(x.pk)+'">Przejdź do wybranego zadania</a></p>'
             iframe = folium.IFrame(html=html, width=200, height=200)
             popup = folium.Popup(iframe, max_width=2650)
 

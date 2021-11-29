@@ -23,6 +23,8 @@ from django.template import loader
 import datetime
 import folium
 import json
+from django.http import HttpResponse
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 
 # Create your views here.
@@ -147,6 +149,7 @@ class EditTaskView(BSModalUpdateView):
     success_message = "Pomyślnie zedytowano zadanie"
     success_url = reverse_lazy('list')
 
+    @xframe_options_exempt
     def get_object(self, queryset=None):
         obj = super(EditTaskView, self).get_object()
         if not obj.user == self.request.user:
