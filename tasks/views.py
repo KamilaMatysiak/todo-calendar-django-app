@@ -38,10 +38,9 @@ def test(request):
 
 
 @login_required
-def task_list(request):
+def task_list(request, pk=None):
     tasks = [x for x in Task.objects.all() if x.user == request.user]
     categories = [x for x in Category.objects.all() if x.user == request.user]
-    #tasks = Task.objects.all()
     form = TaskModelForm(request.user)
 
     if request.method == 'POST':
@@ -52,6 +51,8 @@ def task_list(request):
         return redirect('/')
 
     context = {"categories": categories, "tasks": tasks, 'form': form}
+    if pk is not None:
+        context["task_pk"] = pk
     return render(request, 'tasks/task-list.html', context)
 
 def categoryView(request, pk):

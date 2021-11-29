@@ -66,10 +66,10 @@ def location(request, lat, lon):
 
     for x in tasks:
         if x.l_lon and x.l_lat:
-            html = x.localization + "\n" + '<p><a  href="/task-list/update_task/'+str(x.pk)+'">Przejdź do wybranego zadania</a></p>'
+            path = "/task-list/" + str(x.id)
+            html = f"<strong>{x.title}</strong> <br>{x.localization}<br>{x.date}<br><a style='color: #2F9CEB; width: 100%;' target='_blank' href='{path}'>Zobacz zadanie</a>"
             iframe = folium.IFrame(html=html, width=200, height=200)
-            popup = folium.Popup(iframe, max_width=2650)
-
+            popup = folium.Popup(max_width=2650, html=html)
 
             folium.Marker([x.l_lat, x.l_lon], tooltip=x.title,
                           popup=popup,
@@ -82,7 +82,7 @@ def location(request, lat, lon):
     context = {
         'lat': lat,
         'lon': lon,
-        'map': m,
+        'map': m
     }
 
     t = loader.get_template('geolocation/location.html')
