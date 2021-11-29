@@ -100,7 +100,7 @@ def profile(request):
                                                             firstname=request.user.first_name + ' ' + request.user.last_name)
     print(userProfile)
     print(costam)
-    if costam:
+    if not costam:
 
         google_user = SocialAccount.objects.filter(user=request.user).first()
         if google_user:
@@ -111,6 +111,7 @@ def profile(request):
                 new_birthdate = datetime.date(**res['birthdays'][0]['date'])
                 print(new_birthdate)
                 userProfile.birthdate = new_birthdate
+                userProfile.save()
             if res.get('phoneNumbers', None):
                 print(res['phoneNumbers'])
 
