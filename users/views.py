@@ -1,3 +1,5 @@
+import datetime
+
 from allauth.socialaccount.models import SocialAccount, SocialToken
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalLoginView, BSModalUpdateView, BSModalDeleteView
 from django.contrib.auth.models import User
@@ -98,23 +100,19 @@ def profile(request):
                                                             firstname=request.user.first_name + ' ' + request.user.last_name)
     print(userProfile)
     print(costam)
-    if not costam:
+    if costam:
 
         google_user = SocialAccount.objects.filter(user=request.user).first()
         if google_user:
             service = construct_people_service(request.user)
             res = service.people().get(resourceName="people/me", personFields='names,birthdays,phoneNumbers').execute()
             print('res: ', res)
-            userProfile.birthdate = res['birthdays'][0]['date']
-
-        # extra_data = google_user.extra_data
-        # print(extra_data)
-        # people = extra_data.get('people', None)
-        # birth_date = extra_data.get('birth_date', None)
-        # if birth_date:
-        #     userProfile.birthdate = birth_date
-        # if people:
-        #     print(people)
+            if res.get('birthdays', None):
+                new_birthdate = datetime.date(**res['birthdays'][0]['date'])
+                print(new_birthdate)
+                userProfile.birthdate = new_birthdate
+            if res.get('phoneNumbers', None):
+                print(res['phoneNumbers'])
 
     return render(request, 'users/profile.html', {'userProfile': userProfile})
 
