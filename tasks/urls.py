@@ -16,6 +16,8 @@ urlpatterns = [
     path('delete/<str:pk>/', views.DeleteTaskView.as_view(), name="delete"),
     path('delete_cat/<str:pk>', views.DeleteCategoryView.as_view(), name="delete_cat"),
     path('task-list/finish', views.finishTask, name="finish-task"),
+    path('home/<str:pk>/reject', views.refuse_task, name='reject'),
+    path('home/<str:pk>/confirm', views.accept_task, name='confirm'),
     path('send_push', views.send_push),
     path('task-list/<str:pk>', views.categoryView, name="category"),
     path('test', views.test, name="test"),
