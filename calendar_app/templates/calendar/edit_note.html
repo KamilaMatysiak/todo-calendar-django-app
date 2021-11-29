@@ -1,0 +1,46 @@
+{% load bootstrap4 %}
+{% load crispy_forms_tags %}
+{{form.media}}
+{%load static%}
+
+<form method="post" action="">
+  {% csrf_token %}
+
+  <div class="modal-header">
+    <h3 class="modal-title">Edytuj notatkę</h3>
+    <button type="button" class="close delete-note button" style="opacity: 100%;" data-form-url="{% url 'delete_note' object.pk %}">
+        <img src="{% static 'image/icons/delete-icon.svg'%}" alt="Usuń">
+    </button>
+  </div>
+
+  <div class="modal-body">
+
+    <div class="{% if form.non_field_errors %}invalid{% endif %} mb-2">
+      {% for error in form.non_field_errors %}
+        {{ error }}
+      {% endfor %}
+    </div>
+
+    {% for field in form %}
+      <div class="form-group">
+        {{ field | as_crispy_field }}
+        <div class="{% if field.errors %} invalid{% endif %}">
+          {% for error in field.errors %}
+            <p class="help-block">{{ error }}</p>
+          {% endfor %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
+  </div>
+
+</form>
+
+<script>
+    $(".delete-note").each(function () {
+            $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
+        });
+</script>
