@@ -142,15 +142,17 @@
         </nav>
         <hr>
 
-        <div style="width: 100%; display: flex; max-height: 80vh; overflow: auto;">
+        <div class="week-container">
         {% for day, meetings in week %}
         <div class="week-row">
-            <a href="{% url 'home' day|get_year day|get_month day|get_day %}"><div class="weekdays"><h3>{{day|get_day}}</h3><p style="font-size: 0.9rem">{{day|get_dayname}}</p></div></a>
+            <a href="{% url 'home' day|get_year day|get_month day|get_day %}"><div class="weekdays"><h3>{{day|get_day}}</h3><p>{{day|get_dayname}}</p></div></a>
             {% for meeting in meetings %}
-            <div style="margin-top: 0; "class="event blue {% if meeting|passed %} passed {% endif %} long" >
-                            <div class="info"><h1 style="font-size: 1rem;">{{meeting.title}}</h1><p style="font-size: 0.6rem;">{{meeting.description}}</p></div>
-                            <div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div>
-                            </div>
+                <a href="{% url 'edit_meeting' meeting.id %}">
+                    <div style="margin-top: 0; "class="event blue {% if meeting|passed %} passed {% endif %} long" >
+                        <div class="info"><h1 style="font-size: 1rem;">{{meeting.title}}</h1><p style="font-size: 0.6rem;">{{meeting.description}}</p></div>
+                        <div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div>
+                    </div>
+                </a>
             {% endfor %}
             </div>
             {% endfor %}

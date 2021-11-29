@@ -163,7 +163,7 @@
                             <div class="container">
                             <div class="pointer">{{d.0}}</div>
                             {% for meeting in meetings_day %}
-                            <div  class="month-event blue">{{meeting.title}}</div>
+                                <a href="{% url 'edit_meeting' meeting.id %}"><div class="month-event blue"><span>{{meeting.title}}</span></div></a>
                             {% endfor %}
                         </div></a></td>
                     {% endif %}

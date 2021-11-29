@@ -178,6 +178,11 @@ text-decoration: none;
     color: #2F9CEB;
 }
 
+.button-select:active,
+.button-select:focus {
+    border: 2px solid #2F9CEB;
+}
+
 /*--------------------
         TASKS
 ---------------------*/
@@ -637,6 +642,13 @@ background: #333;
     WEEK VIEW
 ----------------------------------------------------- */
 
+.week-container {
+    width: 100%;
+    display: flex;
+    max-height: 80vh;
+    overflow: auto;
+}
+
 .week-row {
     display: flex;
     flex-direction: column;
@@ -661,6 +673,10 @@ background: #333;
     color: #aaa;
 }
 
+.weekdays p {
+    font-size: 0.9rem;
+}
+
 /* ---------------------------------------------------
     MONTH VIEW
 ----------------------------------------------------- */
@@ -668,7 +684,7 @@ background: #333;
 .month-view {
     min-height: 80vh;
     width: 98%;
-    margin: auto;
+    margin: auto auto 20px auto;
     border: 1px solid rgba(0,0,0,0.12);
 }
 
@@ -693,18 +709,29 @@ background: #333;
 }
 
 .month-view td .container {
-   height: 125px;
+   height: 145px;
    overflow-y: auto;
    width: 100%;
 }
 
 .month-event {
     border-radius: 25px;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: white;
     padding: 4px;
     margin: 4px 0;
+    min-height: 1.6rem;
+    overflow-x: visible;
 }
+
+.month-event span {
+      display: block;
+      width: 100px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+}
+
 
 /* ---------------------------------------------------
     TIMETABLE
