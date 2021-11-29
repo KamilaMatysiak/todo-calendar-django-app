@@ -136,10 +136,18 @@ class AddTaskView(BSModalCreateView):
             obj.l_lon = destination.longitude
         print(obj.user)
         if form.cleaned_data.get('for_who'):
-            obj.from_who = self.request.user
-            obj.user =  User.objects.get(id=form.cleaned_data.get('for_who'))
-            obj.accepted = False
-        return super(AddTaskView, self).form_valid(form)
+            for x in User.objects.all():
+                if x.username == form.cleaned_data.get('for_who'):
+                    obj.from_who = self.request.user
+                    id = x.id
+                    print(id)
+                    obj.user =  User.objects.get(id=id)
+                    obj.accepted = False
+                    return super(AddTaskView, self).form_valid(form)
+            else:
+                print("Nie ma takiego użytkownika")
+                raise Http404
+        
 
     def get_form_kwargs(self):
         kwargs = super(AddTaskView, self).get_form_kwargs()
