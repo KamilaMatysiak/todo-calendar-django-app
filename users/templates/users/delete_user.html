@@ -1,6 +1,6 @@
 {% load bootstrap4 %}
-{%load static%}
-
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
 
 <form method="post" action="">
   {% csrf_token %}
@@ -13,13 +13,13 @@
   </div>
 
   <div class="modal-body">
-      <p class="delete-text">Czy na pewno chcesz usunąć swoje konto {{user.id}}?</p>
+      <p class="delete-text">Czy na pewno chcesz usunąć swoje konto?</p>
       <p><b>UWAGA! </b><i>Usunięcie konta jest nieodwracalne!</i></p>
   </div>
 
   <div class="modal-footer">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-      <span aria-hidden="true">Anuluj</span>
+      <p class="cancel-button" aria-hidden="true">Anuluj</p>
     </button>
     <button type="submit" id="delete-btn" class="btn btn-danger">Usuń</button>
   </div>

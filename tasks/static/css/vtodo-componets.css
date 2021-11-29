@@ -1,10 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;500;600&display=swap');
 
 body {
     margin: 0;
     padding: 0;
     background-color: #f3f3f3 !important;
     font-family: 'Poppins', san-serif;
+    font-weight: 300;
 }
 
 a:hover {
@@ -22,11 +23,11 @@ text-decoration: none;
     min-height: 40px;
     text-decoration: none;
     border-radius: 4px;
-    font-family: sans-serif;
     font-size: 0.9rem;
+    font-weight: 500;
     cursor: pointer;
     text-align: center;
-    transition: background 250ms ease-in-out, 
+    transition: background 250ms ease-in-out,
                 transform 150ms ease;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -35,7 +36,7 @@ text-decoration: none;
 
 .add {
     background: #2F9CEB;
-    color: white; 
+    color: white;
 }
 
 .add:hover {
@@ -83,6 +84,12 @@ text-decoration: none;
     color: #E47676;
 }
 
+.cancel-button {
+    font-size: 0.7em;
+    color: #2F9CEB;
+    margin: 0 10px;
+}
+
 /*---------------------
         EVENTS
 ----------------------*/
@@ -122,6 +129,10 @@ text-decoration: none;
         background: #9B51E0;
     }
 
+    .grey {
+        #e1e1e1;
+    }
+
 .event .info {
     width: 100%;
     flex: 1;
@@ -152,6 +163,11 @@ text-decoration: none;
 
 .passed {
     opacity: 0.5;
+}
+
+.small-event {
+    width: 200px;
+    min-height: 135px;
 }
 
 /*---------------------
@@ -392,7 +408,7 @@ text-decoration: none;
 .menu-buttons li a {
     color: #2F3045;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 300;
     display: flex;
     flex: 1;
 }
@@ -573,7 +589,7 @@ margin: 0 auto;}
 .week-label
 {
     font-size: 12px;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 .week-label p
@@ -584,7 +600,7 @@ margin: 0 auto;}
 .month-label p
 {
     padding: 5px 15px;
-    font-weight: bold;
+    font-weight: 500;
     color: #111;
     background: #f5f5f5;
 }
@@ -605,8 +621,7 @@ margin: 0 auto;}
 
 .calendar-module table
 {
-width: 90%
-background: #333;
+    width: 90%;
     border: none;
     border-collapse: collapse;
     padding: 0;
@@ -619,6 +634,7 @@ background: #333;
     padding: 5px;
     height: auto;
     text-align: center;
+    font-weight: 300;
 }
 
 .day {
@@ -635,7 +651,25 @@ background: #333;
 }
 
 .current a {
-    font-weight: bold;
+    font-weight: 600;
+}
+
+.pointer {
+    display: none;
+}
+
+.busy .pointer {
+    display: block;
+    width: 4px;
+    height: 4px;
+    margin: 0 auto;
+
+    background: #2F9CEB;
+    border-radius: 90px;
+}
+
+.passed-day .pointer {
+    background: #c4c4c4;
 }
 
 /* ---------------------------------------------------
@@ -844,6 +878,99 @@ margin-left: 15px;
 }
 
 /* ---------------------------------------------------
+    STRONA GŁÓWNA
+----------------------------------------------------- */
+
+.heading {
+    display: flex;
+    justify-content: space-between;
+}
+
+.task-panel {
+    width: 90%;
+    margin: 2%;
+}
+
+.task-panel .task {
+    width: 100% !important;
+}
+
+.task-panel .task-content {
+    margin-left: 2%;
+}
+
+.nav-pills .nav-item {
+    width: 15%;
+    max-width: 200px;
+    border-radius: 0;
+}
+
+.nav-pills .nav-item .active {
+    background: #F2994A;
+    color: white;
+}
+
+.nav-pills .nav-item img {
+    width: 25px;
+    padding: 4px;
+    margin: 0 10px;
+}
+
+.active-icon {
+    display: none;
+}
+
+.nav-pills .nav-item .active .active-icon {
+    display: block;
+}
+
+.nav-pills .nav-item .active .icon {
+    display: none;
+}
+
+.nav-pills {
+    background: #e4e4e4;
+    width: 100%;
+    box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
+.nav-item a {
+    color: #a4a4a4;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+}
+
+.nav-item a:hover {
+    color: #545454;
+    background: #e2e2e2;
+}
+
+.all-tasks {
+    float: right;
+    justify-self: right;
+    color: #F2994A;
+    font-weight: 300;
+    cursor: pointer;
+}
+
+.all-tasks:hover {
+    font-weight: 500;
+    color: #F2994A;
+}
+
+.event-carousel {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    overflow: auto;
+    flex-wrap: wrap;
+    margin-bottom: 10vh;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+/* ---------------------------------------------------
     NAVBAR
 ----------------------------------------------------- */
 
@@ -907,14 +1034,49 @@ margin-left: 15px;
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    margin: 0 0 0 15px;
+    margin: 0 0 0 10px;
 }
 
 .big img {
-    width: 125px;
-    height: 125px;
+    width: 100px;
+    height: 100px;
         border-radius: 50%;
-    margin: 25px;
+    margin: 15px;
+}
+
+
+.change-avatar {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: none;
+    position: absolute;
+    top: 0px;
+    width: 100px;
+    height: 100px;
+    margin: 15px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6);
+                color: white;
+            font-size: 0.7rem;
+}
+
+        .big:hover + .change-avatar {
+            display: flex;
+
+        }
+
+        .change-avatar:hover {
+            display: flex;
+            color: white;
+            font-weight: 500;
+        }
+
+.change-avatar img {
+    width: 45px;
+    height: 45px;
+    padding: 5px;
 }
 
 .hr {
@@ -939,15 +1101,54 @@ margin-left: 15px;
     flex-wrap: wrap;
 }
 
+.profile-panel {
+    width: 60%;
+    margin: 15px auto;
+    padding: 5% 0;
+}
+
 /* ---------------------------
 PROFILE
 ------------------------------*/
 .visitcard {
-    margin: 15px;
+    height: 200px;
+    position: relative;
     display: flex;
-    justify-content center;
-    align-items: center;
+    justify-content: center;
+}
+
+.avatar-pos {
+    position: absolute;
+    display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-info {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.user-info p {
+    padding: 2px;
+
+}
+
+.labels {
+    width: 40%;
+}
+
+.data {
+    width: 60%;
+}
+
+
+.labels p {
+    font-weight: 300;
 }
 
 #logout {
@@ -962,7 +1163,7 @@ PROFILE
 }
 
 .input-group-text {
-    font-weight: bold;
+    font-weight: 200;
 }
 
 .input-group-text i {
@@ -1003,9 +1204,111 @@ PROFILE
     padding-right: 1em;
 }
 
+
+.radiobutton,
+.radiocontainer input {
+    width: 25px;
+    height: 25px;
+    border-radius: 90px;
+}
+
+.radiocontainer {
+    display: block;
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.radiocontainer input {
+    position: absolute;
+    opacity: 0%;
+    cursor: pointer;
+    z-index: 2;
+}
+
+.radiobutton {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  opacity: 100%;
+  z-index: 1;
+}
+
+.radiocontainer:hover input ~ .radiobutton{
+    opacity: 80%;
+    box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
+.mark {
+    position: relative;
+    display: inline-block;
+    margin: 3px 0;
+    width: 16px;
+    height: 16px;
+    background: none;
+    z-index: 0;
+}
+
+.mark::before {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    height: 50%;
+    width: 2px;
+    background-color: #fff;
+    content: "";
+    transform: translateX(10px) rotate(-45deg);
+    transform-origin: left bottom;
+}
+
+.mark::after {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 100%;
+    background-color: #fff;
+    content: "";
+    transform: translateX(10px) rotate(-45deg);
+    transform-origin: left bottom;
+}
+
+.radiocontainer input:checked ~ .mark {
+
+    z-index: 3;
+}
+
+
+
+
+.profile-footer {
+    width: 50%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
+@media (max-width: 1024px) {
+
+    .profile-panel {
+        width: 80%;
+    }
+
+    .user-info {
+        width: 90%;
+        font-size: 0.9em;
+    }
+
+}
+
 @media (max-width: 768px) {
     #sidebar, .menu {
         margin-left: -300px;
@@ -1099,12 +1402,8 @@ height: 100px;
     height: 20px;
 }
 
-.avatar img {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    margin: 0 0 0 15px;
-}
+
+
 
 .hamburger {
     z-index: 998;
