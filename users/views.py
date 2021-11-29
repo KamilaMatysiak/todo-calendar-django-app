@@ -100,7 +100,7 @@ def profile(request):
                                                             firstname=request.user.first_name + ' ' + request.user.last_name)
     print(userProfile)
     print(costam)
-    if not costam:
+    if costam:
 
         google_user = SocialAccount.objects.filter(user=request.user).first()
         if google_user:
