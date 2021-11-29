@@ -96,7 +96,7 @@ text-decoration: none;
 
 .event {
     width: 250px;
-    min-height: 250px;
+    min-height: 25px;
     color: white;
     font-family: sans-serif;
     padding: 5px;
@@ -140,6 +140,7 @@ text-decoration: none;
 
 .event h1 {
     font-size: 1.3rem;
+    text-align: left;
 }
 
 .event p {
@@ -181,19 +182,26 @@ text-decoration: none;
 .button-select {
     border-radius: 4px;
     text-align: left;
-    padding: 0.86rem 1rem 0.86rem 0.5rem;
+    padding: 5px;
     margin: 0;
     font-family: sans-serif;
     font-size: 0.8rem;
+    font-weight: 300;
     cursor: pointer;
     background: white;
     border: 1px solid #2F9CEB;
     color: #2F9CEB;
+    height: 40px;
 }
 
 .button-select:hover {
     background: #fbfbfb;
     color: #2F9CEB;
+}
+
+.button-select:active,
+.button-select:focus {
+    border: 2px solid #2F9CEB;
 }
 
 /*--------------------
@@ -616,7 +624,7 @@ margin: 0 auto;}
 }
 
 
-table
+.calendar-module table
 {
     width: 90%;
     border: none;
@@ -625,7 +633,7 @@ table
     margin: auto;
 }
 
-td
+.calendar-module td
 {
     border: none;
     padding: 5px;
@@ -670,6 +678,157 @@ td
 }
 
 /* ---------------------------------------------------
+    WEEK VIEW
+----------------------------------------------------- */
+
+.week-container {
+    width: 100%;
+    display: flex;
+    max-height: 80vh;
+    overflow: auto;
+}
+
+.week-row {
+    display: flex;
+    flex-direction: column;
+    min-height: 80vh;
+    width: 14%;
+    border-left: 1px solid #c4c4c4;
+}
+
+.week-row:first-child {
+    border:none;
+}
+
+.weekdays {
+    text-align: center;
+    align-items: center;
+    color: #333;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+}
+
+.weekdays:hover {
+    color: #aaa;
+}
+
+.weekdays p {
+    font-size: 0.9rem;
+}
+
+/* ---------------------------------------------------
+    MONTH VIEW
+----------------------------------------------------- */
+
+.month-view {
+    min-height: 80vh;
+    width: 98%;
+    margin: auto auto 20px auto;
+    border: 1px solid rgba(0,0,0,0.12);
+}
+
+.month-view th {
+    text-align: center;
+    vertical-align: center;
+    font-size: 1.2rem;
+    height: 40px;
+}
+
+.month-view td {
+    border: 1px solid rgba(0,0,0,0.12);
+    width: 14%;
+    vertical-align: top;
+}
+
+.month-view td .pointer {
+    padding: 5px;
+    margin: 0;
+    color: #222;
+    font-weight: bold;
+}
+
+.month-view td .container {
+   height: 145px;
+   overflow-y: auto;
+   width: 100%;
+}
+
+.month-event {
+    border-radius: 25px;
+    font-size: 0.7rem;
+    color: white;
+    padding: 4px;
+    margin: 4px 0;
+    min-height: 1.6rem;
+    overflow-x: visible;
+}
+
+.month-event span {
+      display: block;
+      width: 100px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+}
+
+
+/* ---------------------------------------------------
+    TIMETABLE
+----------------------------------------------------- */
+
+.timetable {
+    display: block;
+    width: 78vw;
+    max-height: 85vh !important;
+    height: 85vh;
+    padding: 0;
+    text-align: left;
+    overflow-y: auto;
+    overflow-x: hidden;
+    table-layout: fixed;
+    }
+
+.hour-span {
+    min-width: 50px;
+    min-height: 25px;
+    max-height: 25px;
+    width: 50px !important;
+    max-width: 50px !important;
+        border-right: 1px solid #F2994A;
+            vertical-align:top;
+}
+
+.hour-container{
+    min-width: 50px;
+    width: 35px;
+    max-width: 40px;
+    min-height: 25px;
+    height: 100%;
+    max-height: 25px !important;
+    float: left;
+    text-align: right;
+    font-size: 0.7rem;
+
+}
+
+.timetable td {
+    width: 1px;
+    height: 1px;
+}
+
+.hour-container p {
+    margin-right: 10px;
+}
+
+.timetable .event {
+    min-height: 100%;
+    margin: 0 2px;
+    width: 100%;
+}
+
+.timetable tr:nth-child(4n+1) {font-weight: bold;}
+
+/* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
 
@@ -711,8 +870,8 @@ margin-left: 15px;
 
 .link {
     text-decoration: none;
-    color: orange;
-    font-weight: 300;
+    color: #F2994A;
+    font-weight: bold;
     margin: 0;
     cursor: pointer;
 }
@@ -1380,22 +1539,7 @@ content: '+';
 
 .event {
  width: 100%;
- margin: 5px 0;
-}
-
-.task-panel {
-    width: 95%;
-    margin: auto;
-}
-
-.event-carousel {
-    width: 100vw;
-    flex-direction: column;
-    justify-content: left;
-}
-
-.small-event{
-    width: 90vw;
+ margin: 2px;
 }
 
 #mobile-sidebar .week-label
@@ -1427,20 +1571,8 @@ td {
     font-size: 0.7rem;
 }
 
-.nav-pills {
-    display: flex;
-}
-
-
-.nav-pills .nav-item {
-    width: 30vw;
-    max-width: auto;
-    margin: 0;
-}
-
-.user-info .labels {
-    margin-left: 5%;
-    width: 40%
+.timetable {
+    width: 100vw;
 }
 
 #top, #bottom, .inside {

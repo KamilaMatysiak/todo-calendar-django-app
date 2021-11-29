@@ -21,12 +21,12 @@
     </nav>
         <nav class="sidebar menu">
             <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>KALENDARZ</h1></div>
-            <div class="calendar-module">
-                <div class="calendar-header">
-                    <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
-                    <div class="month-label"><p>{{month_name}} {{year}}</p></div>
-                    <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
-                </div>
+                <div class="calendar-module">
+                    <div class="calendar-header">
+                        <div class="prev"><a href="{% url 'month' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
+                        <div class="month-label"><p>{{month_name}} {{year}}</p></div>
+                        <div class="next"><a href="{% url 'month' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
+                    </div>
 
                 <table class="labels">
                     <tr class="week-label">
@@ -45,7 +45,7 @@
                         {% if d.0 == 0 %}
                             <td class="noday"></td>
                         {% else %}
-                            <td class="{{ classes }}"><a href="{% url 'home' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
+                            <td class="{{ classes }}"><a href="{% url 'month' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
                         {% endif %}
                         {% if d.1 == 6 %}<tr>{% endif %}
                     {% endfor %}
@@ -72,9 +72,9 @@
                                 </li>
                             <div class="calendar-module">
                                 <div class="calendar-header">
-                                    <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
+                                    <div class="prev"><a href="{% url 'month' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
                                     <div class="month-label"><p>{{month_name}} {{year}}</p></div>
-                                    <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
+                                    <div class="next"><a href="{% url 'month' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
                                 </div>
                                 <table class="labels">
                                     <tr class="week-label">
@@ -91,7 +91,7 @@
                                     {% if d.0 == 0 %}
                                         <td class="noday"></td>
                                     {% else %}
-                                        <td class="{{ classes }}"><a href="{% url 'home' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
+                                        <td class="{{ classes }}"><a href="{% url 'month' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
                                     {% endif %}
                                     {% if d.1 == 6 %}<tr>{% endif %}
                                 {% endfor %}
@@ -119,7 +119,7 @@
 
         <nav class="navbar">
             <div class="left">
-                <h1>{{day_name}}</h1><p>{{day}} / {{month}} / {{year}}</p>
+                <h1>{{month_name}} {{year}}</h1>
             </div>
             <div class="right">
                 <div class="modal fade" tabindex="-1" role="dialog" id="modal">
@@ -129,9 +129,12 @@
                 </div>
 
                 <select class="button-select inverse" ONCHANGE="location = this.options[this.selectedIndex].value;">
+                  <option value="{% url 'month' year month day %}">MIESIĄC</option>
                   <option value="{% url 'home' year month day %}">DZIEŃ</option>
                   <option value="{% url 'week' year month day %}">TYDZIEŃ</option>
-                  <option value="{% url 'month' year month day %}">MIESIĄC</option>
+
+
+
                 </select>
 
                 <button id="add-event" class="button add" type="button" name="button">DODAJ SPOTKANIE</button>
@@ -142,29 +145,32 @@
         </nav>
         <hr>
 
-        <div class="table-container">
-        <table class="timetable">
-
-        {% for hour, meetings in timetable %}
-                <tr>
-                    <td class="hour-span"><div class="hour-container"><p>{{hour}}</p></div></td>
-
-                    {% for meeting in meetings %}
-                    <td class="meeting" style="width: {% get_width meetings %}%" rowspan="{{meeting|get_meeting_span}}">
-                                           <a href="{% url 'edit_meeting' meeting.id %}">
-                        <div class="event blue {% if meeting|passed %} passed {% endif %}">
-                            <div class="info"><h1>{{meeting.title}}</h1><p>{{meeting.description}}</p></div>
-                            <div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div>
-                            </div></a>
-                    </td>{% endfor %}
-
-
-                </tr>
-
-
-        {% endfor %}
-        </table>
-            </div>
+        <div style="width: 100%;">
+            <table class="month-view">
+                    <tr class="week-label">
+                        <th class="mon"><p>Pon</p></th>
+                        <th class="tue"><p>Wt</p></th>
+                        <th class="wed"><p>Śr</p></th>
+                        <th class="thu"><p>Czw</p></th>
+                        <th class="fri"><p>Pt</p></th>
+                        <th class="sat"><p>Sob</p></th>
+                        <th class="sun"><p>Nd</p></th></tr>
+                {% for d, meetings_day in month_days %}
+                    {% if d.0 == 0 %}
+                        <td class="noday"><div class="empty-cell"></div></td>
+                    {% else %}
+                        <td class="day"><a href="{% url 'home' year month d.0 %}">
+                            <div class="container">
+                            <div class="pointer">{{d.0}}</div>
+                            {% for meeting in meetings_day %}
+                                <a href="{% url 'edit_meeting' meeting.id %}"><div class="month-event blue"><span>{{meeting.title}}</span></div></a>
+                            {% endfor %}
+                        </div></a></td>
+                    {% endif %}
+                    {% if d.1 == 6 %}<tr>{% endif %}
+                {% endfor %}
+            </table>
+        </div>
     </div>
 </div>
 
@@ -179,31 +185,19 @@
             $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
         });
 
-        $("#mobile-sidebar").mCustomScrollbar({
-            theme: "minimal"
-        });
+            $("#mobile-sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
 
-        $('#dismiss').on('click', function () {
-            $('#mobile-sidebar').removeClass('active');
-        });
+            $('#dismiss').on('click', function () {
+                $('#mobile-sidebar').removeClass('active');
+            });
 
-        $('#sidebarCollapse').on('click', function () {
-            $('#mobile-sidebar').addClass('active');
-            $('.collapse.in').toggleClass('in');
-            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-        });
-
-        $('#importCalendar').on('click', function () {
-            const fetchURL = "/calendar/import_google_calendar_data";
-            fetch(fetchURL)
-            .then((response) => {return response.json();})
-            .then((body) => {
-              console.log(body);
-              if(body.msg == "success"){
-                  location.reload();
-              }
-            })
-        });
+            $('#sidebarCollapse').on('click', function () {
+                $('#mobile-sidebar').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
         });
     </script>
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>

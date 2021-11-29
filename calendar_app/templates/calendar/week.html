@@ -21,12 +21,12 @@
     </nav>
         <nav class="sidebar menu">
             <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>KALENDARZ</h1></div>
-            <div class="calendar-module">
-                <div class="calendar-header">
-                    <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
-                    <div class="month-label"><p>{{month_name}} {{year}}</p></div>
-                    <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
-                </div>
+                <div class="calendar-module">
+                    <div class="calendar-header">
+                        <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
+                        <div class="month-label"><p>{{month_name}} {{year}}</p></div>
+                        <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
+                    </div>
 
                 <table class="labels">
                     <tr class="week-label">
@@ -45,7 +45,7 @@
                         {% if d.0 == 0 %}
                             <td class="noday"></td>
                         {% else %}
-                            <td class="{{ classes }}"><a href="{% url 'home' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
+                            <td class="{{ classes }}"><a href="{% url 'week' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
                         {% endif %}
                         {% if d.1 == 6 %}<tr>{% endif %}
                     {% endfor %}
@@ -91,7 +91,7 @@
                                     {% if d.0 == 0 %}
                                         <td class="noday"></td>
                                     {% else %}
-                                        <td class="{{ classes }}"><a href="{% url 'home' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
+                                        <td class="{{ classes }}"><a href="{% url 'week' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
                                     {% endif %}
                                     {% if d.1 == 6 %}<tr>{% endif %}
                                 {% endfor %}
@@ -119,7 +119,7 @@
 
         <nav class="navbar">
             <div class="left">
-                <h1>{{day_name}}</h1><p>{{day}} / {{month}} / {{year}}</p>
+                <h1>{{week|get_months}}</h1>
             </div>
             <div class="right">
                 <div class="modal fade" tabindex="-1" role="dialog" id="modal">
@@ -129,8 +129,8 @@
                 </div>
 
                 <select class="button-select inverse" ONCHANGE="location = this.options[this.selectedIndex].value;">
-                  <option value="{% url 'home' year month day %}">DZIEŃ</option>
                   <option value="{% url 'week' year month day %}">TYDZIEŃ</option>
+                  <option value="{% url 'home' year month day %}">DZIEŃ</option>
                   <option value="{% url 'month' year month day %}">MIESIĄC</option>
                 </select>
 
@@ -142,29 +142,21 @@
         </nav>
         <hr>
 
-        <div class="table-container">
-        <table class="timetable">
-
-        {% for hour, meetings in timetable %}
-                <tr>
-                    <td class="hour-span"><div class="hour-container"><p>{{hour}}</p></div></td>
-
-                    {% for meeting in meetings %}
-                    <td class="meeting" style="width: {% get_width meetings %}%" rowspan="{{meeting|get_meeting_span}}">
-                                           <a href="{% url 'edit_meeting' meeting.id %}">
-                        <div class="event blue {% if meeting|passed %} passed {% endif %}">
-                            <div class="info"><h1>{{meeting.title}}</h1><p>{{meeting.description}}</p></div>
-                            <div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div>
-                            </div></a>
-                    </td>{% endfor %}
-
-
-                </tr>
-
-
-        {% endfor %}
-        </table>
+        <div class="week-container">
+        {% for day, meetings in week %}
+        <div class="week-row">
+            <a href="{% url 'home' day|get_year day|get_month day|get_day %}"><div class="weekdays"><h3>{{day|get_day}}</h3><p>{{day|get_dayname}}</p></div></a>
+            {% for meeting in meetings %}
+                <a href="{% url 'edit_meeting' meeting.id %}">
+                    <div style="margin-top: 0; "class="event blue {% if meeting|passed %} passed {% endif %} long" >
+                        <div class="info"><h1 style="font-size: 1rem;">{{meeting.title}}</h1><p style="font-size: 0.6rem;">{{meeting.description}}</p></div>
+                        <div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div>
+                    </div>
+                </a>
+            {% endfor %}
             </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 
@@ -179,31 +171,19 @@
             $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
         });
 
-        $("#mobile-sidebar").mCustomScrollbar({
-            theme: "minimal"
-        });
+            $("#mobile-sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
 
-        $('#dismiss').on('click', function () {
-            $('#mobile-sidebar').removeClass('active');
-        });
+            $('#dismiss').on('click', function () {
+                $('#mobile-sidebar').removeClass('active');
+            });
 
-        $('#sidebarCollapse').on('click', function () {
-            $('#mobile-sidebar').addClass('active');
-            $('.collapse.in').toggleClass('in');
-            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-        });
-
-        $('#importCalendar').on('click', function () {
-            const fetchURL = "/calendar/import_google_calendar_data";
-            fetch(fetchURL)
-            .then((response) => {return response.json();})
-            .then((body) => {
-              console.log(body);
-              if(body.msg == "success"){
-                  location.reload();
-              }
-            })
-        });
+            $('#sidebarCollapse').on('click', function () {
+                $('#mobile-sidebar').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
         });
     </script>
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
