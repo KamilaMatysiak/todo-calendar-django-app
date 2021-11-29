@@ -1,3 +1,4 @@
+from allauth.socialaccount.models import SocialAccount
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalLoginView, BSModalUpdateView, BSModalDeleteView
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
@@ -27,6 +28,7 @@ class LoginView(BSModalLoginView):
     success_message = 'Zalogowano'
     success_url = reverse_lazy('index')
 
+
 @login_required
 def change_password(request):
     if request.method == 'POST':
@@ -48,6 +50,7 @@ def change_password(request):
         'form': form
     })
 
+
 class DeleteUserView(BSModalDeleteView):
     template_name = 'users/delete_user.html'
     model = User
@@ -61,6 +64,7 @@ class DeleteUserView(BSModalDeleteView):
             raise Http404
         return obj
 
+
 class EditUserView(BSModalUpdateView):
     model = UserProfile
     template_name = 'users/edit_profile.html'
@@ -71,12 +75,22 @@ class EditUserView(BSModalUpdateView):
 
 @login_required
 def profile(request):
-    userProfile, costam = UserProfile.objects.get_or_create(user=request.user)
+
+    userProfile, costam = UserProfile.objects.get_or_create(user=request.user,
+                                                            firstname=request.user.first_name + ' ' + request.user.last_name)
     print(userProfile)
     print(costam)
-    #if userProfile == None:
-     #   userProfile = UserProfile.objects.create(user=request.user, firstname=None, birthdate=None, phonenumber=None)
+    google_user = SocialAccount.objects.filter(user=request.user).first()
+    if google_user:
+        extra_data = google_user.extra_data
+        print(extra_data)
+        birth_date = extra_data.get('birth_date', None)
+        if birth_date:
+            userProfile.birthdate = birth_date
+    # if userProfile == None:
+    #   userProfile = UserProfile.objects.create(user=request.user, firstname=None, birthdate=None, phonenumber=None)
     return render(request, 'users/profile.html', {'userProfile': userProfile})
+
 
 def username_ifunique(request, pk):
     import json
