@@ -1,11 +1,9 @@
 from django import forms
-from django.forms import ModelForm, ModelMultipleChoiceField
+from django.forms import ModelForm
 from .models import *
 from bootstrap_modal_forms.forms import BSModalModelForm
 from bootstrap_datepicker_plus import DatePickerInput, TimePickerInput
 from datetime import *
-from tasks.models import Task
-
 
 
 class EventModelForm(BSModalModelForm):
@@ -38,23 +36,3 @@ class EventModelForm(BSModalModelForm):
             'time_end': ('Godzina zakończenia'),
             'date_end': ('Data zakończenia')
         }
-
-class ConnectTaskForm(BSModalModelForm):
-
-    def __init__(self, user, *args, **kwargs):
-        super(ConnectTaskForm, self).__init__(*args, **kwargs)
-        self.fields['tasks'].queryset = Task.objects.filter(user=user)
-        #self.fields['tasks'].initial = Task.objects.filter(meeting=self.object)
-
-    tasks = forms.ModelMultipleChoiceField(queryset=None, widget=forms.CheckboxSelectMultiple )
-
-    class Meta:
-        model = Meeting
-        fields = ['tasks']
-
-class NoteModelForm(BSModalModelForm):
-    class Meta:
-        model = Notes
-        fields = ['text']
-
-        labels = {"text": ("Wprowadź notatkę:")}
