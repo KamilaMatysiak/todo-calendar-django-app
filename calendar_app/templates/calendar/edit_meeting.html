@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% load bootstrap4 %}
 {% load crispy_forms_tags %}
-
+{% load poll_extras %}
 {%load static%}
-
+{% load avatar_tags %}
 {% block content %}
 
     <div class="wrapper">
@@ -34,15 +34,7 @@
                         <form method="POST" action="">
                             <button id="delete-event" data-form-url="{% url 'delete_meeting' id %}" class="button delete delete-event" type="button" name="button">Usuń spotkanie</button>
                         </form>
-                        <div class="avatar">
-                            <a href="{% url 'profile' %}">
-                            {% if user.avatar == None %}
-                                <img alt="avatar" src="{%static 'image/avatar-test.png' %}" />
-                            {% else %}
-                                <img alt="avatar" src="user.avatar"/>
-                            {% endif %}
-                                </a>
-                        </div>
+                        <div class="avatar"><a href="{% url 'profile' %}">{% avatar user %}</a></div>
 
                     </div>
                 </nav>
@@ -88,13 +80,57 @@
             </form>
                     </div>
 
-
-                    <div class="panel">
-                        <div class="navbar"><h2>Menedżer zadań</h2><h2>0</h2></div>
+                    <div class="panel-container inside" style="flex-direction: column; width: 50%;padding: 1% 0;">
+                    <div class="panel" id="top">
+                        <div class="navbar"><h2>Menedżer zadań</h2><h2 style="color:#F2994A;">{{count}}</h2></div>
                         <hr class="hr">
-                        <button class="button add" style="width: 50%; align-self: center;">DODAJ ZADANIA</button>
+                        <button id="connect-task" class="button add" style="width: 50%; align-self: center; margin-bottom: 15px;" data-toggle="modal" data-form-url="{% url 'connect_task' meeting.pk %}"> DODAJ ZADANIA</button>
+                        <div class="task-panel-modal">
+                        {% for task in tasks %}
+                            {% if task.meeting == meeting %}
+                                <div class="task" style="width: 98%; margin: 1%;">
+                                <div class="task-content" style="margin-left: 15px;">
+                                    <h1><b>{{task}}</b></h1><div class="task-info"><p id="date">
+                                    {% if task|to_datetime|is_expired and not task.complete %}
+                                        <p class="warning"><b>Spóźnienie</b></p>
+                                    {% elif task.complete %}
+                                        <p><b>Zakończone</b></p>
+                                    {% else %}
+                                        {{task |to_datetime |timeuntil}}
+                                    {% endif %}
+                                    </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
+                                </div>
+                                <div class="important-tag">
+                                    {% if task.priority == "H" %}
+                                        <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
+                                    {% elif task.priority == "J" %}
+                                        <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
+                                    {% elif task.priority == "L" %}
+                                        <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
+                                    {% else %}
+                                    <div style="width: 15px; height: 15px;"></div>
+                                    {% endif %}
+                                </div>
+                    </div>
+                            {% endif %}
+                        {% endfor %}
+                            </div>
+
+                    </div>
+                    <div class="panel" id="bottom">
+                        <div class="navbar"><h2>Notatki</h2></div>
+                        <hr class="hr"><button id="add-note" class="button add" style="width: 50%; align-self: center; margin-bottom: 15px;" data-toggle="modal" data-form-url="{% url 'add_note' meeting.pk %}">DODAJ NOTATKĘ</button>
+
+                        <div class="task-panel-modal" id="notes">
+                            {% for note in notes%}
+                                {% if note.meeting == meeting %}
+                            <a class="edit_note"  data-toggle="modal" data-form-url="{% url 'edit_note' note.pk %}"><div class="note">{{note.text}}</div></a>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
+
             <!--</form>-->
 
 
@@ -107,6 +143,22 @@
             $(".delete-event").each(function () {
                 $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
             });
+
+            $("#connect-task").each(function () {
+              $(this).modalForm({
+                formURL: $(this).data("form-url")});
+            });
+
+            $("#add-note").each(function () {
+              $(this).modalForm({
+                formURL: $(this).data("form-url")});
+            });
+
+            $(".edit_note").each(function () {
+              $(this).modalForm({
+                formURL: $(this).data("form-url")});
+            });
+
         });
         </script>
     <script type="text/javascript">
