@@ -161,6 +161,7 @@ SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
             'https://www.googleapis.com/auth/user.birthday.read',
+            'https://www.googleapis.com/auth/user.phonenumbers.read',
             'https://www.googleapis.com/auth/userinfo.email',
             'https://www.googleapis.com/auth/userinfo.profile',
             'https://www.googleapis.com/auth/calendar',

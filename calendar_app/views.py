@@ -317,35 +317,6 @@ class DeleteNoteView(BSModalDeleteView):
         return obj
 
 @login_required
-def retrieve_google_contacts(request):
-    import xml.etree.ElementTree as ET
-
-    user = request.user
-    response = {}
-    try:
-        social_token = SocialToken.objects.get(account__user=user)
-
-        url = 'https://www.google.com/m8/feeds/contacts/default/full' + '?access_token=' + social_token.token + '&max-results=100'
-        data = api_reqs.get(url, headers={
-            'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.30 (KHTML, like Gecko) Ubuntu/11.04 Chromium/12.0.742.112 Chrome/12.0.742.112 Safari/534.30"})
-        contacts_xml = ET.fromstring(data.text)
-        result = []
-
-        for entry in contacts_xml.findall('{http://www.w3.org/2005/Atom}entry'):
-            for address in entry.findall('{http://schemas.google.com/g/2005}email'):
-                email = address.attrib.get('address')
-                result.append(email)
-        response = {'msg': 'success',
-                    'data': result}
-
-    except Exception as e:
-        print("Got next error when tried to get google contacts: ", e)
-        response = {'msg': 'error',
-                    'data': e}
-    return JsonResponse(response)
-
-
-@login_required
 def import_google_calendar_data(request):
     import re
 
