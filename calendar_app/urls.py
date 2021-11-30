@@ -3,8 +3,9 @@ from . import views
 
 urlpatterns = [
 
-    path('<int:year>/<int:month>/<int:day>', views.home, name="home"),
-    path('2020/6/12', views.home, name="home_empty"),
+    path('day/<int:year>/<int:month>/<int:day>', views.home, name="home"),
+    path('week/<int:year>/<int:month>/<int:day>', views.weekView, name="week"),
+    path('month/<int:year>/<int:month>/<int:day>', views.monthView, name="month"),
     path('', views.current_date, name="date"),
     path('add_meeting', views.AddEventView.as_view(), name="add_meeting"),
     path('connect_task/<int:pk>', views.ConnectTaskView.as_view(), name="connect_task"),

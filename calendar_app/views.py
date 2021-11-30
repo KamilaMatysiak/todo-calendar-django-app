@@ -21,24 +21,49 @@ from allauth.socialaccount.models import SocialToken
 
 from .custom_variables import colors_event, colors_calendar, months, timezone, vtodo_colors_event
 
+def get_meetings(dict, date):
+    if date in dict:
+        return dict[date]
+    else:
+        return []
 
-@login_required
-def home(request, year, month, day):
-    """Shows a map with starting point of user, based on users localization.
-        If user provide name of location,
-         then map will show both starting point and destination with a line connecting  them
-
-    Args:
-        request: request to return .html file
-    Returns:
-        .html file with a map of user starting point and places with task assigned to them
-
-    """
-    name = "usernaame"
-    locale.setlocale(locale.LC_ALL, "pl_PL")
-    cal = calendar.Calendar(firstweekday=0)
+def get_context(year, month, day, user):
+    meetings = Meeting.objects.filter(user=user)
+    now = datetime.now()
+    current_day = now.day
+    current_month = now.month
     date = datetime(year, month, day).date()
+    weekday = date.weekday()
     month_name = months[month]
+    day_name = date.strftime("%A")
+    time = datetime.now().time()
+    cal = calendar.Calendar(firstweekday=0)
+    form = EventModelForm()
+
+    all_events = {}
+    for m in meetings:
+        meeting_date = m.date_start
+        if meeting_date in all_events:
+            all_events[meeting_date].append(m)
+        else:
+            all_events[meeting_date] = [m]
+
+    days = []
+    for d in cal.itermonthdays2(year, month):
+        classes = ""
+        if d[0] != 0:
+            if get_meetings(all_events, datetime(year, month, d[0]).date()):
+                classes += "busy "
+        if d[0] == day:
+            classes += "current "
+        if month == current_month and d[0] == current_day:
+            classes += "active-day "
+        if month == current_month and d[0] < current_day:
+            classes += "passed-day "
+        if classes == "":
+            classes = "day"
+        days.append([d, classes])
+
     if month == 1:
         prev = [year - 1, 12]
         next = [year, month + 1]
@@ -58,54 +83,113 @@ def home(request, year, month, day):
         next.append(next_month_range)
     else:
         next.append(day)
-    now = datetime.now()
-    day_name = date.strftime("%A")
-    current_day = now.day
-    current_month = now.month
-    # current_year = now.year
-    meetings = [x for x in Meeting.objects.all() if x.user == request.user]
-    # days = [x for x in cal.itermonthdays2(year, month)]
-    days = []
-    for d in cal.itermonthdays2(year, month):
-        classes = ""
-        for m in meetings:
-            if m.date_start.day == d[0] and m.date_start.month == month and m.date_start.year == year:
-                classes += "busy "
-                break
-        if d[0] == day:
-            classes += "current "
-        if month == current_month and d[0] == current_day:
-            classes += "active-day "
-        if month == current_month and d[0] < current_day:
-            classes += "passed-day "
-        if classes == "":
-            classes = "day"
-        days.append([d, classes])
 
-    time = datetime.now().time()
+    #stuff for day
+    timetable = []
+    for i in range(24):
+        timetable.append((f"{i}"":00", []))
+        for j in range(15, 60, 15):
+            if j % 30 == 0:
+                timetable.append((f"{i}:{j}", []))
+            else:
+                timetable.append(("", []))
 
-    # meetings = Meeting.objects.all()
-    form = EventModelForm()
-    return render(request,
-                  'calendar/home.html',
-                  {
-                      "name": name,
-                      "year": year,
-                      "month": month,
-                      "day": day,
-                      "date": date,
-                      "prev_month": prev,
-                      "next_month": next,
-                      "month_name": month_name,
-                      "days": days,
-                      "day_name": day_name,
-                      "current_day": current_day,
-                      "current_month": current_month,
-                      #   "current_year": current_year,
-                      "time": time,
-                      "meetings": meetings,
-                      "form": form
-                  })
+    for m in get_meetings(all_events, date):
+        interval = m.time_start.hour * 4 + m.time_start.minute // 15
+        timetable[interval][1].append(m)
+    max_width = 1
+    tt_width = [["", []] for i in range(24 * 60 // 15)]
+
+    for index, (label, time_period) in enumerate(timetable):
+        tt_width[index][0] = label
+        for event in time_period:
+            length = get_span(event)
+            tt_width[index][1].append(event)
+            for j in range(1, length):
+                if (index + j) < len(tt_width):
+                    tt_width[index + j][1].append("busy")
+        if len(tt_width[index][1]) > max_width:
+            max_width = len(tt_width[index][1])
+
+    # print(timetable)
+    for x in tt_width:
+        string = ""
+        for y in x[1]:
+            string += " " + str(y)
+        # print(f"{x[0]}|{string}")
+    print("Maksymalna szerokosc to ", max_width)
+
+
+    #stuff for week
+    current_week = []
+    for i in range(weekday, 0, -1):
+        week_day = date - timedelta(days=i)
+        current_week.append((week_day, get_meetings(all_events, week_day)))
+
+    for i in range(7 - weekday):
+        week_day = date + timedelta(days=i)
+        current_week.append((week_day, get_meetings(all_events, week_day)))
+
+    context = {
+        "all_events": all_events,
+        "now": now,
+        "current_day": current_day,
+        "current_month": current_month,
+        "date": date,
+        "month_name": month_name,
+        "day_name": day_name,
+        "time": time,
+        "cal": cal,
+        "days": days,
+        "year": year,
+        "month": month,
+        "day": day,
+        "prev_month": prev,
+        "next_month": next,
+        "meetings": meetings,
+        "form": form,
+        "timetable": timetable,
+        "week": current_week,
+    }
+
+    return context
+
+@login_required
+def home(request, year, month, day):
+    locale.setlocale(locale.LC_ALL, "pl_PL")
+    user = request.user
+    context = get_context(year, month, day, user)
+    return render(request, 'calendar/home.html', context)
+
+
+@login_required
+def weekView(request, year, month, day):
+    user = request.user
+    context = get_context(year, month, day, user)
+    return render(request, 'calendar/week.html', context)
+
+
+@login_required
+def monthView(request, year, month, day):
+    user = request.user
+    context = get_context(year, month, day, user)
+    all_events = context["all_events"]
+    days = context["days"]
+    month_days = []
+    for day, _ in days:
+        if day[0] != 0:
+            date = datetime(year, month, day[0]).date()
+            month_days.append((day, get_meetings(all_events, date)))
+        else:
+            month_days.append((day, []))
+    context["month_days"] = month_days
+    return render(request, 'calendar/month.html', context)
+
+
+def get_span(meeting):
+    diff = ((meeting.time_end.hour - meeting.time_start.hour) * 60
+            + (meeting.time_end.minute - meeting.time_start.minute)) // 15
+    return diff + 1
 
 
 def create_event(service, location=None, attendees=None, meeting_obj=None):
@@ -153,14 +237,6 @@ def create_event(service, location=None, attendees=None, meeting_obj=None):
 
 
 def current_date(request):
-    """Shows current date in dd / mm / yyyy format
-
-    Args:
-        request: request to redirect
-    Returns:
-        redirection to 'home' with current year, month and day
-
-    """
     now = datetime.now()
     return redirect('home', now.year, now.month, now.day)
 
@@ -186,6 +262,7 @@ class AddEventView(BSModalCreateView):
     success_url = reverse_lazy('date')
 
     def form_valid(self, form):
+
         obj = form.save(commit=False)
         obj.user = self.request.user
 
@@ -359,14 +436,6 @@ class ConnectTaskView(BSModalUpdateView):
         return self.form_valid(form)
 
 def delete_meeting(request, pk):
-    """Deletes meeting from meeting list
-
-    Args:
-        request: POST request
-    Returns:
-        redirection to delete meeting
-
-    """
     item = Meeting.objects.get(id=pk)
     if request.method == 'POST':
         item.delete()
