@@ -166,9 +166,9 @@ def retrieve_google_contacts_via_service(request):
                                               personFields='names,birthdays').execute()
     print(res)
     print(res.keys())
-    print(f"{ res.get('nextPageToken', []) =  }")
-    print(f"{ res.get('totalPeople', []) =  }")
-    print(f"{ res.get('totalItems', []) =  }")
+    print(res.get('nextPageToken', []))
+    print(res.get('totalPeople', []))
+    print(res.get('totalItems', []))
     connections = res.get('connections', [])
 
     for person in connections:
