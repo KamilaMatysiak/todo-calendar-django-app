@@ -1,10 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;500;600&display=swap');
 
 body {
     margin: 0;
     padding: 0;
     background-color: #f3f3f3 !important;
     font-family: 'Poppins', san-serif;
+    font-weight: 300;
 }
 
 a:hover {
@@ -22,11 +23,11 @@ text-decoration: none;
     min-height: 40px;
     text-decoration: none;
     border-radius: 4px;
-    font-family: sans-serif;
     font-size: 0.9rem;
+    font-weight: 500;
     cursor: pointer;
     text-align: center;
-    transition: background 250ms ease-in-out, 
+    transition: background 250ms ease-in-out,
                 transform 150ms ease;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -35,7 +36,7 @@ text-decoration: none;
 
 .add {
     background: #2F9CEB;
-    color: white; 
+    color: white;
 }
 
 .add:hover {
@@ -83,6 +84,12 @@ text-decoration: none;
     color: #E47676;
 }
 
+.cancel-button {
+    font-size: 0.7em;
+    color: #2F9CEB;
+    margin: 0 10px;
+}
+
 /*---------------------
         EVENTS
 ----------------------*/
@@ -120,6 +127,10 @@ text-decoration: none;
 
     .purple {
         background: #9B51E0;
+    }
+
+    .grey {
+        #e1e1e1;
     }
 
 .event .info {
@@ -389,7 +400,7 @@ text-decoration: none;
 .menu-buttons li a {
     color: #2F3045;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 300;
     display: flex;
     flex: 1;
 }
@@ -570,7 +581,7 @@ margin: 0 auto;}
 .week-label
 {
     font-size: 12px;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 .week-label p
@@ -581,7 +592,7 @@ margin: 0 auto;}
 .month-label p
 {
     padding: 5px 15px;
-    font-weight: bold;
+    font-weight: 500;
     color: #111;
     background: #f5f5f5;
 }
@@ -602,8 +613,7 @@ margin: 0 auto;}
 
 table
 {
-width: 90%;
-background: #333;
+    width: 90%;
     border: none;
     border-collapse: collapse;
     padding: 0;
@@ -616,6 +626,7 @@ td
     padding: 5px;
     height: auto;
     text-align: center;
+    font-weight: 300;
 }
 
 .day {
@@ -632,7 +643,25 @@ td
 }
 
 .current a {
-    font-weight: bold;
+    font-weight: 600;
+}
+
+.pointer {
+    display: none;
+}
+
+.busy .pointer {
+    display: block;
+    width: 4px;
+    height: 4px;
+    margin: 0 auto;
+
+    background: #2F9CEB;
+    border-radius: 90px;
+}
+
+.passed-day .pointer {
+    background: #c4c4c4;
 }
 
 /* ---------------------------------------------------
@@ -846,14 +875,49 @@ margin-left: 15px;
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    margin: 0 0 0 15px;
+    margin: 0 0 0 10px;
 }
 
 .big img {
-    width: 125px;
-    height: 125px;
+    width: 100px;
+    height: 100px;
         border-radius: 50%;
-    margin: 25px;
+    margin: 15px;
+}
+
+
+.change-avatar {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border: none;
+    position: absolute;
+    top: 0px;
+    width: 100px;
+    height: 100px;
+    margin: 15px;
+    border-radius: 50%;
+    background: rgba(0,0,0,0.6);
+                color: white;
+            font-size: 0.7rem;
+}
+
+        .big:hover + .change-avatar {
+            display: flex;
+
+        }
+
+        .change-avatar:hover {
+            display: flex;
+            color: white;
+            font-weight: 500;
+        }
+
+.change-avatar img {
+    width: 45px;
+    height: 45px;
+    padding: 5px;
 }
 
 .hr {
@@ -888,11 +952,44 @@ margin-left: 15px;
 PROFILE
 ------------------------------*/
 .visitcard {
-    margin: 15px;
+    height: 200px;
+    position: relative;
     display: flex;
     justify-content: center;
-    align-items: center;
+}
+
+.avatar-pos {
+    position: absolute;
+    display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.user-info {
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.user-info p {
+    padding: 2px;
+
+}
+
+.labels {
+    width: 40%;
+}
+
+.data {
+    width: 60%;
+}
+
+
+.labels p {
+    font-weight: 300;
 }
 
 #logout {
@@ -907,7 +1004,7 @@ PROFILE
 }
 
 .input-group-text {
-    font-weight: bold;
+    font-weight: 200;
 }
 
 .input-group-text i {
@@ -1040,6 +1137,19 @@ PROFILE
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
+@media (max-width: 1024px) {
+
+    .profile-panel {
+        width: 80%;
+    }
+
+    .user-info {
+        width: 90%;
+        font-size: 0.9em;
+    }
+
+}
+
 @media (max-width: 768px) {
     #sidebar, .menu {
         margin-left: -300px;
@@ -1133,19 +1243,15 @@ height: 100px;
     height: 20px;
 }
 
-.avatar img {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    margin: 0 0 0 15px;
-}
+
+
 
 .hamburger {
     z-index: 998;
     width: 50px;
     height: 50px;
     font-size: 5px;
-    margin: 15px;
+    margin 15px;
     border: none;
     background: none;
 }

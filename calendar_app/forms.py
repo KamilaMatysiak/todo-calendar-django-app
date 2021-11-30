@@ -10,9 +10,17 @@ class EventModelForm(BSModalModelForm):
     description = forms.CharField(required=False, label="Opis")
     today = datetime.now().strftime("%d-%m-%Y")
 
+    COLORS = [('blue', 'blue'),
+            ('orange', 'orange'),
+            ('red', 'red'),
+            ('purple', 'purple'),
+            ('green', 'green')]
+
+    color = forms.CharField(label="Kolor", widget=forms.RadioSelect(choices=COLORS), initial="blue")
+
     class Meta:
         model = Meeting
-        fields = ['title', 'description', 'date_start', 'time_start', 'time_end', 'date_end']
+        fields = ['color', 'title', 'description', 'date_start', 'time_start', 'time_end', 'date_end']
         widgets = {
             # 'x': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl"}),
             'date_start': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl", "useCurrent": False}),
@@ -24,7 +32,7 @@ class EventModelForm(BSModalModelForm):
         labels = {
             'title': ('Nazwa spotkania'),
             'date_start': ('Data rozpoczęcia'),
-            'time_start': ('Rozpoczęcie'),
-            'time_end': ('Zakończenie'),
+            'time_start': ('Godzina rozpoczęcie'),
+            'time_end': ('Godzina zakończenia'),
             'date_end': ('Data zakończenia')
         }
