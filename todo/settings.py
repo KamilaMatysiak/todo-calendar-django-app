@@ -15,11 +15,9 @@ from pathlib import Path
 from os import getenv
 from pathlib import Path
 import sys
+
 path_root = Path(__file__).parents[2]
 sys.path.append(str(path_root))
-
-
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -69,10 +67,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'phonenumber_field',
 ]
-
-
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -89,6 +85,9 @@ MIDDLEWARE = [
 # TODO: get id from db or check how to get the correct one
 # Solution: Write custom Middleware
 SITE_ID = 3
+
+PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
+PHONENUMBER_DEFAULT_FORMAT = 'INTERNATIONAL'
 
 BOOTSTRAP4 = {
     'include_jquery': True,

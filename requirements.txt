@@ -41,6 +41,7 @@ django-allauth==0.45.0
 datefinder==0.7.1
 google-api-python-client==2.27.0
 google-auth-oauthlib==0.4.6
-phonenumbers==8.12.37
+django-phonenumber-field==5.0.0
+phonenumberslite==8.12.11
 psycopg2-binary==2.8.6
 

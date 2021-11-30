@@ -7,6 +7,7 @@ from users.models import UserProfile
 from bootstrap_modal_forms.forms import BSModalModelForm
 from django.utils.translation import ugettext, ugettext_lazy as _
 from bootstrap_datepicker_plus import DatePickerInput
+from phonenumber_field.formfields import PhoneNumberField
 
 
 class UserRegisterForm(PopRequestMixin, CreateUpdateAjaxMixin, UserCreationForm):
@@ -16,7 +17,6 @@ class UserRegisterForm(PopRequestMixin, CreateUpdateAjaxMixin, UserCreationForm)
     password2 = forms.CharField(max_length=16, widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': 'Powtórz hasło'}),
                                 label="Powtórz hasło")
-
 
     class Meta:
         model = User
@@ -34,15 +34,15 @@ class UserRegisterForm(PopRequestMixin, CreateUpdateAjaxMixin, UserCreationForm)
         }
 
 
-
 class CustomAuthenticationForm(AuthenticationForm):
     class Meta:
         model = User
         fields = ['username', 'password']
 
 
-
 class UserProfileForm(BSModalModelForm):
+    phonenumber = PhoneNumberField()
+
     class Meta:
         model = UserProfile
         fields = ['firstname', 'birthdate', 'phonenumber']
