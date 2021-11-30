@@ -165,7 +165,8 @@
                             {% for meeting in meetings_day %}
                                 <a href="{% url 'edit_meeting' meeting.id %}"><div class="month-event blue"><span>{{meeting.title}}</span></div></a>
                             {% endfor %}
-                        </div></a></td>
+                        </div></a>
+                        </td>
                     {% endif %}
                     {% if d.1 == 6 %}<tr>{% endif %}
                 {% endfor %}

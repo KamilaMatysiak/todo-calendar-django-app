@@ -146,14 +146,7 @@ class DeleteTaskView(BSModalDeleteView):
         return obj
 
 def updateTask(request, pk):
-    """
-    Lets user update their task.
-    Args:
-        request: request to return .html file
 
-    Returns: .html file of update-task
-
-    """
     task = Task.objects.get(id=pk)
     form = TaskModelForm(instance=task)
 
