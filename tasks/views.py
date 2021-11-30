@@ -83,7 +83,7 @@ def index(request):
         if x.date_start == datetime.date.today() and x.time_end > datetime.datetime.now().time():
             today_events.append(x)
 
-    tasks = [x for x in Task.objects.all() if x.user == request.user]
+    tasks = [x for x in Task.objects.all() if x.user == request.user and x.accepted == True]
     for x in tasks:
         if not x.complete:
             if x.date == datetime.date.today():
