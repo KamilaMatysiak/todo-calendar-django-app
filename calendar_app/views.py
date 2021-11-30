@@ -6,19 +6,30 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 import calendar
 from datetime import datetime, date, timedelta
-import requests as api_reqs
 
 from .models import *
 from .forms import *
 from django.urls import reverse_lazy
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalDeleteView, BSModalUpdateView
-from django.http import Http404, JsonResponse
+from django.http import Http404
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
-from google.oauth2.credentials import Credentials
-from allauth.socialaccount.models import SocialToken
 
-from .custom_variables import colors_event, colors_calendar, months, timezone, vtodo_colors_event
+months = {
+    1: "Styczeń",
+    2: "Luty",
+    3: "Marzec",
+    4: "Kwiecień",
+    5: "Maj",
+    6: "Czerwiec",
+    7: "Lipiec",
+    8: "Sierpień",
+    9: "Wrzesień",
+    10: "Październik",
+    11: "Listopad",
+    12: "Grudzień"
+}
+timezone = 'Europe/Warsaw'
 
 def get_meetings(dict, date):
     if date in dict:
@@ -191,67 +202,38 @@ def get_span(meeting):
     return diff + 1
 
 
-def create_event(service, location=None, attendees=None, meeting_obj=None):
-    if meeting_obj:
-        if attendees is None:
-            attendees = []
+def create_event(service, start_date_str, end_date_str, start_time_str, end_time_str, summary, description=None,
+                 location=None, attendees=None):
+    if attendees is None:
+        attendees = []
 
-        start_date_str = meeting_obj.date_start
-        summary = meeting_obj.title
-        description = meeting_obj.description
-        end_date_str = meeting_obj.date_end
-        start_time_str = meeting_obj.time_start
-        end_time_str = meeting_obj.time_end
-        calendarId = meeting_obj.user.email
+    full_start_datetime = datetime.combine(start_date_str, start_time_str)
+    full_end_datetime = datetime.combine(end_date_str, end_time_str)
 
-        full_start_datetime = datetime.combine(start_date_str, start_time_str)
-        full_end_datetime = datetime.combine(end_date_str, end_time_str)
-
-        event = {
-            'summary': summary,
-            'location': location,
-            'description': description,
-            'status': 'confirmed',
-            'visibility': 'default',
-            'colorId': vtodo_colors_event.get(meeting_obj.color, 'blue'),
-            'start': {
-                'dateTime': full_start_datetime.strftime("%Y-%m-%dT%H:%M:%S"),
-                'timeZone': timezone,
-            },
-            'end': {
-                'dateTime': full_end_datetime.strftime("%Y-%m-%dT%H:%M:%S"),
-                'timeZone': timezone,
-            },
-            'attendees': attendees,
-            'reminders': {
-                'useDefault': False,
-                'overrides': [
-                    {'method': 'email', 'minutes': 24 * 60},
-                    {'method': 'popup', 'minutes': 10}, ],
-            },
-        }
-
-        event = service.events().insert(calendarId=calendarId, body=event).execute()
-        print(event)
+    event = {
+        'summary': summary,
+        'location': location,
+        'description': description,
+        'start': {
+            'dateTime': full_start_datetime.strftime("%Y-%m-%dT%H:%M:%S"),
+            'timeZone': timezone,
+        },
+        'end': {
+            'dateTime': full_end_datetime.strftime("%Y-%m-%dT%H:%M:%S"),
+            'timeZone': timezone,
+        },
+        'attendees': attendees,
+        'reminders': {
+            'useDefault': False,
+            'overrides': [
+                {'method': 'email', 'minutes': 24 * 60},
+                {'method': 'popup', 'minutes': 10}, ], }, }
+    event = service.events().insert(calendarId="primary", body=event).execute()
 
 
 def current_date(request):
     now = datetime.now()
     return redirect('home', now.year, now.month, now.day)
-
-
-def build_credentials(token):
-    return Credentials(token=token.token,
-                       refresh_token=token.token_secret,
-                       client_id=token.app.client_id,
-                       client_secret=token.app.secret,
-                       )
-
-
-def construct_service(user):
-    social_token = SocialToken.objects.get(account__user=user)
-    creds = build_credentials(social_token)
-    return build('calendar', 'v3', credentials=creds)
 
 
 class AddEventView(BSModalCreateView):
@@ -261,91 +243,46 @@ class AddEventView(BSModalCreateView):
     success_url = reverse_lazy('date')
 
     def form_valid(self, form):
+
         obj = form.save(commit=False)
         obj.user = self.request.user
 
-        if self.request.is_ajax():
-            try:
-                service = construct_service(obj.user)
-                print("start: ", obj.date_start, "\n end: ", obj.date_end)
-                create_event(service=service,
-                             meeting_obj=obj)
-            except Exception as e:
-                print("Error is", e)
+        # TODO: SocialToken matching query does not exist
+        from google.oauth2.credentials import Credentials
+        from allauth.socialaccount.models import SocialToken
+
+        print(obj.user, "   ")
+        try:
+            social_token = SocialToken.objects.get(account__user=self.request.user)
+            print(social_token,"   ")
+            print(social_token.__dict__, "   ")
+            # TODO: creds could be invalid
+            creds = Credentials(token=social_token.token,
+                                refresh_token=social_token.token_secret,
+                                client_id=social_token.app.client_id,
+                                client_secret=social_token.app.secret,
+                                )
+            print(creds, "= ,")
+            print(creds.__dict__, "=  ")
+            service = build('calendar', 'v3', credentials=creds)
+            # print(service.calendars().get(calendarId='primary').execute(), "=  ")
+            # calendar = service.calendars().get(calendarId='primary')
+            # print(calendar)
+            # print(calendar.__dict__, "=  ")
+            print("start: ", obj.date_start, "\n end: ", obj.date_end)
+            create_event(service=service,
+                         start_date_str=obj.date_start,
+                         summary=obj.title,
+                         description=obj.title,
+                         end_date_str=obj.date_end,
+                         start_time_str=obj.time_start,
+                         end_time_str=obj.time_end)
+        except Exception as e:
+            print("Error is", e)
         return super(AddEventView, self).form_valid(form)
 
 
-@login_required
-def retrieve_google_contacts(request):
-    import xml.etree.ElementTree as ET
 
-    user = request.user
-    response = {}
-    try:
-        social_token = SocialToken.objects.get(account__user=user)
-
-        url = 'https://www.google.com/m8/feeds/contacts/default/full' + '?access_token=' + social_token.token + '&max-results=100'
-        data = api_reqs.get(url, headers={
-            'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.30 (KHTML, like Gecko) Ubuntu/11.04 Chromium/12.0.742.112 Chrome/12.0.742.112 Safari/534.30"})
-        contacts_xml = ET.fromstring(data.text)
-        result = []
-
-        for entry in contacts_xml.findall('{http://www.w3.org/2005/Atom}entry'):
-            for address in entry.findall('{http://schemas.google.com/g/2005}email'):
-                email = address.attrib.get('address')
-                result.append(email)
-        response = {'msg': 'success',
-                    'data': result}
-
-    except Exception as e:
-        print("Got next error when tried to get google contacts: ", e)
-        response = {'msg': 'error',
-                    'data': e}
-    return JsonResponse(response)
-
-
-@login_required
-def import_google_calendar_data(request):
-    import re
-
-    user = request.user
-    try:
-        service = construct_service(user)
-
-        # colors = service.colors().get().execute()
-        # print('colors')
-
-        events_result = service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z',
-                                              maxResults=10, singleEvents=True,
-                                              orderBy='startTime').execute()
-        events = events_result.get('items', [])
-        for event in events:
-            print(event)
-            date_start, time_start, _ = re.split(r"[TZ]", event['start'].get('dateTime', datetime.now()))
-            date_end, time_end, _ = re.split(r"[TZ]", event['end'].get('dateTime', datetime.now()))
-
-            meeting_kwargs = {
-                'user': user,
-                'title': event.get('summary', 'brak tytułu'),
-                'description': event.get('description', 'brak opisu'),
-                'date_start': date_start,
-                'time_start': time_start,
-                'date_end': date_end,
-                'time_end': time_end,
-                'color': colors_event[event.get('colorId', '9')].get('name', 'blue'),
-            }
-
-            Meeting.objects.get_or_create(**meeting_kwargs)
-
-        response = {'msg': 'success',
-                    'data': events}
-    except Exception as e:
-        e = 'Got this exception: ' + str(e)
-        print(e)
-        response = {'msg': 'error',
-                    'data': e}
-
-    return JsonResponse(response)
 
 
 class DeleteEventView(BSModalDeleteView):
@@ -372,6 +309,8 @@ def edit_meeting(request, pk):
         if form.is_valid():
             form.save()
             return redirect('/calendar')
+
+
 
     context = {'form': form, 'id': pk}
 
