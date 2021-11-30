@@ -7,8 +7,9 @@ from django.shortcuts import redirect, render
 import calendar
 from datetime import datetime, date, timedelta
 import requests as api_reqs
-
+from django.http import HttpResponseRedirect
 from .models import *
+from tasks.models import Task
 from .forms import *
 from django.urls import reverse_lazy
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalDeleteView, BSModalUpdateView
@@ -198,6 +199,46 @@ class AddEventView(BSModalCreateView):
                 print("Error is", e)
         return super(AddEventView, self).form_valid(form)
 
+class AddNoteView(BSModalCreateView):
+    template_name = 'calendar/add_note.html'
+    form_class = NoteModelForm
+    success_message = "Dodano notatkę"
+
+    def get_object(self, quaryset=None):
+        return super(AddNoteView, self).get_object()
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        meeting = Meeting.objects.get(pk=self.kwargs["meeting_pk"])
+        obj.meeting = meeting
+        self.success_url = reverse_lazy("edit_meeting", args=[obj.meeting.id])
+        return super(AddNoteView, self).form_valid(form)
+
+class EditNoteView(BSModalUpdateView):
+    model = Notes
+    template_name = 'calendar/edit_note.html'
+    form_class = NoteModelForm
+    success_message = "Zedytowano notatkę"
+
+    def get_object(self, queryset=None):
+        obj = super(EditNoteView, self).get_object()
+        self.success_url = reverse_lazy("edit_meeting", args=[obj.meeting.id])
+        if not obj.user == self.request.user:
+            raise Http404
+        return obj
+
+class DeleteNoteView(BSModalDeleteView):
+    template_name = 'calendar/delete_note.html'
+    model = Notes
+    success_message = "Pomyślnie usunięto notatkę"
+
+    def get_object(self, queryset=None):
+        obj = super(DeleteNoteView, self).get_object()
+        self.success_url = reverse_lazy("edit_meeting", args=[obj.meeting.id])
+        if not obj.user == self.request.user:
+            raise Http404
+        return obj
 
 @login_required
 def import_google_calendar_data(request):
@@ -257,7 +298,9 @@ class DeleteEventView(BSModalDeleteView):
 
 
 def edit_meeting(request, pk):
+    count = 0
     meeting = Meeting.objects.get(id=pk)
+
     form = EventModelForm(instance=meeting)
     if not meeting.user == request.user:
         raise Http404
@@ -268,10 +311,52 @@ def edit_meeting(request, pk):
             form.save()
             return redirect('/calendar')
 
-    context = {'form': form, 'id': pk}
+    tasks = [x for x in Task.objects.all() if x.user == request.user]
+    for x in tasks:
+        if x.meeting == meeting:
+            count += 1
+
+    notes = [x for x in Notes.objects.all() if x.user == request.user]
+
+
+    context = {'form': form, 'id': pk, 'meeting': meeting, 'tasks': tasks, 'count': count, 'notes': notes}
 
     return render(request, 'calendar/edit_meeting.html', context)
 
+class ConnectTaskView(BSModalUpdateView):
+    model = Meeting
+    template_name = 'calendar/connect_tasks.html'
+    form_class = ConnectTaskForm
+    success_message = "Podpięto zadania"
+
+    def get_form_kwargs(self):
+        kwargs = super(ConnectTaskView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def get_object(self):
+        obj = super(ConnectTaskView, self).get_object()
+        self.success_url = reverse_lazy("edit_meeting", args=[obj.id])
+        self.initial['tasks'] = Task.objects.filter(meeting=obj)
+        return obj
+
+    def form_valid(self, form):
+        tasks = Task.objects.filter(user=self.request.user, meeting=self.object)
+        if "tasks" not in form.cleaned_data:
+            form.cleaned_data["tasks"] = []
+        for task in tasks:
+            if task not in form.cleaned_data["tasks"]:
+                task.meeting = None
+                task.save()
+        for task in form.cleaned_data["tasks"]:
+            task.meeting = self.object
+            task.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+    def form_invalid(self, form):
+        """If the form is invalid, render the invalid form."""
+        return self.form_valid(form)
 
 def delete_meeting(request, pk):
     """Deletes meeting from meeting list
