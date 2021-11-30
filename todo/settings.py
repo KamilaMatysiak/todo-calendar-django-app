@@ -82,6 +82,8 @@ MIDDLEWARE = [
     'todo.middleware.DynamicSiteMiddleware'
 ]
 
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 # TODO: get id from db or check how to get the correct one
 # Solution: Write custom Middleware
 SITE_ID = 3
