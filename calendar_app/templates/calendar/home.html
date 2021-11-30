@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load poll_extras %}
 {% load avatar_tags %}
 
 {% block headcontent %}
@@ -49,11 +48,9 @@
                         {% endif %}
                         {% if d.1 == 6 %}<tr>{% endif %}
                     {% endfor %}
-                                </table>
-                            </div>
-                           <ul class="menu-buttons">
-                                <li class="option-dropdown"><a>Połącz z Kalendarzem Google</a></li>
-                            </ul>
+                </table>
+            </div>
+            <div class="menu-buttons"><button class="option-dropdown" id="importCalendar"><a>Połącz z Kalendarzem Google</a></button></div>
         </nav>
     </nav>
 
@@ -128,12 +125,7 @@
                   </div>
                 </div>
 
-                <select class="button-select inverse" ONCHANGE="location = this.options[this.selectedIndex].value;">
-                  <option value="{% url 'home' year month day %}">DZIEŃ</option>
-                  <option value="{% url 'week' year month day %}">TYDZIEŃ</option>
-                  <option value="{% url 'month' year month day %}">MIESIĄC</option>
-                </select>
-
+                <!-- Create book button -->
                 <button id="add-event" class="button add" type="button" name="button">DODAJ SPOTKANIE</button>
                 <div class="avatar">
                     <a href="{% url 'profile' %}">{% avatar user %}</a>
@@ -142,29 +134,15 @@
         </nav>
         <hr>
 
-        <div class="table-container">
-        <table class="timetable">
+            {% for meeting in meetings %}
+                {% if meeting.date_start <= date %}
+                    {% if date <= meeting.date_end %}
+                        <a href="{% url 'edit_meeting' meeting.id %}">
+            <div class="event {{meeting.color}} long"><div class="info"><h1>{{meeting.title}}</h1><p>{{meeting.description}}</p></div><div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div></div>                    </a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
 
-        {% for hour, meetings in timetable %}
-                <tr>
-                    <td class="hour-span"><div class="hour-container"><p>{{hour}}</p></div></td>
-
-                    {% for meeting in meetings %}
-                    <td class="meeting" style="width: {% get_width meetings %}%" rowspan="{{meeting|get_meeting_span}}">
-                                           <a href="{% url 'edit_meeting' meeting.id %}">
-                        <div class="event blue {% if meeting|passed %} passed {% endif %}">
-                            <div class="info"><h1>{{meeting.title}}</h1><p>{{meeting.description}}</p></div>
-                            <div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div>
-                            </div></a>
-                    </td>{% endfor %}
-
-
-                </tr>
-
-
-        {% endfor %}
-        </table>
-            </div>
     </div>
 </div>
 

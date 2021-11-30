@@ -40,7 +40,7 @@ SECURE_SSL_REDIRECT = getenv("COOKIES", False)
 SESSION_COOKIE_SECURE = getenv("COOKIES", False)
 CSRF_COOKIE_SECURE = getenv("COOKIES", False)
 
-ALLOWED_HOSTS = ['*', 'localhost']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -121,12 +121,8 @@ WSGI_APPLICATION = 'todo.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        "USER": 'vtodo',
-        "PASSWORD": 'ZXC#$mnu4321',
-        "HOST": 'v-todo.c7619xurnc1g.eu-central-1.rds.amazonaws.com',
-        "PORT": '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': str(os.path.join(BASE_DIR, "db.sqlite3")),
     }
 }
 
