@@ -23,9 +23,9 @@
             <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>KALENDARZ</h1></div>
                 <div class="calendar-module">
                     <div class="calendar-header">
-                        <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
+                        <div class="prev"><a href="{% url 'week' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
                         <div class="month-label"><p>{{month_name}} {{year}}</p></div>
-                        <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
+                        <div class="next"><a href="{% url 'week' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
                     </div>
 
                 <table class="labels">
