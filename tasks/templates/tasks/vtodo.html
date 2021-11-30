@@ -67,22 +67,154 @@
         </nav>
         <hr class="hr">
 
-        <div style="margin: 50px;">
-              <h2>Witaj, {{user.username}}!</h2>
-            {% if count > 4 %}
-            <h3 class="line-text">Masz <p style="color: orange; margin: 0 15px; font-weight: bold;">{{count}}</p> zadań na dziś</h3>
-            {% elif count > 1 %}
-            <h3 class="line-text">Masz <p style="color: orange; margin: 0 15px; font-weight: bold;">{{count}}</p> zadania na dziś</h3>
-            {% elif count == 1 %}
-            <h3 class="line-text">Masz <p style="color: orange; margin: 0 15px; font-weight: bold;">{{count}}</p> zadanie na dziś</h3>
-            {% else %}
-            <h3 class="line-text">NIE MASZ ZADAŃ NA DZIŚ :)</h3>
-            {% endif %}
-            </div>
-        <div class="panel-container">
+        <div class="task-panel">
+             <h2>Witaj, {{user.username}}!</h2>
+            <br>
+             <div class="heading"><h5>Spotkania na dziś:</h5>
+                 <a class="all-tasks" href="{% url 'date' %}">Zobacz wszystkie</a></div>
+            <div class="event-carousel">
+                {% if not events%}
+                <div class="task"><h4 class="center">Wygląda na to, że masz dzisiaj wolne!</h4></div>
+                  {% else %}
+            {% for meeting in events %}
+                        <a href="{% url 'edit_meeting' meeting.id %}">
+            <div class="event {{meeting.color}} {% if meeting.time_end < now %} passed {% endif%} small-event"><div class="info"><h1>{{meeting.title}}</h1></div><div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div></div>                    </a>
 
-
+            {% endfor %}
+                {%endif%}
         </div>
+                    </div>
+
+        <div class="task-panel">
+            <div class="heading"><h5>Wyróżnione zadania:</h5>
+                <a class="all-tasks" href="{% url 'list' %}">Zobacz wszystkie</a></div>
+            <ul class="nav nav-pills " id="pills-tab" role="tablist">
+              <li class="nav-item">
+                <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab"
+                   aria-controls="pills-home" aria-selected="true">
+                    <img class="icon" src="{% static 'image/icons/mainpage-calendar.svg' %}">
+                    <img class="active-icon" src="{% static 'image/icons/active-calendar.svg' %}">
+                    Na dziś
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab"
+                   aria-controls="pills-profile" aria-selected="false">
+                    <img class="icon" src="{% static 'image/icons/mainpage-fire.svg' %}">
+                    <img class="active-icon" src="{% static 'image/icons/active-fire.svg' %}">
+                    Ważne</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab"
+                   aria-controls="pills-contact" aria-selected="false">
+                    <img class="icon" src="{% static 'image/icons/mainpage-late.svg' %}">
+                    <img class="active-icon" src="{% static 'image/icons/active-late.svg' %}">
+                    Spóźnione</a>
+              </li>
+
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+              <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                  {% if not today%}
+                  <div class="task"><h4 class="center">Nie masz zadań na dziś!</h4></div>
+                  {% else %}
+                {% for task in today %}
+                    <div class="task">
+                                <div class="task-content">
+                                    <h1><b>{{task}}</b></h1><div class="task-info"><p id="date">
+                                    {% if task|to_datetime|is_expired and not task.complete %}
+                                        <p class="warning"><b>Spóźnienie</b></p>
+                                    {% elif task.complete %}
+                                        <p><b>Zakończone</b></p>
+                                    {% else %}
+                                        {{task |to_datetime |timeuntil}}
+                                    {% endif %}
+                                    </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
+                                </div>
+                                <div class="important-tag">
+                                    {% if task.priority == "H" %}
+                                        <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
+                                    {% elif task.priority == "J" %}
+                                        <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
+                                    {% elif task.priority == "L" %}
+                                        <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
+                                    {% else %}
+                                    <div style="width: 15px; height: 15px;"></div>
+                                    {% endif %}
+                                </div>
+                    </div>
+                    {% endfor %}
+                  {% endif %}
+              </div>
+              <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                  {% if not high%}
+                  <div class="task"><h4 class="center">Wszystkie ważne zadania zostały wykonane!</h4></div>
+                  {% else %}
+                  {% for task in high %}
+            <div class="task">
+                        <div class="task-content">
+                            <h1><b>{{task}}</b></h1><div class="task-info"><p id="date">
+                            {% if task|to_datetime|is_expired and not task.complete %}
+                                <p class="warning"><b>Spóźnienie</b></p>
+                            {% elif task.complete %}
+                                <p><b>Zakończone</b></p>
+                            {% else %}
+                                {{task |to_datetime |timeuntil}}
+                            {% endif %}
+                            </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
+                        </div>
+                        <div class="important-tag">
+                            {% if task.priority == "H" %}
+                                <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
+                            {% elif task.priority == "J" %}
+                                <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
+                            {% elif task.priority == "L" %}
+                                <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
+                            {% else %}
+                            <div style="width: 15px; height: 15px;"></div>
+                            {% endif %}
+                        </div>
+            </div>
+            {% endfor %}
+                  {% endif %}
+              </div>
+              <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                  {% if not late%}
+                  <div class="task"><h4 class="center">Wszystkie zadania zostały wykonane w terminie!</h4></div>
+                  {% else %}
+                {% for task in tasks %}
+            {% if task|to_datetime|is_expired and not task.complete %}
+            <div class="task">
+                        <div class="task-content">
+                            <h1><b>{{task}}</b></h1><div class="task-info"><p id="date">
+                            {% if task|to_datetime|is_expired and not task.complete %}
+                                <p class="warning"><b>Spóźnienie</b></p>
+                            {% elif task.complete %}
+                                <p><b>Zakończone</b></p>
+                            {% else %}
+                                {{task |to_datetime |timeuntil}}
+                            {% endif %}
+                            </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
+                        </div>
+                        <div class="important-tag">
+                            {% if task.priority == "H" %}
+                                <img src="{%static 'image/icons/fire_H.svg'%}" width="25" height="25">
+                            {% elif task.priority == "J" %}
+                                <img src="{%static 'image/icons/fire_M.svg'%}" width="20" height="20">
+                            {% elif task.priority == "L" %}
+                                <img src="{%static 'image/icons/fire_L.svg'%}" width="15" height="15">
+                            {% else %}
+                            <div style="width: 15px; height: 15px;"></div>
+                            {% endif %}
+                        </div>
+            </div>
+                  
+                  {%endif%}
+            {% endfor %}
+                  {%endif%}
+              </div>
+            </div>
+
     </div>
 </div>
 
@@ -102,6 +234,10 @@
                 $('a[aria-expanded=true]').attr('aria-expanded', 'false');
             });
         });
+    </script>
+    <script>
+        document.getElementById("#fire-icon");
+        document.getElementByClass(".active");
     </script>
     <script src="{% static '/js/site.js' %}"></script>
     <script src="{% static '/js/registerSW.js' %}"></script>

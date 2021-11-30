@@ -1,11 +1,10 @@
+
 {% load bootstrap4 %}
 {% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %}
-{{form.media}}
+
 {% load avatar_tags %}
 {% load poll_extras %}
-{%load static%}
-
+{% load static %}
 
 
 <html>
@@ -14,6 +13,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </head>
 <body>
 <div class="wrapper">
@@ -38,8 +41,7 @@
                 <li><a href="{% url 'date' %}"><img src="{%static 'image/icons/mobile/cal-icon-black.svg' %}"> Kalendarz</a></li>
                 <li><a href="{% url 'list' %}"><img src="{%static 'image/icons/mobile/list-icon-black.svg' %}"> Lista zadań</a></li>
                 <li><a href="{% url 'location' %}"><img src="{%static 'image/icons/mobile/map-icon-black.svg' %}"> Mapa</a></li>
-                <!--<div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>-->
-
+                <!--<li><a href="#"><img src="{%static 'image/icons/mobile/set-icon-black.svg' %}"> Ustawienia</a></li>-->
             </ul>
             <ul class="list-unstyled"><li><a href="{% url 'logout' %}"><img src="{%static 'image/icons/mobile/logout.svg' %}"> Wyloguj się</a></li></ul>
         </div>
@@ -56,25 +58,42 @@
         </div>
 
         <div class="center">
-            <div class="panel" style="padding: 15px;">
-                <div class="visitcard">
+        <div class="panel profile-panel">
+            <div class="visitcard">
+                <div class="avatar-pos">
                     <div class="avatar big">
                         {% avatar user %}
+
                     </div>
-                    <a href="{% url 'avatar_change' %}">Zmień avatar</a>
-                <h2>{{user.username}}</h2>
+                    <a href="{% url 'avatar_change' %}" class="change-avatar"><img src="{% static 'image/icons/camera.svg' %}"/>ZMIEŃ AVATAR</a>
+                    <h2><b>{{ user.username }}</b> </h2>
                 </div>
-                <hr class="hr">
-                <div class="user_info">
-                    <p>Imię i Nazwisko:</p>
-                    <p>Data urodzenia:</p>
-                    <p>Adres e-mail: <b>{{user.email}}</b></p>
-                    <p>Numer telefonu:</p>
-                    <p>Hasło: <b>********</b> <button class="button inverse borderless" id="change-password">ZMIEŃ HASŁO</button></p>
-                </div>
-                <button class="button add">Edytuj konto</button>
-                <button class="button inverse borderless delete-account" style="margin-top: 15px; color:#eb5757" data-form-url="{% url 'deleteac' user.id %}">Usuń konto</button>
+                <hr style="width: 98%; height: 0.3px; margin-top: 75px;">
             </div>
+
+            <div class="user-info">
+                <div class="labels">
+                    <p>Imię i nazwisko: </p>
+                    <p>Data urodzenia: </p>
+                    <p>Adres e-mail:  </p>
+                    <p>Numer telefonu:  </p>
+                    <p>Hasło: </p>
+                </div>
+
+                <div class="data">
+                    <p>{% if userProfile.firstname == None %} (brak danych) {% else %}{{userProfile.firstname}}{% endif %}</p>
+                    <p>{% if userProfile.birthdate == None %} (brak danych) {% else %}{{userProfile.birthdate}}{% endif %} </p>
+                    <p>{% if user.email == None %} (brak danych) {% else %}<strong>{{user.email}}</strong>{% endif %}</p>
+                    <p>{% if userProfile.phonenumber == None %} (brak danych) {% else %}{{userProfile.phonenumber }}{% endif %}</p>
+                    <p>******** <button class="button inverse borderless" id="change-password">ZMIEŃ HASŁO</button></p>
+                </div>
+
+            </div>
+            <div class="profile-footer">
+            <button class="profile-edit button add" data-toggle="modal" data-form-url="{% url 'edit_profile' userProfile.id %}">EDYTUJ PROFIL</button>
+            <button class="delete-account button inverse borderless" style="color: #EB5757;" data-form-url="{% url 'deleteac' user.id %}">USUŃ KONTO</button>
+            </div>
+        </div>
         </div>
     </div>
 </div>
@@ -85,12 +104,16 @@
             formURL: "{% url 'change' %}"
         });
 
+        $(".profile-edit").each(function () {
+              $(this).modalForm({
+                formURL: $(this).data("form-url")});
+        });
+
         $(".delete-account").each(function () {
             $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
         });
     });
     </script>
-    <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $("#mobile-sidebar").mCustomScrollbar({
@@ -108,7 +131,14 @@
             });
         });
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script><script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    {{form.media}}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment-with-locales.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="{% static 'bootstrap_datepicker_plus/js/datepicker-widget.js' %}"></script>
+    <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
 
 </body>
 </html>
+
+

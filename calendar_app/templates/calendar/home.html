@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% load static %}
-{% load poll_extras %}
 {% load avatar_tags %}
 
 {% block headcontent %}
@@ -21,12 +20,12 @@
     </nav>
         <nav class="sidebar menu">
             <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>KALENDARZ</h1></div>
-                <div class="calendar-module">
-                    <div class="calendar-header">
-                        <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
-                        <div class="month-label"><p>{{month_name}} {{year}}</p></div>
-                        <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
-                    </div>
+            <div class="calendar-module">
+                <div class="calendar-header">
+                    <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
+                    <div class="month-label"><p>{{month_name}} {{year}}</p></div>
+                    <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
+                </div>
 
                 <table class="labels">
                     <tr class="week-label">
@@ -49,11 +48,9 @@
                         {% endif %}
                         {% if d.1 == 6 %}<tr>{% endif %}
                     {% endfor %}
-                                </table>
-                            </div>
-                           <ul class="menu-buttons">
-                                <li class="option-dropdown"><a>Połącz z Kalendarzem Google</a></li>
-                            </ul>
+                </table>
+            </div>
+            <div class="menu-buttons"><button class="option-dropdown" id="importCalendar"><a>Połącz z Kalendarzem Google</a></button></div>
         </nav>
     </nav>
 
@@ -128,12 +125,7 @@
                   </div>
                 </div>
 
-                <select class="button-select inverse" ONCHANGE="location = this.options[this.selectedIndex].value;">
-                  <option value="{% url 'home' year month day %}">DZIEŃ</option>
-                  <option value="{% url 'week' year month day %}">TYDZIEŃ</option>
-                  <option value="{% url 'month' year month day %}">MIESIĄC</option>
-                </select>
-
+                <!-- Create book button -->
                 <button id="add-event" class="button add" type="button" name="button">DODAJ SPOTKANIE</button>
                 <div class="avatar">
                     <a href="{% url 'profile' %}">{% avatar user %}</a>
@@ -142,29 +134,15 @@
         </nav>
         <hr>
 
-        <div class="table-container">
-        <table class="timetable">
+            {% for meeting in meetings %}
+                {% if meeting.date_start <= date %}
+                    {% if date <= meeting.date_end %}
+                        <a href="{% url 'edit_meeting' meeting.id %}">
+            <div class="event {{meeting.color}} long"><div class="info"><h1>{{meeting.title}}</h1><p>{{meeting.description}}</p></div><div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div></div>                    </a>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
 
-        {% for hour, meetings in timetable %}
-                <tr>
-                    <td class="hour-span"><div class="hour-container"><p>{{hour}}</p></div></td>
-
-                    {% for meeting in meetings %}
-                    <td class="meeting" style="width: {% get_width meetings %}%" rowspan="{{meeting|get_meeting_span}}">
-                                           <a href="{% url 'edit_meeting' meeting.id %}">
-                        <div class="event blue {% if meeting|passed %} passed {% endif %}">
-                            <div class="info"><h1>{{meeting.title}}</h1><p>{{meeting.description}}</p></div>
-                            <div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div>
-                            </div></a>
-                    </td>{% endfor %}
-
-
-                </tr>
-
-
-        {% endfor %}
-        </table>
-            </div>
     </div>
 </div>
 
@@ -179,19 +157,31 @@
             $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
         });
 
-            $("#mobile-sidebar").mCustomScrollbar({
-                theme: "minimal"
-            });
+        $("#mobile-sidebar").mCustomScrollbar({
+            theme: "minimal"
+        });
 
-            $('#dismiss').on('click', function () {
-                $('#mobile-sidebar').removeClass('active');
-            });
+        $('#dismiss').on('click', function () {
+            $('#mobile-sidebar').removeClass('active');
+        });
 
-            $('#sidebarCollapse').on('click', function () {
-                $('#mobile-sidebar').addClass('active');
-                $('.collapse.in').toggleClass('in');
-                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-            });
+        $('#sidebarCollapse').on('click', function () {
+            $('#mobile-sidebar').addClass('active');
+            $('.collapse.in').toggleClass('in');
+            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+        });
+
+        $('#importCalendar').on('click', function () {
+            const fetchURL = "/calendar/import_google_calendar_data";
+            fetch(fetchURL)
+            .then((response) => {return response.json();})
+            .then((body) => {
+              console.log(body);
+              if(body.msg == "success"){
+                  location.reload();
+              }
+            })
+        });
         });
     </script>
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
