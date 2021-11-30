@@ -20,12 +20,12 @@
     </nav>
         <nav class="sidebar menu">
             <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>KALENDARZ</h1></div>
-            <div class="calendar-module">
-                <div class="calendar-header">
-                    <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
-                    <div class="month-label"><p>{{month_name}} {{year}}</p></div>
-                    <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
-                </div>
+                <div class="calendar-module">
+                    <div class="calendar-header">
+                        <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
+                        <div class="month-label"><p>{{month_name}} {{year}}</p></div>
+                        <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
+                    </div>
 
                 <table class="labels">
                     <tr class="week-label">
@@ -157,31 +157,19 @@
             $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
         });
 
-        $("#mobile-sidebar").mCustomScrollbar({
-            theme: "minimal"
-        });
+            $("#mobile-sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
 
-        $('#dismiss').on('click', function () {
-            $('#mobile-sidebar').removeClass('active');
-        });
+            $('#dismiss').on('click', function () {
+                $('#mobile-sidebar').removeClass('active');
+            });
 
-        $('#sidebarCollapse').on('click', function () {
-            $('#mobile-sidebar').addClass('active');
-            $('.collapse.in').toggleClass('in');
-            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-        });
-
-        $('#importCalendar').on('click', function () {
-            const fetchURL = "/calendar/import_google_calendar_data";
-            fetch(fetchURL)
-            .then((response) => {return response.json();})
-            .then((body) => {
-              console.log(body);
-              if(body.msg == "success"){
-                  location.reload();
-              }
-            })
-        });
+            $('#sidebarCollapse').on('click', function () {
+                $('#mobile-sidebar').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
         });
     </script>
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>

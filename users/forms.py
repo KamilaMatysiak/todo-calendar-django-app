@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.core.files.images import get_image_dimensions
 from users.models import UserProfile
-from bootstrap_modal_forms.forms import BSModalModelForm
 from django.utils.translation import ugettext, ugettext_lazy as _
 from bootstrap_datepicker_plus import DatePickerInput
 from phonenumber_field.formfields import PhoneNumberField

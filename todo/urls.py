@@ -29,7 +29,7 @@ urlpatterns = [
     path('', include('pwa.urls')),
     path('register/', user_views.SignUpView.as_view(), name='register'),
     path('profile/', user_views.profile, name='profile'),
-    path('edit_profile/<str:pk>/', user_views.EditUserView.as_view(), name="edit_profile"),
+    path('check_username/<str:pk>', user_views.username_ifunique, name='check-username'),
     path('change_password', user_views.change_password, name="change"),
     path('delete_account/<str:pk>', user_views.DeleteUserView.as_view(), name="deleteac"),
     path('retrieve_google_contacts', user_views.retrieve_google_contacts, name="retrieve_contacts"),

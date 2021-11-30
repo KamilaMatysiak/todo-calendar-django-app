@@ -34,7 +34,6 @@ class LoginView(BSModalLoginView):
     success_message = 'Zalogowano'
     success_url = reverse_lazy('index')
 
-
 @login_required
 def change_password(request):
     if request.method == 'POST':
@@ -56,7 +55,6 @@ def change_password(request):
         'form': form
     })
 
-
 class DeleteUserView(BSModalDeleteView):
     template_name = 'users/delete_user.html'
     model = User
@@ -70,13 +68,6 @@ class DeleteUserView(BSModalDeleteView):
             raise Http404
         return obj
 
-
-class EditUserView(BSModalUpdateView):
-    model = UserProfile
-    template_name = 'users/edit_profile.html'
-    form_class = UserProfileForm
-    success_message = "Pomyślnie zedytowano konto"
-    success_url = reverse_lazy('profile')
 
 
 def build_credentials(token):
