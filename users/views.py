@@ -139,37 +139,48 @@ def retrieve_google_contacts(request):
     try:
         social_token = SocialToken.objects.get(account__user=user)
 
-        url = 'https://www.google.com/m8/feeds/contacts/default/full' + '?access_token=' + social_token.token + '&max-results=100'
+        # url = 'https://www.google.com/m8/feeds/contacts/default/full' + '?access_token=' + social_token.token + '&max-results=100'
+        url = 'https://people.googleapis.com/v1/people/me/connections' + '?access_token=' + social_token.token + '&personFields=names,birthdays,emailAddresses'
         data = api_reqs.get(url, headers={
             'User-Agent': "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/534.30 (KHTML, like Gecko) Ubuntu/11.04 Chromium/12.0.742.112 Chrome/12.0.742.112 Safari/534.30"})
-        contacts_xml = ET.fromstring(data.text)
+        # contacts_xml = ET.fromstring(data.text)
+
+        connections = data.json()['connections']
         result = []
 
-        for entry in contacts_xml.findall('{http://www.w3.org/2005/Atom}entry'):
-            for address in entry.findall('{http://schemas.google.com/g/2005}email'):
-                email = address.attrib.get('address')
-                result.append(email)
+        for el in connections:
+            name = el["names"][0]['displayName']
+            email = el.get('emailAddresses', None)
+            if email:
+                email = email[0]['value']
+            result.append({'name': name, 'email': email})
+        # for entry in contacts_xml.findall('{http://www.w3.org/2005/Atom}entry'):
+        #     for address in entry.findall('{http://schemas.google.com/g/2005}email'):
+        #         email = address.attrib.get('address')
+        #         result.append(email)
+        # print(result)
         response = {'msg': 'success',
                     'data': result}
 
     except Exception as e:
         print("Got next error when tried to get google contacts: ", e)
         response = {'msg': 'error',
-                    'data': e}
+                    'data': str(e)}
     return JsonResponse(response)
 
 
 @login_required
 def retrieve_google_contacts_via_service(request):
     service = construct_people_service(request.user)
-    res = service.people().connections().list(resourceName="people/me", pageSize=10,
-                                              personFields='names,birthdays').execute()
+    res = service.people().connections().list(resourceName="people/me", pageSize=100,
+                                              personFields='names,birthdays,emailAddresses').execute()
     print(res)
     print(res.keys())
     print(res.get('nextPageToken', []))
     print(res.get('totalPeople', []))
     print(res.get('totalItems', []))
     connections = res.get('connections', [])
+    response = {'data': []}
 
     for person in connections:
         print(person)
