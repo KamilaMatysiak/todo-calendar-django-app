@@ -18,7 +18,7 @@ class TaskModelForm(BSModalModelForm):
         super(TaskModelForm, self).__init__(*args, **kwargs)
         self.fields['category'].queryset = Category.objects.filter(user=user)
 
-    # with_who = forms.CharField(required=False, label="Kontakty")
+    with_who = forms.CharField(required=False, widget=forms.Select(choices=(('', '----------'),)), label="Kontakty")
     localization = forms.CharField(required=False, label="Lokalizacja")
     
     class Meta:
@@ -34,7 +34,7 @@ class TaskModelForm(BSModalModelForm):
             'time': ('Czas'),
             'priority': ('Priorytet'),
             'category': ('Kategoria'),
-            'with_who': ('Kontakty'),
+            # 'with_who': ('Kontakty'),
         }
 
 class CategoryModelForm(BSModalModelForm):

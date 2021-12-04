@@ -31,7 +31,7 @@ class Task(models.Model):
     localization = models.CharField(max_length=200)
     l_lat = models.DecimalField(max_digits=15, decimal_places=10, blank=True, null=True, default=None)
     l_lon = models.DecimalField(max_digits=15, decimal_places=10, blank=True, null=True, default=None)
-    with_who = models.CharField(max_length=200, choices=[])
+    with_who = models.CharField(max_length=200)
     date = models.DateField(default=date.today, null=True)
     time = models.TimeField(default=datetime.now)
     High_priority = "H"
