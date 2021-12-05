@@ -155,7 +155,7 @@ def retrieve_google_contacts(request):
     except Exception as e:
         print("Got next error when tried to get google contacts: ", e)
         response = {'msg': 'error',
-                    'data': e}
+                    'data': str(e)}
     return JsonResponse(response)
 
 
