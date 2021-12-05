@@ -55,7 +55,7 @@ def task_list(request):
 def categoryView(request, pk):
     category = Category.objects.get(id=pk)
     categories = [x for x in Category.objects.all() if x.user == request.user]
-    tasks = [x for x in Task.objects.all() if x.user == request.user and x.category is not None and x.category.id == category.id]
+    tasks = [x for x in Task.objects.all() if x.user == request.user and x.category is not None and x.category.id == category.id and x.accepted == True]
 
     form = TaskModelForm(request.user)
 
@@ -68,6 +68,23 @@ def categoryView(request, pk):
 
     context = {"categories": categories, "tasks": tasks, 'form': form, 'category': category}
     return render(request, 'tasks/category_template.html', context)
+
+def delegateView(request):
+    categories = [x for x in Category.objects.all() if x.user == request.user]
+    tasks = [x for x in Task.objects.all() if x.from_who is not None and x.from_who == request.user]
+
+    form = TaskModelForm(request.user)
+
+    if request.method == 'POST':
+        form = TaskModelForm(request.user, request.POST)
+
+        if form.is_valid():
+            form.save()
+        return redirect('/')
+
+    context = {"categories": categories, "tasks": tasks, 'form': form}
+    return render(request, 'tasks/delegate.html', context)
+
 
 def index(request):
     count = 0

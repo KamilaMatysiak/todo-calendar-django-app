@@ -22,8 +22,8 @@
                         <div class="scroll">
             <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>LISTA ZADAŃ</h1></div>
             <ul class="menu-buttons">
-
                     <li><a href="{% url 'list'%}">WSZYSTKIE</a></li>
+                    <li><a href="{% url 'delegate' %}"> Zlecone zadania </a></li>
                     {% for cat in categories %}
                     {% if category.title == cat.title %}
                         <li class="active"><a class="active" href=#> {{cat}} </a></li>
@@ -51,6 +51,7 @@
                     <a href="{% url 'list' %}"><img src="{%static 'image/icons/mobile/list-icon-black.svg' %}"> Lista zadań</a>
                     <ul class="list-unstyled">
                         <li><a href="{% url 'list'%}">WSZYSTKIE</a></li>
+                        <li><a href="{% url 'delegate' %}"> Zlecone zadania </a></li>
                         {% for cat in categories %}
                         {% if category == cat.title %}
                             <li class="active"><a class="active" href=#> {{cat}} </a></li>

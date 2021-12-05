@@ -20,8 +20,8 @@
         <nav class="sidebar menu">
             <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>LISTA ZADAŃ</h1></div>
             <ul class="menu-buttons">
-                <li class="active"><a class="active" href=#>WSZYSTKIE</a></li>
-                <li><a href="{% url 'delegate' %}"> Zlecone zadania </a></li>
+                <li><a href="{% url 'list'%}">WSZYSTKIE</a></li>
+                <li class="active"><a class="active" href=#> Zlecone zadania </a></li>
                 {% for cat in categories %}
                     <li><a href="{% url 'category' cat.id %}"> {{cat}} </a></li>
                 {% endfor %}
@@ -43,7 +43,7 @@
                     <a href="{% url 'list' %}"><img src="{%static 'image/icons/mobile/list-icon-black.svg' %}"> Lista zadań</a>
                     <ul class="list-unstyled">
                         <li><a href="{% url 'list'%}">WSZYSTKIE</a></li>
-                        <li><a href="{% url 'delegate' %}"> Zlecone zadania </a></li>
+                        <li class="active"><a class="active" href=#> Zlecone zadania </a></li>
                         {% for cat in categories %}
                             <li><a href="{% url 'category' cat.id %}"> {{cat}} </a></li>
                         {% endfor %}
@@ -66,7 +66,7 @@
         </div>
         <nav class="navbar">
             <div class="left">
-                <h1>WSZYSTKIE</h1>
+                <h1>ZLECONE ZADANIA</h1>
             </div>
             <div class="right">
                 <div class="modal fade" tabindex="-1" role="dialog" id="modal">
@@ -89,15 +89,17 @@
                 <div class="vcontainer">
                     {% if task.complete %}
                     <div class="task passed">
-                        <input type="checkbox" checked onclick='taskFinish(this,"{{task.id}}")'>
+                        <input type="checkbox" checked disabled=true>
 
                     {% else %}
                     <div class="task">
-                        <input type="checkbox" onclick='taskFinish(this,"{{task.id}}")'>
+                        <input type="checkbox" disabled=true>
                     {% endif %}
                         <div class="task-content">
                             <h1>{{task}}</h1><div class="task-info"><p id="date">
-                            {% if task|to_datetime|is_expired and not task.complete %}
+                            {% if task.accepted == False %}
+                                <p><b>Niezaakceptowane</b></p>
+                            {% elif task|to_datetime|is_expired and not task.complete %}
                                 <p class="warning"><b>Spóźnienie</b></p>
                             {% elif task.complete %}
                                 <p><b>Zakończone</b></p>
@@ -105,7 +107,7 @@
                                 {{task |to_datetime |timeuntil}}
                             {% endif %}
                             </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p>∙
-                            {% if task.from_who %}<p>Od {{task.from_who}}</p>{% endif %}
+                            {% if task.from_who %}<p>Dla {{task.user}}</p>{% endif %}
                             </div>
                         </div>
                         <div class="important-tag">
@@ -119,12 +121,6 @@
                             <div style="width: 15px; height: 15px;"></div>
                             {% endif %}
                         </div>
-                    </div>
-                    <div class="edit">
-                        <button class="button task-edit" data-toggle="modal" data-form-url="{% url 'update_task' task.pk %}"><img src="{% static 'image/icons/edit-icon.svg'%}" alt="Edytuj"></button>
-                        <button type="button" class="delete-task button task-edit" data-form-url="{% url 'delete' task.pk %}">
-                            <img src="{% static 'image/icons/delete-icon.svg'%}" alt="Usuń">
-                        </button>
                     </div>
                 </div>
 
