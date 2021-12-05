@@ -102,7 +102,7 @@
                             {% else %}
                                 {{task |to_datetime |timeuntil}}
                             {% endif %}
-                            </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
+                            </p><p>∙</p><a href="/location/{{ task.l_lat}}_{{ task.l_lon }}"><p>{{task.localization}}</p></a> <p>∙</p><p>{{task.with_who}}</p></div>
                         </div>
                         <div class="important-tag">
                             {% if task.priority == "H" %}
