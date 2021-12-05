@@ -49,7 +49,8 @@ def passed(meeting):
 def get_meeting_span(meeting):
     diff = ((meeting.time_end.hour - meeting.time_start.hour) * 60
             + (meeting.time_end.minute - meeting.time_start.minute)) // 15
-    return diff + 1
+    height = (diff + 1) * 40
+    return height
 
 
 @register.simple_tag

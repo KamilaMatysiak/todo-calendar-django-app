@@ -142,23 +142,40 @@
         </nav>
         <hr>
 
-        <div class="week-container">
+        <div style="display: flex; flex-direction: row;">
+            <div style="width: 42px; height: 40px;"></div>
         {% for day, meetings in week %}
-        <div class="week-row">
-            <a href="{% url 'home' day|get_year day|get_month day|get_day %}"><div class="weekdays"><h3>{{day|get_day}}</h3><p>{{day|get_dayname}}</p></div></a>
-            {% for meeting in meetings %}
-                <a href="{% url 'edit_meeting' meeting.id %}">
-                    <div style="margin-top: 0; "class="event blue {% if meeting|passed %} passed {% endif %} long" >
-                        <div class="info"><h1 style="font-size: 1rem;">{{meeting.title}}</h1><p style="font-size: 0.6rem;">{{meeting.description}}</p></div>
-                        <div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div>
+             <a style="width: 14%;" href="{% url 'home' day|get_year day|get_month day|get_day %}"><div class="weekdays"><h3>{{day|get_day}}</h3><p>{{day|get_dayname}}</p></div></a>
+        {% endfor %}
+        </div>
+
+        <div class="week-container">
+            <div>
+            {% for hour, week_days in week_timetable %}
+            <div style="display: flex;">
+                <div class="hour-column"><p>{{hour}}</p></div>
+                {% for day in week_days %}
+                {% if day %}
+                <div class="cell">
+                    {% for meeting in day %}
+                    <a href="{% url 'edit_meeting' meeting.id %}">
+                        <div class="event table-event {{meeting.color}}" style="height: {{meeting|get_meeting_span}}px">
+                            <div><h1 style="font-size: 1rem;">{{meeting.title}}</h1></div>
+                            <div><p style="font-size: 0.6rem;">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</p></div>
+                        </div>
+                    </a>
+                    {% endfor %}
                     </div>
-                </a>
-            {% endfor %}
-            </div>
+                {% else %}
+                    <div class="cell"></div>
+                {% endif %}
+                {% endfor %}
+                </div>
             {% endfor %}
         </div>
     </div>
 </div>
+    </div>
 
     <script type="text/javascript">
     $(document).ready(function() {

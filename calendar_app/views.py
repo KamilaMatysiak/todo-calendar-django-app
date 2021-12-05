@@ -84,6 +84,17 @@ def get_context(year, month, day, user):
     else:
         next.append(day)
 
+    #stuff for week
+    current_week = []
+    for i in range(weekday, 0, -1):
+        week_day = date - timedelta(days=i)
+        current_week.append((week_day, get_meetings(all_events, week_day)))
+
+    for i in range(7 - weekday):
+        week_day = date + timedelta(days=i)
+        current_week.append((week_day, get_meetings(all_events, week_day)))
+
+
     #stuff for day
     timetable = []
     for i in range(24):
@@ -97,6 +108,23 @@ def get_context(year, month, day, user):
     for m in get_meetings(all_events, date):
         interval = m.time_start.hour * 4 + m.time_start.minute // 15
         timetable[interval][1].append(m)
+
+
+    week_timetable = []
+    for i in range(24):
+        week_timetable.append((f"{i}"":00", [[], [], [], [], [], [], []]))
+        for j in range(15, 60, 15):
+            if j % 30 == 0:
+                week_timetable.append((f"{i}:{j}", [[], [], [], [], [], [], []]))
+            else:
+                week_timetable.append(("", [[], [], [], [], [], [], []]))
+
+    for i, (week_day, week_meetings) in enumerate(current_week):
+        for m in week_meetings:
+            interval = m.time_start.hour * 4 + m.time_start.minute // 15
+            week_timetable[interval][1][i].append(m)
+
+
     max_width = 1
     tt_width = [["", []] for i in range(24 * 60 // 15)]
 
@@ -116,19 +144,10 @@ def get_context(year, month, day, user):
         string = ""
         for y in x[1]:
             string += " " + str(y)
-        # print(f"{x[0]}|{string}")
+        print(f"{x[0]}|{string}")
     print("Maksymalna szerokosc to ", max_width)
 
 
-    #stuff for week
-    current_week = []
-    for i in range(weekday, 0, -1):
-        week_day = date - timedelta(days=i)
-        current_week.append((week_day, get_meetings(all_events, week_day)))
-
-    for i in range(7 - weekday):
-        week_day = date + timedelta(days=i)
-        current_week.append((week_day, get_meetings(all_events, week_day)))
 
     context = {
         "all_events": all_events,
@@ -149,6 +168,7 @@ def get_context(year, month, day, user):
         "meetings": meetings,
         "form": form,
         "timetable": timetable,
+        "week_timetable": week_timetable,
         "week": current_week,
     }
 

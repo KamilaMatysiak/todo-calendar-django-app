@@ -682,29 +682,49 @@ margin: 0 auto;}
 ----------------------------------------------------- */
 
 .week-container {
-    width: 100%;
-    display: flex;
     max-height: 80vh;
     overflow: auto;
 }
 
-.week-row {
-    display: flex;
-    flex-direction: column;
-    min-height: 80vh;
-    width: 14%;
-    border-left: 1px solid #c4c4c4;
+.table-event {
+    position: absolute;
+    top: 0;
+    margin: 0;
+    padding: 0;
+    width: 100%;
 }
 
-.week-row:first-child {
-    border:none;
+.table-event h1 {
+    display: block;
+    width: 125px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.cell {
+position: relative;
+    width: 14%;
+    height: 40px;
+    border-left: 1px solid rgba(0,0,0,0.12);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.hour-column{
+    width: 40px;
+    height: 40px;
+    border-right: 1px solid #F2994A;
+}
+
+.hour-column p {
+    padding: 5px;
+    font-size: 10px;
 }
 
 .weekdays {
     text-align: center;
     align-items: center;
     color: #333;
-    margin-bottom: 15px;
     border-bottom: 1px solid rgba(0,0,0,0.12);
 }
 
@@ -1382,6 +1402,13 @@ PROFILE
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
+@media (max-width: 1288px) {
+
+    .table-event h1 {
+        width: 75px;
+    }
+}
+
 @media (max-width: 1024px) {
 
     .profile-panel {
@@ -1391,6 +1418,11 @@ PROFILE
     .user-info {
         width: 90%;
         font-size: 0.9em;
+    }
+
+
+    .table-event p {
+        display: none;
     }
 
 }
@@ -1609,4 +1641,18 @@ td {
 #top, #bottom, .inside {
     width: 100vw;
 }
+
+.table-event {
+    margin: 0;
+    padding: 0;
+}
+
+.table-event h1 {
+    width: 50px;
+}
+
+.table-event p {
+    display: none;
+}
+
 }
