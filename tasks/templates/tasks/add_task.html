@@ -87,8 +87,10 @@
             }
         });
 
-        if (!place.geometry){
-            document.getElementsByName('localization')[0].placeholder = "Wpisz adres";
+        if (!place){
+            if(!place.geometry){
+                document.getElementsByName('localization')[0].placeholder = "Wpisz adres";
+            }
         }
         else{
 
