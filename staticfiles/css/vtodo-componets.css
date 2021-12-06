@@ -139,7 +139,7 @@ text-decoration: none;
 }
 
 .event h1 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     text-align: left;
 }
 
@@ -149,10 +149,14 @@ text-decoration: none;
 
 .event .date {
     padding: 0;
-    font-size: 0.8rem;
-    width: 100px;
+    font-size: 0.7rem;
+    width: 100%;
     justify-self: right;
     align-self: flex-end;
+    text-align: right;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .long {
@@ -174,6 +178,38 @@ text-decoration: none;
     width: 200px;
     min-height: 135px;
 }
+
+.table-event {
+    position: absolute;
+    top: 0;
+    margin: 0;
+    padding: 2px 5px 0 5px;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.table-event:hover {
+    left: 0 !important;
+    width: 100% !important;
+    z-index: 100;
+}
+
+.table-event h1 {
+    display: block;
+    width: 130px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.table-event .small-info {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    padding: 2px;
+}
+
 
 /*---------------------
         INPUT
@@ -659,9 +695,6 @@ margin: 0 auto;}
     font-weight: 600;
 }
 
-.pointer {
-    display: none;
-}
 
 .busy .pointer {
     display: block;
@@ -678,33 +711,46 @@ margin: 0 auto;}
 }
 
 /* ---------------------------------------------------
-    WEEK VIEW
+    TIMETABLE VIEW
 ----------------------------------------------------- */
 
-.week-container {
-    width: 100%;
-    display: flex;
+.tt-container {
     max-height: 80vh;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
-.week-row {
-    display: flex;
-    flex-direction: column;
-    min-height: 80vh;
+.cell {
+    position: relative;
     width: 14%;
-    border-left: 1px solid #c4c4c4;
+    height: 40px;
+    border-left: 1px solid rgba(0,0,0,0.12);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
-.week-row:first-child {
-    border:none;
+.long-cell {
+    position: relative;
+    height: 40px;
+    border-left: 1px solid rgba(0,0,0,0.12);
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    width: 100%;
+}
+
+.hour-column{
+    width: 40px;
+    height: 40px;
+    border-right: 1px solid #F2994A;
+}
+
+.hour-column p {
+    padding: 5px;
+    font-size: 10px;
 }
 
 .weekdays {
     text-align: center;
     align-items: center;
     color: #333;
-    margin-bottom: 15px;
     border-bottom: 1px solid rgba(0,0,0,0.12);
 }
 
@@ -771,63 +817,6 @@ margin: 0 auto;}
       text-overflow: ellipsis;
 }
 
-
-/* ---------------------------------------------------
-    TIMETABLE
------------------------------------------------------ */
-
-.timetable {
-    display: block;
-    width: 78vw;
-    max-height: 85vh !important;
-    height: 85vh;
-    padding: 0;
-    text-align: left;
-    overflow-y: auto;
-    overflow-x: hidden;
-    table-layout: fixed;
-    }
-
-.hour-span {
-    min-width: 50px;
-    min-height: 25px;
-    max-height: 25px;
-    width: 50px !important;
-    max-width: 50px !important;
-        border-right: 1px solid #F2994A;
-            vertical-align:top;
-}
-
-.hour-container{
-    min-width: 50px;
-    width: 35px;
-    max-width: 40px;
-    min-height: 25px;
-    height: 100%;
-    max-height: 25px !important;
-    float: left;
-    text-align: right;
-    font-size: 0.7rem;
-
-}
-
-.timetable td {
-    width: 1px;
-    height: 1px;
-}
-
-.hour-container p {
-    margin-right: 10px;
-}
-
-.timetable .event {
-    min-height: 100%;
-    margin: 0 2px;
-    width: 100%;
-}
-
-.timetable tr:nth-child(4n+1) {font-weight: bold;}
-
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
@@ -844,7 +833,7 @@ margin: 0 auto;}
 
 #content-sml {
     width: calc(100% - 80px);
-        min-height: 100vh;
+    min-height: 100vh;
     padding: 0 0 0 20px;
     transition: all 0.3s;
     position: absolute;
@@ -861,8 +850,8 @@ margin: 0 auto;}
 }
 
 .header-container {
-width: 88%;
-margin-left: 15px;
+    width: 88%;
+    margin-left: 15px;
     display: flex;
     justify-content: space-between;
     align-content: center;
@@ -1382,6 +1371,13 @@ PROFILE
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
+@media (max-width: 1288px) {
+
+    .table-event h1 {
+        width: 75px;
+    }
+}
+
 @media (max-width: 1024px) {
 
     .profile-panel {
@@ -1391,6 +1387,11 @@ PROFILE
     .user-info {
         width: 90%;
         font-size: 0.9em;
+    }
+
+
+    .table-event p {
+        display: none;
     }
 
 }
@@ -1609,4 +1610,18 @@ td {
 #top, #bottom, .inside {
     width: 100vw;
 }
+
+.table-event {
+    margin: 0;
+    padding: 0;
+}
+
+.table-event h1 {
+    width: 50px;
+}
+
+.table-event p {
+    display: none;
+}
+
 }
