@@ -82,6 +82,8 @@ MIDDLEWARE = [
     'todo.middleware.DynamicSiteMiddleware'
 ]
 
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 # TODO: get id from db or check how to get the correct one
 # Solution: Write custom Middleware
 SITE_ID = 3
@@ -118,12 +120,20 @@ WSGI_APPLICATION = 'todo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': str(os.path.join(BASE_DIR, "db.sqlite3")),
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': str(os.path.join(BASE_DIR, "db.sqlite3")),
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators

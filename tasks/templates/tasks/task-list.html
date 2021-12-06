@@ -21,9 +21,10 @@
             <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>LISTA ZADAŃ</h1></div>
             <ul class="menu-buttons">
                 <li class="active"><a class="active" href=#>WSZYSTKIE</a></li>
-                    {% for cat in categories %}
-                        <li><a href="{% url 'category' cat.id %}"> {{cat}} </a></li>
-                    {% endfor %}
+                <li><a href="{% url 'delegate' %}"> Zlecone zadania </a></li>
+                {% for cat in categories %}
+                    <li><a href="{% url 'category' cat.id %}"> {{cat}} </a></li>
+                {% endfor %}
                 <li class="add-category"><a>+ Dodaj kategorię</a></li>
             </ul>
         </nav>
@@ -42,6 +43,7 @@
                     <a href="{% url 'list' %}"><img src="{%static 'image/icons/mobile/list-icon-black.svg' %}"> Lista zadań</a>
                     <ul class="list-unstyled">
                         <li><a href="{% url 'list'%}">WSZYSTKIE</a></li>
+                        <li><a href="{% url 'delegate' %}"> Zlecone zadania </a></li>
                         {% for cat in categories %}
                             <li><a href="{% url 'category' cat.id %}"> {{cat}} </a></li>
                         {% endfor %}
@@ -102,7 +104,9 @@
                             {% else %}
                                 {{task |to_datetime |timeuntil}}
                             {% endif %}
-                            </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
+                            </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p>∙
+                            {% if task.from_who %}<p>Od {{task.from_who}}</p>{% endif %}
+                            </div>
                         </div>
                         <div class="important-tag">
                             {% if task.priority == "H" %}
@@ -121,6 +125,7 @@
                         <button type="button" class="delete-task button task-edit" data-form-url="{% url 'delete' task.pk %}">
                             <img src="{% static 'image/icons/delete-icon.svg'%}" alt="Usuń">
                         </button>
+                        <div id="trigger" style="display:none;"></div>
                     </div>
                 </div>
 
@@ -184,6 +189,18 @@
             });
         }
     </script>
+    {% if task_pk %}
+    <script>
+        document.body.onload = function() {
+                                    $("#trigger").modalForm({
+                                     formURL: "{% url 'update_task' task_pk %}"
+                                     });
+                                     $("#trigger").click();
+                                     }
+
+    </script>
+    {% endif %}
+
     {{form.media}}
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>

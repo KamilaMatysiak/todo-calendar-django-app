@@ -22,14 +22,18 @@
     </div>
 
     {% for field in form %}
-      <div class="form-group">
-        {{ field | as_crispy_field }}
-        <div class="{% if field.errors %} invalid{% endif %}">
-          {% for error in field.errors %}
-            <p class="help-block">{{ error }}</p>
-          {% endfor %}
+      {% if field.name != "for_who" %}
+        <div class="form-group">
+          
+          {{ field | as_crispy_field }}
+          <div class="{% if field.errors %} invalid{% endif %}">
+            {% for error in field.errors %}
+              <p class="help-block">{{ error }}</p>
+              
+              {% endfor %}
+          </div>
         </div>
-      </div>
+      {% endif %}
     {% endfor %}
   </div>
 
