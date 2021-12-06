@@ -32,7 +32,7 @@
     </form>
 
 <script>
-    var API_KEY = "AIzaSyAFUxsM2TzMM-Nr7LoRjVyQxylS3jyyjtU";
+    var API_KEY = "AIzaSyCfW4uDvbA6ui1pOX-X0qLLcmtj5w6pIqY";
     $.getScript( "https://maps.googleapis.com/maps/api/js?key=" + API_KEY + "&libraries=places")
     .done(function( script, textStatus ) {
         google.maps.event.addDomListener(window, "load", initAutoComplete())
@@ -65,11 +65,14 @@
         console.log('place:');
         console.log(place);
         var geocoder = new google.maps.Geocoder()
+<!--        var address = "Wieniawskiego 1"-->
         var address = document.getElementsByName('localization')[0].value
 
         geocoder.geocode( { 'address': address}, function(results, status) {
             console.log('results');
             console.log(results);
+            console.log('status');
+            console.log(status);
             if (status == google.maps.GeocoderStatus.OK) {
                 var latitude = results[0].geometry.location.lat();
                 var longitude = results[0].geometry.location.lng();
@@ -80,7 +83,7 @@
         });
 
         if (!place.geometry){
-            document.getElementsByName('localization')[0].placeholder = "*Begin typing address";
+            document.getElementsByName('localization')[0].placeholder = "Wpisz adres";
         }
         else{
 
