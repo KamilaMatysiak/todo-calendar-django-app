@@ -41,7 +41,7 @@ class CustomAuthenticationForm(AuthenticationForm):
 
 
 class UserProfileForm(BSModalModelForm):
-    phonenumber = PhoneNumberField()
+    phonenumber = PhoneNumberField(label="Numer telefonu")
 
     class Meta:
         model = UserProfile

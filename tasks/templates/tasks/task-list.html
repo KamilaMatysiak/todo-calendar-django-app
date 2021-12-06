@@ -90,23 +90,25 @@
                     {% if task.complete %}
                     <div class="task passed">
                         <input type="checkbox" checked onclick='taskFinish(this,"{{task.id}}")'>
-
                     {% else %}
                     <div class="task">
                         <input type="checkbox" onclick='taskFinish(this,"{{task.id}}")'>
                     {% endif %}
                         <div class="task-content">
-                            <h1>{{task}}</h1><div class="task-info"><p id="date">
-                            {% if task|to_datetime|is_expired and not task.complete %}
-                                <p class="warning"><b>Spóźnienie</b></p>
-                            {% elif task.complete %}
-                                <p><b>Zakończone</b></p>
-                            {% else %}
-                                {{task |to_datetime |timeuntil}}
-                            {% endif %}
-                            </p><p>∙</p><a href="/location/{{ task.l_lat}}_{{ task.l_lon }}"><p>{{task.localization}}</p></a><p>∙</p><p>{{task.with_who}}</p>∙
-                            {% if task.from_who %}<p>Od {{task.from_who}}</p>{% endif %}
-                            </div>
+                            <h1>{{task}}</h1>
+                            <div class="task-info">
+                                <p id="date">
+                                    {% if task|to_datetime|is_expired and not task.complete %}
+                                        <p class="warning"><b>Spóźnienie</b></p>
+                                    {% elif task.complete %}
+                                        <p><b>Zakończone</b></p>
+                                    {% else %}
+                                        {{task |to_datetime |timeuntil}}
+                                    {% endif %}
+                            </p>
+                            {% if task.localization %}<p>∙</p><a href="/location/{{ task.l_lat}}_{{ task.l_lon }}"><p>{{task.localization}}</p></a>{% endif %}
+                            {% if task.with_who %}<p>∙</p><p>{{task.with_who}}</p>{% endif %}
+                            {% if task.from_who %}<p>∙</p><p>Od <strong>{{task.from_who}}</strong></p>{% endif %}</div>
                         </div>
                         <div class="important-tag">
                             {% if task.priority == "H" %}
@@ -173,6 +175,7 @@
 
     <script>
         function taskFinish(element, task) {
+            console.log("i should work");
             link = "{% url 'finish-task' %}";
             $.ajax({
               type:'POST',
