@@ -18,7 +18,7 @@ class TaskModelForm(BSModalModelForm):
         super(TaskModelForm, self).__init__(*args, **kwargs)
         self.fields['category'].queryset = Category.objects.filter(user=user)
 
-    with_who = forms.CharField(required=False, widget=forms.Select(choices=(('', '----------'),)), label="Kontakty")
+    with_who = forms.CharField(required=False, widget=forms.Select(choices=(),attrs={"class": "js-example-basic-multiple field-sel", "style": "width: 100%", "multiple": "multiple"}), label="Kontakty")
     localization = forms.CharField(required=False, label="Lokalizacja")
     
     class Meta:
