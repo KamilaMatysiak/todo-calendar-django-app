@@ -15,11 +15,9 @@ from pathlib import Path
 from os import getenv
 from pathlib import Path
 import sys
+
 path_root = Path(__file__).parents[2]
 sys.path.append(str(path_root))
-
-
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -69,10 +67,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'phonenumber_field',
 ]
-
-
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -86,9 +82,14 @@ MIDDLEWARE = [
     'todo.middleware.DynamicSiteMiddleware'
 ]
 
+X_FRAME_OPTIONS = 'SAMEORIGIN'
+
 # TODO: get id from db or check how to get the correct one
 # Solution: Write custom Middleware
 SITE_ID = 3
+
+PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
+PHONENUMBER_DEFAULT_FORMAT = 'INTERNATIONAL'
 
 BOOTSTRAP4 = {
     'include_jquery': True,
@@ -156,8 +157,10 @@ AUTHENTICATION_BACKENDS = [
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
-            'profile',
-            'email',
+            'https://www.googleapis.com/auth/user.birthday.read',
+            'https://www.googleapis.com/auth/user.phonenumbers.read',
+            'https://www.googleapis.com/auth/userinfo.email',
+            'https://www.googleapis.com/auth/userinfo.profile',
             'https://www.googleapis.com/auth/calendar',
             'https://www.googleapis.com/auth/contacts.readonly',
             # 'https://www.googleapis.com/auth/people.readonly',
@@ -165,7 +168,7 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {
             'access_type': 'online',
         }
-    }
+    },
 }
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.email',
@@ -268,3 +271,5 @@ PWA_APP_SPLASH_SCREEN = [
 ]
 PWA_APP_DIR = 'ltr'
 PWA_APP_LANG = 'pl-PL'
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

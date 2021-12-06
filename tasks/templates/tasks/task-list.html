@@ -125,6 +125,7 @@
                         <button type="button" class="delete-task button task-edit" data-form-url="{% url 'delete' task.pk %}">
                             <img src="{% static 'image/icons/delete-icon.svg'%}" alt="Usuń">
                         </button>
+                        <div id="trigger" style="display:none;"></div>
                     </div>
                 </div>
 
@@ -188,6 +189,18 @@
             });
         }
     </script>
+    {% if task_pk %}
+    <script>
+        document.body.onload = function() {
+                                    $("#trigger").modalForm({
+                                     formURL: "{% url 'update_task' task_pk %}"
+                                     });
+                                     $("#trigger").click();
+                                     }
+
+    </script>
+    {% endif %}
+
     {{form.media}}
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>

@@ -1,4 +1,5 @@
 from django.db import models
+from calendar_app.models import Meeting
 from datetime import datetime, date, time
 from django.forms import CheckboxInput
 from django.contrib.auth import get_user_model
@@ -54,6 +55,7 @@ class Task(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, default=1)
     from_who = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
     accepted = models.BooleanField(default=True)
+    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, blank=True, null=True, default=None)
 
     def __str__(self):
         """Returns title of task"""

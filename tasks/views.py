@@ -23,6 +23,8 @@ from django.template import loader
 import datetime
 import folium
 import json
+from django.http import HttpResponse
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 
 # Create your views here.
@@ -36,11 +38,10 @@ def test(request):
 
 
 @login_required
-def task_list(request):
+def task_list(request, pk=None):
     tasks = [x for x in Task.objects.all() if x.user == request.user and x.accepted == True]
 
     categories = [x for x in Category.objects.all() if x.user == request.user]
-    #tasks = Task.objects.all()
     form = TaskModelForm(request.user)
 
     if request.method == 'POST':
@@ -50,6 +51,8 @@ def task_list(request):
         return redirect('/')
 
     context = {"categories": categories, "tasks": tasks, 'form': form}
+    if pk is not None:
+        context["task_pk"] = pk
     return render(request, 'tasks/task-list.html', context)
 
 def categoryView(request, pk):
@@ -131,7 +134,7 @@ def index(request):
                "here": here,
                "events": today_events[:5],
                user: user,
-               'vapid_key': vapid_key, 
+               'vapid_key': vapid_key,
                "to_accept": not_accepted_tasks}
     return render(request, 'tasks/vtodo.html', context)
 
@@ -179,6 +182,7 @@ class EditTaskView(BSModalUpdateView):
     success_message = "Pomyślnie zedytowano zadanie"
     success_url = reverse_lazy('list')
 
+    @xframe_options_exempt
     def get_object(self, queryset=None):
         obj = super(EditTaskView, self).get_object()
         if not obj.user == self.request.user:
