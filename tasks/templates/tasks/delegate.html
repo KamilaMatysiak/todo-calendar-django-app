@@ -106,9 +106,10 @@
                             {% else %}
                                 {{task |to_datetime |timeuntil}}
                             {% endif %}
-                            </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p>∙
-                            {% if task.from_who %}<p>Dla {{task.user}}</p>{% endif %}
-                            </div>
+                            </p>
+                            {% if task.localization %}<p>∙</p><a href="/location/{{ task.l_lat}}_{{ task.l_lon }}"><p>{{task.localization}}</p></a>{% endif %}
+                            {% if task.with_who %}<p>∙</p><p>{{task.with_who}}</p>{% endif %}
+                            {% if task.from_who %}<p>∙</p><p>Od <strong>{{task.from_who}}</strong></p>{% endif %}</div>
                         </div>
                         <div class="important-tag">
                             {% if task.priority == "H" %}

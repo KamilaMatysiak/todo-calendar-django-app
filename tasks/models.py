@@ -7,6 +7,13 @@ from django.contrib.auth import get_user_model
 # Create your models here.
 User = get_user_model()
 
+def temporary_user_validation(user):
+    users = User.objects.all()
+    if user not in users:
+        raise ValidationError(
+            "Nie ma takiego użytkownika!"
+        )
+
 
 class Category(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=1)
@@ -15,18 +22,7 @@ class Category(models.Model):
     def __str__(self):
         return f"{self.title}"
 
-# Create your models here.
 class Task(models.Model):
-    """A model for creating new task. Stores:
-     user,
-     title of task,
-     localization,
-     a person with which the task is performed,
-     date,
-     priority (high, medium or low),
-     information if task is completed,
-     date of creation
-     """
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=1)
     title = models.CharField(max_length=200)
     localization = models.CharField(max_length=200)
@@ -53,7 +49,7 @@ class Task(models.Model):
     complete = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, default=1)
-    from_who = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='+')
+    from_who = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='+', validators=[temporary_user_validation])
     accepted = models.BooleanField(default=True)
     meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, blank=True, null=True, default=None)
 

@@ -271,6 +271,10 @@ text-decoration: none;
     flex-direction: row;
 }
 
+.task-info a {
+    color: #444;
+}
+
 .task-info p {
     padding-right: 5px;
 }
@@ -1367,15 +1371,6 @@ PROFILE
     flex-direction: column;
 }
 
-infoPlaceholder::-webkit-input-placeholder {
-    font-weight: 300;
-}
-.infoPlaceholder::-moz-placeholder {
-    font-weight: 300;
-}
-.infoPlaceholder::-ms-input-placeholder {
-    font-weight: 300;
-}
 
 /* ---------------------------------------------------
     MEDIAQUERIES

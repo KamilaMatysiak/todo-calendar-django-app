@@ -8,6 +8,7 @@ from . import views
 urlpatterns = [
     path('', views.homepage, name="index"),
     path('home', views.index, name="vtodo"),
+    path('task-list/finish', views.finishTask, name="finish-task"),
     path('task-list', views.task_list, name="list"),
     path('task-list/<str:pk>', views.task_list, name="list"),
     path('add_task', views.AddTaskView.as_view(), name="add_task"),
@@ -17,7 +18,7 @@ urlpatterns = [
     path('edit_cat/<str:pk>/', views.EditCategoryView.as_view(), name="edit_cat"),
     path('delete/<str:pk>/', views.DeleteTaskView.as_view(), name="delete"),
     path('delete_cat/<str:pk>', views.DeleteCategoryView.as_view(), name="delete_cat"),
-    path('task-list/finish', views.finishTask, name="finish-task"),
+
     path('home/<str:pk>/reject', views.refuse_task, name='reject'),
     path('home/<str:pk>/confirm', views.accept_task, name='confirm'),
     path('send_push', views.send_push),
