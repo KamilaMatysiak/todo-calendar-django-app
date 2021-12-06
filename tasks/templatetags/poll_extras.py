@@ -47,16 +47,21 @@ def passed(meeting):
 
 @register.filter
 def get_meeting_span(meeting):
-    diff = ((meeting.time_end.hour - meeting.time_start.hour) * 60
-            + (meeting.time_end.minute - meeting.time_start.minute)) // 15
-    height = (diff + 1) * 40
-    return height
+    return meeting * 40
 
 
 @register.simple_tag
-def get_width(events):
-    print(events)
-    return 100/len(events)
+def offset(meeting):
+    return meeting[2] * meeting[3]
+
+
+@register.filter
+def check_cell(meeting):
+    if meeting in ["empty","busy","temp"]:
+        return False
+    return True
+
+
 
 @register.filter
 def get_months(week):

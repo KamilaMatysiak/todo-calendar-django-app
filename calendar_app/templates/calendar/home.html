@@ -132,7 +132,7 @@
                   <option value="{% url 'month' year month day %}">MIESIĄC</option>
                 </select>
 
-                <button id="add-event" class="button add" type="button" name="button">DODAJ SPOTKANIE</button>
+                <button id="add-event" class="button add" type="button" name="button">DODAJ WYDARZENIE</button>
                 <div class="avatar">
                     <a href="{% url 'profile' %}">{% avatar user %}</a>
                 </div>
@@ -140,29 +140,40 @@
         </nav>
         <hr>
 
-        <div class="table-container">
-        <table class="timetable">
-
-        {% for hour, meetings in timetable %}
-                <tr>
-                    <td class="hour-span"><div class="hour-container"><p>{{hour}}</p></div></td>
-
+        <div class="tt-container">
+            {% for hour, meetings in tt_width %}
+                <div style="display: flex;">
+                <div class="hour-column"><p>{{hour}}</p></div>
+                {% if meetings %}
+                <div class="long-cell">
                     {% for meeting in meetings %}
-                    <td class="meeting" style="width: {% get_width meetings %}%" rowspan="{{meeting|get_meeting_span}}">
-                                           <a href="{% url 'edit_meeting' meeting.id %}">
-                        <div class="event blue {% if meeting|passed %} passed {% endif %}">
-                            <div class="info"><h1>{{meeting.title}}</h1><p>{{meeting.description}}</p></div>
-                            <div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div>
-                            </div></a>
-                    </td>{% endfor %}
-
-
-                </tr>
-
-
-        {% endfor %}
-        </table>
-            </div>
+                    {% if meeting|check_cell %}
+                    <a href="{% url 'edit_meeting' meeting.0.id %}">
+                        <div class="event table-event {{meeting.0.color}}"
+                             style="left: {% offset meeting %}%; width: {{meeting.2}}%; height: {{meeting.1|get_meeting_span}}px;">
+                            {%if meeting.1 > 1%}
+                                <div class="info">
+                                    <h1 style="font-weight: 500;">{{meeting.0.title}}</h1>
+                                    <p>{{meeting.0.description}}</p>
+                                </div>
+                                <div class="date">{{meeting.0.time_start |date:"H:i"}} - {{meeting.0.time_end |date:"H:i"}}</div>
+                            {% else %}
+                            <div class="small-info">
+                                <h1 style="font-weight: 500;">{{meeting.0.title}}</h1>
+                                <div class="date">{{meeting.0.time_start |date:"H:i"}} - {{meeting.0.time_end |date:"H:i"}}</div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </a>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                {% else %}
+                    <div class="long-cell"></div>
+                {% endif %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
 </div>
 

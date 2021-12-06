@@ -84,7 +84,6 @@ def get_context(year, month, day, user):
     else:
         next.append(day)
 
-    #stuff for week
     current_week = []
     for i in range(weekday, 0, -1):
         week_day = date - timedelta(days=i)
@@ -95,7 +94,6 @@ def get_context(year, month, day, user):
         current_week.append((week_day, get_meetings(all_events, week_day)))
 
 
-    #stuff for day
     timetable = []
     for i in range(24):
         timetable.append((f"{i}"":00", []))
@@ -130,22 +128,76 @@ def get_context(year, month, day, user):
 
     for index, (label, time_period) in enumerate(timetable):
         tt_width[index][0] = label
-        for event in time_period:
+        delayed = tt_width[index][1].count("temp")
+        for i, event in enumerate(time_period):
             length = get_span(event)
+            if delayed > 0:
+                tt_width[index][1].insert(event)
+                tt_width[index][1].remove("temp")
+                delayed -= 1
             tt_width[index][1].append(event)
             for j in range(1, length):
                 if (index + j) < len(tt_width):
+                    while len(tt_width[index + j][1]) < i-1:
+                        tt_width[index + j][1].append("temp")
                     tt_width[index + j][1].append("busy")
         if len(tt_width[index][1]) > max_width:
             max_width = len(tt_width[index][1])
 
-    # print(timetable)
-    for x in tt_width:
-        string = ""
-        for y in x[1]:
-            string += " " + str(y)
-        print(f"{x[0]}|{string}")
-    print("Maksymalna szerokosc to ", max_width)
+    for i, (timestamp, x) in enumerate(tt_width):
+        for y, cell in enumerate(x):
+            if cell not in ["empty", "busy", "temp"]:
+                tt_width[i][1][y] = (cell, get_span(cell), 100 // len(x), y)
+        while len(x) < max_width:
+            x.append("empty")
+
+    max_week_width = [1,1,1,1,1,1,1]
+    wtt_width = [["", [[],[],[],[],[],[],[]]] for i in range(24 * 60 // 15)]
+    for day_number in range(len(current_week)):
+        for index, (label, time_periods) in enumerate(week_timetable):
+            wtt_width[index][0] = label
+            delayed = wtt_width[index][1][day_number].count("temp")
+            for i, event in enumerate(time_periods[day_number]):
+                length = get_span(event)
+                if delayed > 0:
+                    wtt_width[index][1][day_number].insert(event)
+                    wtt_width[index][1][day_number].remove("temp")
+                    delayed -= 1
+                wtt_width[index][1][day_number].append(event)
+                for j in range(1, length):
+                    if (index + j) < len(wtt_width):
+                        while len(wtt_width[index + j][1][day_number]) < i-1:
+                            wtt_width[index + j][1][day_number].append("temp")
+                        wtt_width[index + j][1][day_number].append("busy")
+            if len(wtt_width[index][1][day_number]) > max_week_width[day_number]:
+                max_week_width[day_number] = len(wtt_width[index][1][day_number])
+
+        for i, (timestamp, x) in enumerate(wtt_width):
+            for y, cell in enumerate(x[day_number]):
+                if cell not in ["empty", "busy", "temp"]:
+                    wtt_width[i][1][day_number][y] = (cell, get_span(cell), 100 // len(x[day_number]), y)
+            while len(x) < max_week_width[day_number]:
+                x.append("empty")
+    print("cry")
+
+
+
+
+    meetings_widths = [["", []] for i in range(24 * 60 // 15)]
+    for x, m in timetable:
+        if len(m) > 1:
+            width = 100/len(m)
+            meetings_widths.append(width)
+        elif len(m) == 1:
+            width = 100
+            meetings_widths.append(width)
+        else:
+            width = 0
+            meetings_widths.append(width)
+
+
+
+
 
 
 
@@ -169,6 +221,8 @@ def get_context(year, month, day, user):
         "form": form,
         "timetable": timetable,
         "week_timetable": week_timetable,
+        "tt_width": tt_width,
+        "wtt_width": wtt_width,
         "week": current_week,
     }
 
@@ -209,7 +263,8 @@ def monthView(request, year, month, day):
 def get_span(meeting):
     diff = ((meeting.time_end.hour - meeting.time_start.hour) * 60
             + (meeting.time_end.minute - meeting.time_start.minute)) // 15
-    return diff + 1
+    height = (diff + 1)
+    return height
 
 
 def create_event(service, location=None, attendees=None, meeting_obj=None):
