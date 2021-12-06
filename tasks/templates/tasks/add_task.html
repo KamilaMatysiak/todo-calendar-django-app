@@ -47,7 +47,6 @@
     var base_country = 'PL';
 
     function initAutoComplete(){
-       console.log('initAutoComplete');
        autocomplete = new google.maps.places.Autocomplete(
            document.getElementsByName('localization')[0],
            {
@@ -56,28 +55,18 @@
                componentRestrictions: {'country': [base_country.toLowerCase()]},
            })
 
-       console.log(autocomplete.getPlace());
-       console.log('initAutoComplete: add listener');
        autocomplete.addListener('place_changed', onPlaceChanged());
-       console.log('finish');
     }
 
 
     function onPlaceChanged (){
-        console.log('onPlaceChanged');
 
         var place = autocomplete.getPlace();
-        console.log('place:');
-        console.log(place);
         var geocoder = new google.maps.Geocoder()
 <!--        var address = "Wieniawskiego 1"-->
         var address = document.getElementsByName('localization')[0].value
 
         geocoder.geocode( { 'address': address}, function(results, status) {
-            console.log('results');
-            console.log(results);
-            console.log('status');
-            console.log(status);
             if (status == google.maps.GeocoderStatus.OK) {
                 var latitude = results[0].geometry.location.lat();
                 var longitude = results[0].geometry.location.lng();
@@ -88,9 +77,7 @@
         });
 
         if (!place){
-            if(!place.geometry){
                 document.getElementsByName('localization')[0].placeholder = "Wpisz adres";
-            }
         }
         else{
 
