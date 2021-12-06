@@ -7,8 +7,9 @@ from django.shortcuts import redirect, render
 import calendar
 from datetime import datetime, date, timedelta
 import requests as api_reqs
-
+from django.http import HttpResponseRedirect
 from .models import *
+from tasks.models import Task
 from .forms import *
 from django.urls import reverse_lazy
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalDeleteView, BSModalUpdateView
@@ -20,24 +21,49 @@ from allauth.socialaccount.models import SocialToken
 
 from .custom_variables import colors_event, colors_calendar, months, timezone, vtodo_colors_event
 
+def get_meetings(dict, date):
+    if date in dict:
+        return dict[date]
+    else:
+        return []
 
-@login_required
-def home(request, year, month, day):
-    """Shows a map with starting point of user, based on users localization.
-        If user provide name of location,
-         then map will show both starting point and destination with a line connecting  them
-
-    Args:
-        request: request to return .html file
-    Returns:
-        .html file with a map of user starting point and places with task assigned to them
-
-    """
-    name = "usernaame"
-    locale.setlocale(locale.LC_ALL, "pl_PL")
-    cal = calendar.Calendar(firstweekday=0)
+def get_context(year, month, day, user):
+    meetings = Meeting.objects.filter(user=user)
+    now = datetime.now()
+    current_day = now.day
+    current_month = now.month
     date = datetime(year, month, day).date()
+    weekday = date.weekday()
     month_name = months[month]
+    day_name = date.strftime("%A")
+    time = datetime.now().time()
+    cal = calendar.Calendar(firstweekday=0)
+    form = EventModelForm()
+
+    all_events = {}
+    for m in meetings:
+        meeting_date = m.date_start
+        if meeting_date in all_events:
+            all_events[meeting_date].append(m)
+        else:
+            all_events[meeting_date] = [m]
+
+    days = []
+    for d in cal.itermonthdays2(year, month):
+        classes = ""
+        if d[0] != 0:
+            if get_meetings(all_events, datetime(year, month, d[0]).date()):
+                classes += "busy "
+        if d[0] == day:
+            classes += "current "
+        if month == current_month and d[0] == current_day:
+            classes += "active-day "
+        if month == current_month and d[0] < current_day:
+            classes += "passed-day "
+        if classes == "":
+            classes = "day"
+        days.append([d, classes])
+
     if month == 1:
         prev = [year - 1, 12]
         next = [year, month + 1]
@@ -57,54 +83,188 @@ def home(request, year, month, day):
         next.append(next_month_range)
     else:
         next.append(day)
-    now = datetime.now()
-    day_name = date.strftime("%A")
-    current_day = now.day
-    current_month = now.month
-    # current_year = now.year
-    meetings = [x for x in Meeting.objects.all() if x.user == request.user]
-    # days = [x for x in cal.itermonthdays2(year, month)]
-    days = []
-    for d in cal.itermonthdays2(year, month):
-        classes = ""
-        for m in meetings:
-            if m.date_start.day == d[0] and m.date_start.month == month and m.date_start.year == year:
-                classes += "busy "
-                break
-        if d[0] == day:
-            classes += "current "
-        if month == current_month and d[0] == current_day:
-            classes += "active-day "
-        if month == current_month and d[0] < current_day:
-            classes += "passed-day "
-        if classes == "":
-            classes = "day"
-        days.append([d, classes])
 
-    time = datetime.now().time()
+    current_week = []
+    for i in range(weekday, 0, -1):
+        week_day = date - timedelta(days=i)
+        current_week.append((week_day, get_meetings(all_events, week_day)))
 
-    # meetings = Meeting.objects.all()
-    form = EventModelForm()
-    return render(request,
-                  'calendar/home.html',
-                  {
-                      "name": name,
-                      "year": year,
-                      "month": month,
-                      "day": day,
-                      "date": date,
-                      "prev_month": prev,
-                      "next_month": next,
-                      "month_name": month_name,
-                      "days": days,
-                      "day_name": day_name,
-                      "current_day": current_day,
-                      "current_month": current_month,
-                      #   "current_year": current_year,
-                      "time": time,
-                      "meetings": meetings,
-                      "form": form
-                  })
+    for i in range(7 - weekday):
+        week_day = date + timedelta(days=i)
+        current_week.append((week_day, get_meetings(all_events, week_day)))
+
+
+    timetable = []
+    for i in range(24):
+        timetable.append((f"{i}"":00", []))
+        for j in range(15, 60, 15):
+            if j % 30 == 0:
+                timetable.append((f"{i}:{j}", []))
+            else:
+                timetable.append(("", []))
+
+    for m in get_meetings(all_events, date):
+        interval = m.time_start.hour * 4 + m.time_start.minute // 15
+        timetable[interval][1].append(m)
+
+
+    week_timetable = []
+    for i in range(24):
+        week_timetable.append((f"{i}"":00", [[], [], [], [], [], [], []]))
+        for j in range(15, 60, 15):
+            if j % 30 == 0:
+                week_timetable.append((f"{i}:{j}", [[], [], [], [], [], [], []]))
+            else:
+                week_timetable.append(("", [[], [], [], [], [], [], []]))
+
+    for i, (week_day, week_meetings) in enumerate(current_week):
+        for m in week_meetings:
+            interval = m.time_start.hour * 4 + m.time_start.minute // 15
+            week_timetable[interval][1][i].append(m)
+
+
+    max_width = 1
+    tt_width = [["", []] for i in range(24 * 60 // 15)]
+
+    for index, (label, time_period) in enumerate(timetable):
+        tt_width[index][0] = label
+        delayed = tt_width[index][1].count("temp")
+        for i, event in enumerate(time_period):
+            length = get_span(event)
+            if delayed > 0:
+                tt_width[index][1].insert(event)
+                tt_width[index][1].remove("temp")
+                delayed -= 1
+            tt_width[index][1].append(event)
+            for j in range(1, length):
+                if (index + j) < len(tt_width):
+                    while len(tt_width[index + j][1]) < i-1:
+                        tt_width[index + j][1].append("temp")
+                    tt_width[index + j][1].append("busy")
+        if len(tt_width[index][1]) > max_width:
+            max_width = len(tt_width[index][1])
+
+    for i, (timestamp, x) in enumerate(tt_width):
+        for y, cell in enumerate(x):
+            if cell not in ["empty", "busy", "temp"]:
+                tt_width[i][1][y] = (cell, get_span(cell), 100 // len(x), y)
+        while len(x) < max_width:
+            x.append("empty")
+
+    max_week_width = [1,1,1,1,1,1,1]
+    wtt_width = [["", [[],[],[],[],[],[],[]]] for i in range(24 * 60 // 15)]
+    for day_number in range(len(current_week)):
+        for index, (label, time_periods) in enumerate(week_timetable):
+            wtt_width[index][0] = label
+            delayed = wtt_width[index][1][day_number].count("temp")
+            for i, event in enumerate(time_periods[day_number]):
+                length = get_span(event)
+                if delayed > 0:
+                    wtt_width[index][1][day_number].insert(event)
+                    wtt_width[index][1][day_number].remove("temp")
+                    delayed -= 1
+                wtt_width[index][1][day_number].append(event)
+                for j in range(1, length):
+                    if (index + j) < len(wtt_width):
+                        while len(wtt_width[index + j][1][day_number]) < i-1:
+                            wtt_width[index + j][1][day_number].append("temp")
+                        wtt_width[index + j][1][day_number].append("busy")
+            if len(wtt_width[index][1][day_number]) > max_week_width[day_number]:
+                max_week_width[day_number] = len(wtt_width[index][1][day_number])
+
+        for i, (timestamp, x) in enumerate(wtt_width):
+            for y, cell in enumerate(x[day_number]):
+                if cell not in ["empty", "busy", "temp"]:
+                    wtt_width[i][1][day_number][y] = (cell, get_span(cell), 100 // len(x[day_number]), y)
+            while len(x) < max_week_width[day_number]:
+                x.append("empty")
+    print("cry")
+
+
+
+
+    meetings_widths = [["", []] for i in range(24 * 60 // 15)]
+    for x, m in timetable:
+        if len(m) > 1:
+            width = 100/len(m)
+            meetings_widths.append(width)
+        elif len(m) == 1:
+            width = 100
+            meetings_widths.append(width)
+        else:
+            width = 0
+            meetings_widths.append(width)
+
+
+
+
+
+
+
+    context = {
+        "all_events": all_events,
+        "now": now,
+        "current_day": current_day,
+        "current_month": current_month,
+        "date": date,
+        "month_name": month_name,
+        "day_name": day_name,
+        "time": time,
+        "cal": cal,
+        "days": days,
+        "year": year,
+        "month": month,
+        "day": day,
+        "prev_month": prev,
+        "next_month": next,
+        "meetings": meetings,
+        "form": form,
+        "timetable": timetable,
+        "week_timetable": week_timetable,
+        "tt_width": tt_width,
+        "wtt_width": wtt_width,
+        "week": current_week,
+    }
+
+    return context
+
+@login_required
+def home(request, year, month, day):
+    locale.setlocale(locale.LC_ALL, "pl_PL")
+    user = request.user
+    context = get_context(year, month, day, user)
+    return render(request, 'calendar/home.html', context)
+
+
+@login_required
+def weekView(request, year, month, day):
+    user = request.user
+    context = get_context(year, month, day, user)
+    return render(request, 'calendar/week.html', context)
+
+
+@login_required
+def monthView(request, year, month, day):
+    user = request.user
+    context = get_context(year, month, day, user)
+    all_events = context["all_events"]
+    days = context["days"]
+    month_days = []
+    for day, _ in days:
+        if day[0] != 0:
+            date = datetime(year, month, day[0]).date()
+            month_days.append((day, get_meetings(all_events, date)))
+        else:
+            month_days.append((day, []))
+    context["month_days"] = month_days
+    return render(request, 'calendar/month.html', context)
+
+
+def get_span(meeting):
+    diff = ((meeting.time_end.hour - meeting.time_start.hour) * 60
+            + (meeting.time_end.minute - meeting.time_start.minute)) // 15
+    height = (diff + 1)
+    return height
 
 
 def create_event(service, location=None, attendees=None, meeting_obj=None):
@@ -152,14 +312,6 @@ def create_event(service, location=None, attendees=None, meeting_obj=None):
 
 
 def current_date(request):
-    """Shows current date in dd / mm / yyyy format
-
-    Args:
-        request: request to redirect
-    Returns:
-        redirection to 'home' with current year, month and day
-
-    """
     now = datetime.now()
     return redirect('home', now.year, now.month, now.day)
 
@@ -185,6 +337,7 @@ class AddEventView(BSModalCreateView):
     success_url = reverse_lazy('date')
 
     def form_valid(self, form):
+
         obj = form.save(commit=False)
         obj.user = self.request.user
 
@@ -198,6 +351,46 @@ class AddEventView(BSModalCreateView):
                 print("Error is", e)
         return super(AddEventView, self).form_valid(form)
 
+class AddNoteView(BSModalCreateView):
+    template_name = 'calendar/add_note.html'
+    form_class = NoteModelForm
+    success_message = "Dodano notatkę"
+
+    def get_object(self, quaryset=None):
+        return super(AddNoteView, self).get_object()
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        meeting = Meeting.objects.get(pk=self.kwargs["meeting_pk"])
+        obj.meeting = meeting
+        self.success_url = reverse_lazy("edit_meeting", args=[obj.meeting.id])
+        return super(AddNoteView, self).form_valid(form)
+
+class EditNoteView(BSModalUpdateView):
+    model = Notes
+    template_name = 'calendar/edit_note.html'
+    form_class = NoteModelForm
+    success_message = "Zedytowano notatkę"
+
+    def get_object(self, queryset=None):
+        obj = super(EditNoteView, self).get_object()
+        self.success_url = reverse_lazy("edit_meeting", args=[obj.meeting.id])
+        if not obj.user == self.request.user:
+            raise Http404
+        return obj
+
+class DeleteNoteView(BSModalDeleteView):
+    template_name = 'calendar/delete_note.html'
+    model = Notes
+    success_message = "Pomyślnie usunięto notatkę"
+
+    def get_object(self, queryset=None):
+        obj = super(DeleteNoteView, self).get_object()
+        self.success_url = reverse_lazy("edit_meeting", args=[obj.meeting.id])
+        if not obj.user == self.request.user:
+            raise Http404
+        return obj
 
 @login_required
 def import_google_calendar_data(request):
@@ -257,7 +450,9 @@ class DeleteEventView(BSModalDeleteView):
 
 
 def edit_meeting(request, pk):
+    count = 0
     meeting = Meeting.objects.get(id=pk)
+
     form = EventModelForm(instance=meeting)
     if not meeting.user == request.user:
         raise Http404
@@ -268,20 +463,54 @@ def edit_meeting(request, pk):
             form.save()
             return redirect('/calendar')
 
-    context = {'form': form, 'id': pk}
+    tasks = [x for x in Task.objects.all() if x.user == request.user]
+    for x in tasks:
+        if x.meeting == meeting:
+            count += 1
+
+    notes = [x for x in Notes.objects.all() if x.user == request.user]
+
+
+    context = {'form': form, 'id': pk, 'meeting': meeting, 'tasks': tasks, 'count': count, 'notes': notes}
 
     return render(request, 'calendar/edit_meeting.html', context)
 
+class ConnectTaskView(BSModalUpdateView):
+    model = Meeting
+    template_name = 'calendar/connect_tasks.html'
+    form_class = ConnectTaskForm
+    success_message = "Podpięto zadania"
+
+    def get_form_kwargs(self):
+        kwargs = super(ConnectTaskView, self).get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+
+    def get_object(self):
+        obj = super(ConnectTaskView, self).get_object()
+        self.success_url = reverse_lazy("edit_meeting", args=[obj.id])
+        self.initial['tasks'] = Task.objects.filter(meeting=obj)
+        return obj
+
+    def form_valid(self, form):
+        tasks = Task.objects.filter(user=self.request.user, meeting=self.object)
+        if "tasks" not in form.cleaned_data:
+            form.cleaned_data["tasks"] = []
+        for task in tasks:
+            if task not in form.cleaned_data["tasks"]:
+                task.meeting = None
+                task.save()
+        for task in form.cleaned_data["tasks"]:
+            task.meeting = self.object
+            task.save()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+    def form_invalid(self, form):
+        """If the form is invalid, render the invalid form."""
+        return self.form_valid(form)
 
 def delete_meeting(request, pk):
-    """Deletes meeting from meeting list
-
-    Args:
-        request: POST request
-    Returns:
-        redirection to delete meeting
-
-    """
     item = Meeting.objects.get(id=pk)
     if request.method == 'POST':
         item.delete()

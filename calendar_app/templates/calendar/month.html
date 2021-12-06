@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load poll_extras %}
 {% load avatar_tags %}
 
 {% block headcontent %}
@@ -7,6 +8,7 @@
 {% endblock %}
 
 {% block content %}
+
 
 <div class="wrapper">
     <nav id="sidebar" class="small">
@@ -22,9 +24,9 @@
             <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>KALENDARZ</h1></div>
                 <div class="calendar-module">
                     <div class="calendar-header">
-                        <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
+                        <div class="prev"><a href="{% url 'month' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
                         <div class="month-label"><p>{{month_name}} {{year}}</p></div>
-                        <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
+                        <div class="next"><a href="{% url 'month' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
                     </div>
 
                 <table class="labels">
@@ -40,25 +42,14 @@
                 </table>
 
                 <table class="month">
-                                {% for d in days %}
-                                    {% if d.0 == 0 %}
-                                        <td class="noday"></td>
-                                    {% elif d.0 == day and month == current_month and d.0 == current_day%}
-                                        <td class="active-day current"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
-                                    {% elif d.0 == day %}
-                                        <td class="active-day"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
-                                    {% elif month == current_month and d.0 == current_day %}
-                                        <td class="current"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
-                                    {% elif month == current_month and d.0 < current_day %}
-                                        <td class="passed-day"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
-
-                                    {% elif d.1 == 6 %}
-                                        <td class="sunday"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td><tr>
-                                    {% else %}
-                                        <td class="day"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
-                                    {% endif %}
-                                    {% if d.1 == 6 %}<tr>{% endif %}
-                                {% endfor %}
+                    {% for d, classes in days %}
+                        {% if d.0 == 0 %}
+                            <td class="noday"></td>
+                        {% else %}
+                            <td class="{{ classes }}"><a href="{% url 'month' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
+                        {% endif %}
+                        {% if d.1 == 6 %}<tr>{% endif %}
+                    {% endfor %}
                                 </table>
                             </div>
                            <ul class="menu-buttons">
@@ -82,9 +73,9 @@
                                 </li>
                             <div class="calendar-module">
                                 <div class="calendar-header">
-                                    <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
+                                    <div class="prev"><a href="{% url 'month' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
                                     <div class="month-label"><p>{{month_name}} {{year}}</p></div>
-                                    <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
+                                    <div class="next"><a href="{% url 'month' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
                                 </div>
                                 <table class="labels">
                                     <tr class="week-label">
@@ -97,22 +88,11 @@
                                         <th class="sun"><p>Nd</p></th></tr>
                                 </table>
                                 <table class="month">
-                                {% for d in daysy %}
+                                {% for d, classes in days %}
                                     {% if d.0 == 0 %}
                                         <td class="noday"></td>
-                                    {% elif d.0 == day and month == current_month and d.0 == current_day%}
-                                        <td class="active-day current"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
-                                    {% elif d.0 == day %}
-                                        <td class="active-day"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
-                                    {% elif month == current_month and d.0 == current_day %}
-                                        <td class="current"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
-                                    {% elif month == current_month and d.0 < current_day %}
-                                        <td class="passed-day"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
-
-                                    {% elif d.1 == 6 %}
-                                        <td class="sunday"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td><tr>
                                     {% else %}
-                                        <td class="day"><a href="{% url 'home' year month d.0 %}">{{d.0}}</a></td>
+                                        <td class="{{ classes }}"><a href="{% url 'month' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
                                     {% endif %}
                                     {% if d.1 == 6 %}<tr>{% endif %}
                                 {% endfor %}
@@ -140,7 +120,7 @@
 
         <nav class="navbar">
             <div class="left">
-                <h1>{{day_name}}</h1><p>{{day}} / {{month}} / {{year}}</p>
+                <h1>{{month_name}} {{year}}</h1>
             </div>
             <div class="right">
                 <div class="modal fade" tabindex="-1" role="dialog" id="modal">
@@ -149,8 +129,16 @@
                   </div>
                 </div>
 
-                <!-- Create book button -->
-                <button id="add-event" class="button add" type="button" name="button">DODAJ SPOTKANIE</button>
+                <select class="button-select inverse" ONCHANGE="location = this.options[this.selectedIndex].value;">
+                  <option value="{% url 'month' year month day %}">MIESIĄC</option>
+                  <option value="{% url 'home' year month day %}">DZIEŃ</option>
+                  <option value="{% url 'week' year month day %}">TYDZIEŃ</option>
+
+
+
+                </select>
+
+                <button id="add-event" class="button add" type="button" name="button">DODAJ WYDARZENIE</button>
                 <div class="avatar">
                     <a href="{% url 'profile' %}">{% avatar user %}</a>
                 </div>
@@ -158,15 +146,32 @@
         </nav>
         <hr>
 
-            {% for meeting in meetings %}
-                {% if meeting.date_start <= date %}
-                    {% if date <= meeting.date_end %}
-                        <a href="{% url 'edit_meeting' meeting.id %}">
-            <div class="event {{meeting.color}} long"><div class="info"><h1>{{meeting.title}}</h1><p>{{meeting.description}}</p></div><div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div></div>                    </a>
+        <div style="width: 100%;">
+            <table class="month-view">
+                    <tr class="week-label">
+                        <th class="mon"><p>Pon</p></th>
+                        <th class="tue"><p>Wt</p></th>
+                        <th class="wed"><p>Śr</p></th>
+                        <th class="thu"><p>Czw</p></th>
+                        <th class="fri"><p>Pt</p></th>
+                        <th class="sat"><p>Sob</p></th>
+                        <th class="sun"><p>Nd</p></th></tr>
+                {% for d, meetings_day in month_days %}
+                    {% if d.0 == 0 %}
+                        <td class="noday"><div class="empty-cell"></div></td>
+                    {% else %}
+                        <td class="day"><a href="{% url 'home' year month d.0 %}">
+                            <div class="container">
+                            <div class="pointer">{{d.0}}</div>
+                            {% for meeting in meetings_day %}
+                                <a href="{% url 'edit_meeting' meeting.id %}"><div class="month-event {{meeting.color}}"><span>{{meeting.title}}</span></div></a>
+                            {% endfor %}
+                        </div></a></td>
                     {% endif %}
-                {% endif %}
-            {% endfor %}
-
+                    {% if d.1 == 6 %}<tr>{% endif %}
+                {% endfor %}
+            </table>
+        </div>
     </div>
 </div>
 

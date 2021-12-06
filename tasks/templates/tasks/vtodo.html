@@ -70,6 +70,27 @@
         <div class="task-panel">
              <h2>Witaj, {{user.username}}!</h2>
             <br>
+            {% if to_accept %}
+                <div class="task_order"><h5>Zlecone zadania:</h5>
+                <div class="event-carousel">
+                
+                {% for x in to_accept %}
+                    <div class="task"><h4 class="center">Masz zadanie {{x.title}} od {{x.from_who}}!</h4></div>
+                        <form action="{% url 'confirm' x.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" value="Confirm">
+                        </form>
+                        
+                        <form action="{% url 'reject' x.id %}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" value="Reject">
+                        </form>
+                {% endfor %}
+                    </div>
+                   </div>
+                {% endif %}
+
+
              <div class="heading"><h5>Spotkania na dziś:</h5>
                  <a class="all-tasks" href="{% url 'date' %}">Zobacz wszystkie</a></div>
             <div class="event-carousel">

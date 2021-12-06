@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.utils.timezone import now
-from datetime import datetime, date, time
+from datetime import datetime, timedelta, time, date
 
 User = get_user_model()
 
@@ -22,8 +22,15 @@ class Meeting(models.Model):
     time_end = models.TimeField(default=datetime.now)
     color = models.CharField(default="blue", max_length=50)
 
+
     def __str__(self):
         return self.title
 
     class Meta:
         ordering = ['date_start', 'time_start', 'title']
+
+
+class Notes(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=1)
+    meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE)
+    text = models.TextField(blank=True, null=True, max_length=250)

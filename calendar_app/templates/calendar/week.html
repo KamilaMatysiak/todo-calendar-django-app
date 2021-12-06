@@ -3,12 +3,12 @@
 {% load poll_extras %}
 {% load avatar_tags %}
 
-
 {% block headcontent %}
 <title>Kalendarz - vToDo</title>
 {% endblock %}
 
 {% block content %}
+
 
 <div class="wrapper">
     <nav id="sidebar" class="small">
@@ -20,40 +20,41 @@
             <!--<div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>-->
         </nav>
     </nav>
-        <nav class="sidebar menu">
-            <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>KALENDARZ</h1></div>
-            <div class="calendar-module">
-                <div class="calendar-header">
-                    <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
-                    <div class="month-label"><p>{{month_name}} {{year}}</p></div>
-                    <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
-                </div>
-
-                <table class="labels">
-                    <tr class="week-label">
-                        <th class="mon"><p>Pon</p></th>
-                        <th class="tue"><p>Wt</p></th>
-                        <th class="wed"><p>Śr</p></th>
-                        <th class="thu"><p>Czw</p></th>
-                        <th class="fri"><p>Pt</p></th>
-                        <th class="sat"><p>Sob</p></th>
-                        <th class="sun"><p>Nd</p></th>
-                    </tr>
-                </table>
-
-                <table class="month">
-                    {% for d, classes in days %}
-                        {% if d.0 == 0 %}
-                            <td class="noday"></td>
-                        {% else %}
-                            <td class="{{ classes }}"><a href="{% url 'home' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
-                        {% endif %}
-                        {% if d.1 == 6 %}<tr>{% endif %}
-                    {% endfor %}
-                </table>
+    <nav class="sidebar menu">
+        <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>KALENDARZ</h1></div>
+        <div class="calendar-module">
+            <div class="calendar-header">
+                <div class="prev"><a href="{% url 'home' prev_month.0 prev_month.1 prev_month.2 %}"> < </a></div>
+                <div class="month-label"><p>{{month_name}} {{year}}</p></div>
+                <div class="next"><a href="{% url 'home' next_month.0 next_month.1 next_month.2 %}"> > </a></div>
             </div>
-            <button class="option-dropdown button menu-buttons" id="importCalendar"><a>Połącz z Kalendarzem Google</a></button>
-        </nav>
+
+            <table class="labels">
+                <tr class="week-label">
+                    <th class="mon"><p>Pon</p></th>
+                    <th class="tue"><p>Wt</p></th>
+                    <th class="wed"><p>Śr</p></th>
+                    <th class="thu"><p>Czw</p></th>
+                    <th class="fri"><p>Pt</p></th>
+                    <th class="sat"><p>Sob</p></th>
+                    <th class="sun"><p>Nd</p></th>
+                </tr>
+            </table>
+
+            <table class="month">
+                {% for d, classes in days %}
+                    {% if d.0 == 0 %}
+                        <td class="noday"></td>
+                    {% else %}
+                        <td class="{{ classes }}"><a href="{% url 'week' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
+                    {% endif %}
+                    {% if d.1 == 6 %}<tr>{% endif %}
+                {% endfor %}
+            </table>
+        </div>
+        <ul class="menu-buttons">
+           <li class="option-dropdown"><a>Połącz z Kalendarzem Google</a></li>
+        </ul>
     </nav>
 
     <nav id="mobile-sidebar">
@@ -90,7 +91,7 @@
                                     {% if d.0 == 0 %}
                                         <td class="noday"></td>
                                     {% else %}
-                                        <td class="{{ classes }}"><a href="{% url 'home' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
+                                        <td class="{{ classes }}"><a href="{% url 'week' year month d.0 %}">{{d.0}}<div class="pointer"></div></a></td>
                                     {% endif %}
                                     {% if d.1 == 6 %}<tr>{% endif %}
                                 {% endfor %}
@@ -118,7 +119,7 @@
 
         <nav class="navbar">
             <div class="left">
-                <h1>{{day_name}}</h1><p>{{day}} / {{month}} / {{year}}</p>
+                <h1>{{week|get_months}}</h1>
             </div>
             <div class="right">
                 <div class="modal fade" tabindex="-1" role="dialog" id="modal">
@@ -128,8 +129,8 @@
                 </div>
 
                 <select class="button-select inverse" ONCHANGE="location = this.options[this.selectedIndex].value;">
-                  <option value="{% url 'home' year month day %}">DZIEŃ</option>
                   <option value="{% url 'week' year month day %}">TYDZIEŃ</option>
+                  <option value="{% url 'home' year month day %}">DZIEŃ</option>
                   <option value="{% url 'month' year month day %}">MIESIĄC</option>
                 </select>
 
@@ -141,16 +142,27 @@
         </nav>
         <hr>
 
-        <div class="tt-container">
-            {% for hour, meetings in tt_width %}
+        <div style="display: flex; flex-direction: row;">
+            <div style="width: 42px; height: 40px;"></div>
+            {% for day, meetings in week %}
+                <a style="width: 14%;" href="{% url 'home' day|get_year day|get_month day|get_day %}">
+                    <div class="weekdays"><h3>{{day|get_day}}</h3><p>{{day|get_dayname}}</p></div>
+                </a>
+            {% endfor %}
+        </div>
+
+        <div class="tt-container" style="max-height: 75vh;">
+            <div>
+            {% for hour, week_meetings in wtt_width %}
                 <div style="display: flex;">
                 <div class="hour-column"><p>{{hour}}</p></div>
-                {% if meetings %}
-                <div class="long-cell">
-                    {% for meeting in meetings %}
-                    {% if meeting|check_cell %}
-                    <a href="{% url 'edit_meeting' meeting.0.id %}">
-                        <div class="event table-event {{meeting.0.color}}"
+                {% for day in week_meetings %}
+                    {% if day %}
+                    <div class="cell">
+                        {% for meeting in day %}
+                            {% if meeting|check_cell %}
+                            <a href="{% url 'edit_meeting' meeting.0.id %}">
+                            <div class="event table-event {{meeting.0.color}}"
                              style="left: {% offset meeting %}%; width: {{meeting.2}}%; height: {{meeting.1|get_meeting_span}}px;">
                             {%if meeting.1 > 1%}
                                 <div class="info">
@@ -165,17 +177,19 @@
                             </div>
                             {% endif %}
                         </div>
-                    </a>
-                    {% endif %}
-                    {% endfor %}
-                </div>
-                {% else %}
-                    <div class="long-cell"></div>
-                {% endif %}
-                </div>
+                            </a>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="cell"></div>
+                    {%endif%}
+                {% endfor %}
+</div>
             {% endfor %}
+
         </div>
-    </div>
+        </div>
 </div>
 
     <script type="text/javascript">
@@ -189,31 +203,19 @@
             $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
         });
 
-        $("#mobile-sidebar").mCustomScrollbar({
-            theme: "minimal"
-        });
+            $("#mobile-sidebar").mCustomScrollbar({
+                theme: "minimal"
+            });
 
-        $('#dismiss').on('click', function () {
-            $('#mobile-sidebar').removeClass('active');
-        });
+            $('#dismiss').on('click', function () {
+                $('#mobile-sidebar').removeClass('active');
+            });
 
-        $('#sidebarCollapse').on('click', function () {
-            $('#mobile-sidebar').addClass('active');
-            $('.collapse.in').toggleClass('in');
-            $('a[aria-expanded=true]').attr('aria-expanded', 'false');
-        });
-
-        $('#importCalendar').on('click', function () {
-            const fetchURL = "/calendar/import_google_calendar_data";
-            fetch(fetchURL)
-            .then((response) => {return response.json();})
-            .then((body) => {
-              console.log(body);
-              if(body.msg == "success"){
-                  location.reload();
-              }
-            })
-        });
+            $('#sidebarCollapse').on('click', function () {
+                $('#mobile-sidebar').addClass('active');
+                $('.collapse.in').toggleClass('in');
+                $('a[aria-expanded=true]').attr('aria-expanded', 'false');
+            });
         });
     </script>
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>

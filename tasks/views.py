@@ -23,6 +23,8 @@ from django.template import loader
 import datetime
 import folium
 import json
+from django.http import HttpResponse
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 
 # Create your views here.
@@ -36,26 +38,27 @@ def test(request):
 
 
 @login_required
-def task_list(request):
-    tasks = [x for x in Task.objects.all() if x.user == request.user]
+def task_list(request, pk=None):
+    tasks = [x for x in Task.objects.all() if x.user == request.user and x.accepted == True]
+
     categories = [x for x in Category.objects.all() if x.user == request.user]
-    #tasks = Task.objects.all()
     form = TaskModelForm(request.user)
 
     if request.method == 'POST':
         form = TaskModelForm(request.user, request.POST)
-
         if form.is_valid():
             form.save()
         return redirect('/')
 
     context = {"categories": categories, "tasks": tasks, 'form': form}
+    if pk is not None:
+        context["task_pk"] = pk
     return render(request, 'tasks/task-list.html', context)
 
 def categoryView(request, pk):
     category = Category.objects.get(id=pk)
     categories = [x for x in Category.objects.all() if x.user == request.user]
-    tasks = [x for x in Task.objects.all() if x.user == request.user and x.category is not None and x.category.id == category.id]
+    tasks = [x for x in Task.objects.all() if x.user == request.user and x.category is not None and x.category.id == category.id and x.accepted == True]
 
     form = TaskModelForm(request.user)
 
@@ -69,6 +72,23 @@ def categoryView(request, pk):
     context = {"categories": categories, "tasks": tasks, 'form': form, 'category': category}
     return render(request, 'tasks/category_template.html', context)
 
+def delegateView(request):
+    categories = [x for x in Category.objects.all() if x.user == request.user]
+    tasks = [x for x in Task.objects.all() if x.from_who is not None and x.from_who == request.user]
+
+    form = TaskModelForm(request.user)
+
+    if request.method == 'POST':
+        form = TaskModelForm(request.user, request.POST)
+
+        if form.is_valid():
+            form.save()
+        return redirect('/')
+
+    context = {"categories": categories, "tasks": tasks, 'form': form}
+    return render(request, 'tasks/delegate.html', context)
+
+
 def index(request):
     count = 0
     today = []
@@ -78,11 +98,12 @@ def index(request):
     late = []
 
     events = [x for x in Meeting.objects.all() if x.user == request.user]
+    not_accepted_tasks = [x for x in Task.objects.all() if x.user == request.user and x.accepted == False]
     for x in events:
         if x.date_start == datetime.date.today() and x.time_end > datetime.datetime.now().time():
             today_events.append(x)
 
-    tasks = [x for x in Task.objects.all() if x.user == request.user]
+    tasks = [x for x in Task.objects.all() if x.user == request.user and x.accepted == True]
     for x in tasks:
         if not x.complete:
             if x.date == datetime.date.today():
@@ -113,7 +134,8 @@ def index(request):
                "here": here,
                "events": today_events[:5],
                user: user,
-               'vapid_key': vapid_key}
+               'vapid_key': vapid_key,
+               "to_accept": not_accepted_tasks}
     return render(request, 'tasks/vtodo.html', context)
 
 
@@ -132,6 +154,19 @@ class AddTaskView(BSModalCreateView):
             destination = geolocator.geocode(destination_)
             obj.l_lat = destination.latitude
             obj.l_lon = destination.longitude
+        print(obj.user)
+        if form.cleaned_data.get('for_who') != "":
+            for x in User.objects.all():
+                if x.username == form.cleaned_data.get('for_who'):
+                    obj.from_who = self.request.user
+                    id = x.id
+                    print(id)
+                    obj.user = User.objects.get(id=id)
+                    obj.accepted = False
+                    break
+            else:
+                print("Nie ma takiego użytkownika")
+                raise Http404
         return super(AddTaskView, self).form_valid(form)
 
     def get_form_kwargs(self):
@@ -147,6 +182,7 @@ class EditTaskView(BSModalUpdateView):
     success_message = "Pomyślnie zedytowano zadanie"
     success_url = reverse_lazy('list')
 
+    @xframe_options_exempt
     def get_object(self, queryset=None):
         obj = super(EditTaskView, self).get_object()
         if not obj.user == self.request.user:
@@ -282,3 +318,18 @@ class DeleteCategoryView(BSModalDeleteView):
         if not obj.user == self.request.user:
             raise Http404
         return obj
+
+def refuse_task(request, pk):
+    obj = get_object_or_404(Task, pk=pk)  # Get your current cat
+
+    if request.method == 'POST':         # If method is POST,
+        obj.delete()                     # delete the cat.
+    return redirect('vtodo')             # Finally, redirect to the homepage.
+
+
+def accept_task(request, pk):
+    obj = get_object_or_404(Task, pk=pk)
+    if request.method == 'POST':
+        obj.accepted = True
+        obj.save()
+    return redirect('vtodo')

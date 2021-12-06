@@ -19,7 +19,11 @@ import json
 from django.http import HttpResponse
 from django.urls import reverse
 from django.template import loader
+from django.http import HttpResponse
+from django.views.decorators.clickjacking import xframe_options_exempt
 
+
+@xframe_options_exempt
 def location(request, lat, lon):
     """Shows a map with starting point of user, based on users location. Also shows the locations of tasks and their priorities.
 
@@ -40,18 +44,17 @@ def location(request, lat, lon):
                 lon = n_lon
                 return redirect('location-2', n_lat, n_lon)
         else:
-            return HttpResponse(json.dumps([{'lat':lat, 'lon':lon}]))
-
+            return HttpResponse(json.dumps([{'lat': lat, 'lon': lon}]))
 
     m = folium.Map(width='100%', height='100%',
-            location=get_center_coordinates(lat, lon),
-            zoom_start=10)
+                   location=get_center_coordinates(lat, lon),
+                   zoom_start=10)
 
     folium.Marker([lat, lon], tooltip='twoja lokalizacja',
-            popup="Twoja lokalizacja",
-            icon=folium.Icon('green')).add_to(m)
+                  popup="Twoja lokalizacja",
+                  icon=folium.Icon('green')).add_to(m)
 
-        # destination  marker
+    # destination  marker
     tasks = (x for x in Task.objects.all() if x.user == request.user)
 
     color = {
@@ -63,10 +66,15 @@ def location(request, lat, lon):
 
     for x in tasks:
         if x.l_lon and x.l_lat:
-            folium.Marker([x.l_lat, x.l_lon], tooltip=x.title,
-                    popup=x.localization,
-                    icon=folium.Icon(color[x.priority], icon="cloud")).add_to(m)
+            path = "/task-list/" + str(x.id)
+            html = f"<strong>{x.title}</strong> <br>{x.localization}<br>{x.date}<br><a style='color: #2F9CEB; width: 100%;' target='_blank' href='{path}'>Zobacz zadanie</a>"
+            iframe = folium.IFrame(html=html, width=200, height=200)
+            popup = folium.Popup(max_width=2650, html=html)
 
+            folium.Marker([x.l_lat, x.l_lon], tooltip=x.title,
+                          popup=popup,
+                          icon=folium.Icon(color[x.priority], icon="cloud")
+                          ).add_to(m)
 
     m = m._repr_html_()
     # distance = None
@@ -74,7 +82,7 @@ def location(request, lat, lon):
     context = {
         'lat': lat,
         'lon': lon,
-        'map': m,
+        'map': m
     }
 
     t = loader.get_template('geolocation/location.html')
@@ -92,8 +100,7 @@ def start(request):
     return redirect('location-2', lat, lon)
 
 
-
-#def send_push(request):
+# def send_push(request):
 #    payload = {"head": "Welcome!", "body": "Hello World"}
 #    user = request.user
 #    print(user)

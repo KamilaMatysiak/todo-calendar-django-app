@@ -13,6 +13,7 @@ class TaskModelForm(BSModalModelForm):
 
     with_who = forms.CharField(required=False, label="Kontakty")
     localization = forms.CharField(required=False, label="Lokalizacja")
+    for_who = forms.CharField(required=False, label="Zleć komuś")
     
     class Meta:
         model = Task
@@ -28,6 +29,8 @@ class TaskModelForm(BSModalModelForm):
             'priority': ('Priorytet'),
             'category': ('Kategoria'),
         }
+
+    
 
 class CategoryModelForm(BSModalModelForm):
 
