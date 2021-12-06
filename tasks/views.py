@@ -164,6 +164,9 @@ class AddTaskView(BSModalCreateView):
                     obj.user = User.objects.get(id=id)
                     obj.accepted = False
                     return super(AddTaskView, self).form_valid(form)
+            return Http404
+        return super(AddTaskView, self).form_valid(form)
+
 
     def get_form_kwargs(self):
         kwargs = super(AddTaskView, self).get_form_kwargs()
