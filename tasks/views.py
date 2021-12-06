@@ -132,11 +132,14 @@ class AddTaskView(BSModalCreateView):
             destination = geolocator.geocode(destination_)
             obj.l_lat = destination.latitude
             obj.l_lon = destination.longitude
+        print(self.request.POST.getlist("contacts[]"))
+        print(self.request.POST)
         return super(AddTaskView, self).form_valid(form)
 
     def get_form_kwargs(self):
         kwargs = super(AddTaskView, self).get_form_kwargs()
         kwargs['user'] = self.request.user
+
         return kwargs
 
 
