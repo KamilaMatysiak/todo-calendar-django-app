@@ -103,7 +103,8 @@ def home(request, year, month, day):
                       #   "current_year": current_year,
                       "time": time,
                       "meetings": meetings,
-                      "form": form
+                      "form": form,
+                      'API_KEY': settings.GOOGLE_API_KEY
                   })
 
 
