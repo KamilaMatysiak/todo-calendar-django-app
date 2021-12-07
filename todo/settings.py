@@ -188,6 +188,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details',
 )
 
+GOOGLE_API_KEY = "AIzaSyCfW4uDvbA6ui1pOX-X0qLLcmtj5w6pIqY"
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "228316449016-s0210ihiktgnnaifeej15m87blo7rb2d.apps.googleusercontent.com"
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
 SOCIAL_AUTH_URL_NAMESPACE = 'social'

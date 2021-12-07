@@ -49,7 +49,7 @@ def task_list(request):
             form.save()
         return redirect('/')
 
-    context = {"categories": categories, "tasks": tasks, 'form': form}
+    context = {"categories": categories, "tasks": tasks, 'form': form, 'API_KEY': settings.GOOGLE_API_KEY}
     return render(request, 'tasks/task-list.html', context)
 
 def categoryView(request, pk):
