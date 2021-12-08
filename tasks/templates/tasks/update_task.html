@@ -45,6 +45,10 @@
                   .then((body) => {
                     console.log(body);
                     if(body.msg == 'success') {
+                        const words = "{{ object.with_who }}".split("|");
+                        console.log("{{ object.with_who }}")
+                        console.log(words)
+
                         var selector = document.getElementsByName('with_who')[0];
                         for(let contact of body.data){
                             var opt = document.createElement('option');
@@ -53,9 +57,11 @@
                             opt.innerHTML = i;
                             selector.appendChild(opt);
                         }
+                        $('.js-example-basic-multiple').val(words).change()
                     }
                     });
             $('.js-example-basic-multiple').select2({tags: true});
+
     });
   </script>
 

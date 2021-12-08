@@ -106,9 +106,7 @@
                             {% endif %}
                             </p><p>∙</p><p>{{task.localization}}</p><p>∙</p>
                             {% if task.with_who %}
-                                {% for contact in task.with_who %}
-                                    <p>{{contact}}</p>
-                                    {%endfor%}
+                            <p>{{task.with_who|get_contacts}}</p>
                             {% endif %}</div>
                         </div>
                         <div class="important-tag">
