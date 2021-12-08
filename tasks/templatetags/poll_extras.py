@@ -37,6 +37,9 @@ def is_expired(datetime):
 def get_contacts(list):
     contacts = list.split("|")
     count = len(contacts)
-    message = f"{contacts[0]} + {count-1}"
+    if count < 2:
+        message = contacts[0]
+    else:
+        message = f"{contacts[0]} + {count-1}"
     return message
 

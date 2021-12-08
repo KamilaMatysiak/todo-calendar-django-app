@@ -49,7 +49,14 @@
                         }
                     }
                     });
-            $('.js-example-basic-multiple').select2({tags: true});
+            $('.js-example-basic-multiple').select2({
+                tags: true,
+                language: {
+                      noResults: function (params) {
+                        return "Nie znaleziono kontaktów.";
+                      }
+                    }
+                });
 
     });
 </script>
