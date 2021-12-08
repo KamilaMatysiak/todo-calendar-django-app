@@ -33,6 +33,10 @@ def homepage(request):
     return render(request, 'tasks/index.html')
 
 
+def terms_of_service(request):
+    return render(request, 'tasks/terms_of_service.html')
+
+
 def test(request):
     return render(request, 'tasks/components.html')
 
@@ -55,10 +59,12 @@ def task_list(request, pk=None):
         context["task_pk"] = pk
     return render(request, 'tasks/task-list.html', context)
 
+
 def categoryView(request, pk):
     category = Category.objects.get(id=pk)
     categories = [x for x in Category.objects.all() if x.user == request.user]
-    tasks = [x for x in Task.objects.all() if x.user == request.user and x.category is not None and x.category.id == category.id and x.accepted == True]
+    tasks = [x for x in Task.objects.all() if
+             x.user == request.user and x.category is not None and x.category.id == category.id and x.accepted == True]
 
     form = TaskModelForm(request.user)
 
@@ -71,6 +77,7 @@ def categoryView(request, pk):
 
     context = {"categories": categories, "tasks": tasks, 'form': form, 'category': category}
     return render(request, 'tasks/category_template.html', context)
+
 
 def delegateView(request):
     categories = [x for x in Category.objects.all() if x.user == request.user]
@@ -107,13 +114,12 @@ def index(request):
     for x in tasks:
         if not x.complete:
             if x.date == datetime.date.today():
-                count = count+1
+                count = count + 1
                 today.append(x)
                 if not x.complete and x.time < datetime.datetime.now().time():
                     late.append(x)
             if x.priority == "H":
                 priority.append(x)
-
 
     webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
     vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
@@ -167,7 +173,6 @@ class AddTaskView(BSModalCreateView):
             return Http404
         return super(AddTaskView, self).form_valid(form)
 
-
     def get_form_kwargs(self):
         kwargs = super(AddTaskView, self).get_form_kwargs()
         kwargs['user'] = self.request.user
@@ -183,7 +188,7 @@ class EditTaskView(BSModalUpdateView):
 
     @xframe_options_exempt
     def get_object(self, queryset=None):
-        obj = super(EditTaskView, self).get_object()
+        obj = supr(EditTaskView, self).get_object()
         if not obj.user == self.request.user:
             raise Http404
         return obj
@@ -205,6 +210,7 @@ class DeleteTaskView(BSModalDeleteView):
         if not obj.user == self.request.user:
             raise Http404
         return obj
+
 
 def updateTask(request, pk):
     """
@@ -251,6 +257,7 @@ def finishTask(request):
     task.save()
     return HttpResponse('')
 
+
 @require_POST
 @csrf_exempt
 def send_push(request):
@@ -268,8 +275,9 @@ def send_push(request):
         data_tasks = how_many_tasks(user, float(data['lat']), float(data['lon']))
         print("DATA_TASKS", data_tasks)
         if data_tasks[1] != None:
-            payload = {'head': 'Zadań w okolicy: ' + data_tasks[0], 'body': 'Najbliższe zadanie: ' + data_tasks[1] + ' - ' +
-                data_tasks[2] + 'km stąd'}
+            payload = {'head': 'Zadań w okolicy: ' + data_tasks[0],
+                       'body': 'Najbliższe zadanie: ' + data_tasks[1] + ' - ' +
+                               data_tasks[2] + 'km stąd'}
         else:
             payload = {'head': 'Brak zadań w okolicy'}
         print(payload)
@@ -280,8 +288,6 @@ def send_push(request):
         return JsonResponse(status=500, data={"message": "An error occurred"})
 
 
-
-        
 class AddCategoryView(BSModalCreateView):
     template_name = 'tasks/add_category.html'
     form_class = CategoryModelForm
@@ -292,6 +298,7 @@ class AddCategoryView(BSModalCreateView):
         obj = form.save(commit=False)
         obj.user = self.request.user
         return super(AddCategoryView, self).form_valid(form)
+
 
 class EditCategoryView(BSModalUpdateView):
     model = Category
@@ -306,6 +313,7 @@ class EditCategoryView(BSModalUpdateView):
             raise Http404
         return obj
 
+
 class DeleteCategoryView(BSModalDeleteView):
     template_name = 'tasks/delete-category.html'
     model = Category
@@ -318,12 +326,13 @@ class DeleteCategoryView(BSModalDeleteView):
             raise Http404
         return obj
 
+
 def refuse_task(request, pk):
     obj = get_object_or_404(Task, pk=pk)  # Get your current cat
 
-    if request.method == 'POST':         # If method is POST,
-        obj.delete()                     # delete the cat.
-    return redirect('vtodo')             # Finally, redirect to the homepage.
+    if request.method == 'POST':  # If method is POST,
+        obj.delete()  # delete the cat.
+    return redirect('vtodo')  # Finally, redirect to the homepage.
 
 
 def accept_task(request, pk):
