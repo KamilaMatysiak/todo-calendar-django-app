@@ -4,14 +4,14 @@
 {%load static%}
 
 <style>
-.modal { z-index: 1001 !important;}
+.modal:focus { z-index: 1001 !important;}
 .modal-backdrop {z-index: 1000 !important;}
 .pac-container {z-index: 1055 !important;}
 </style>
 <form method="post" action="">
       {% csrf_token %}
      <div class="modal-header">
-        <h5 class="modal-title">Dodaj spotkanie</h5>
+        <h5 class="modal-title">Dodaj wydarzenie</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -94,5 +94,10 @@
             $("#id_time_end").on("dp.change", function (e) {
                validate();
                });
+
+            document.getElementsByClassName("dismissButton").onclick(function() {
+              $('.pac-container').style.display = "none";
+            });
         });
     </script>
+
