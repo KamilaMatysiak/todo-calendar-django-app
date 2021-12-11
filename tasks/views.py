@@ -50,7 +50,7 @@ def task_list(request, pk=None):
             form.save()
         return redirect('/')
 
-    context = {"categories": categories, "tasks": tasks, 'form': form}
+    context = {"categories": categories, "tasks": tasks, 'form': form, 'API_KEY': settings.GOOGLE_API_KEY}
     if pk is not None:
         context["task_pk"] = pk
     return render(request, 'tasks/task-list.html', context)
@@ -244,7 +244,7 @@ def finishTask(request):
     else:
         print("saving to false")
         task.complete = False
-    print("im working!")
+
     task.save()
     return HttpResponse('')
 

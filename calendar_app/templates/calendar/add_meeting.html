@@ -3,7 +3,11 @@
 {{form.media}}
 {%load static%}
 
-
+<style>
+.modal { z-index: 1001 !important;}
+.modal-backdrop {z-index: 1000 !important;}
+.pac-container {z-index: 1055 !important;}
+</style>
 <form method="post" action="">
       {% csrf_token %}
      <div class="modal-header">
@@ -46,6 +50,7 @@
 
     </form>
 
+    <script type="text/javascript" src="{% static 'js/autocomplete_localization.js' %}" ></script>
     <script type="text/javascript">
         function validate() {
             var start = $('#id_date_start').data("DateTimePicker");

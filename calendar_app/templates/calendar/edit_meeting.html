@@ -4,8 +4,14 @@
 {% load poll_extras %}
 {%load static%}
 {% load avatar_tags %}
-{% block content %}
 
+
+<style>
+.modal { z-index: 1001 !important;}
+.modal-backdrop {z-index: 1000 !important;}
+.pac-container {z-index: 1055 !important;}
+</style>
+{% block content %}
 
     <div class="wrapper">
         <nav id="sidebar" class="small">
@@ -209,6 +215,7 @@
     </script>
 
         <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/autocomplete_localization.js' %}" ></script>
 
 {% endblock %}
 
