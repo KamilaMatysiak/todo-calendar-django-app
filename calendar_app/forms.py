@@ -19,7 +19,7 @@ class EventModelForm(BSModalModelForm):
             ('green', 'green')]
 
     color = forms.CharField(label="Kolor", widget=forms.RadioSelect(choices=COLORS), initial="blue")
-    with_who = forms.CharField(required=False, label="Kontakty")
+    with_who = forms.CharField(required=False, widget=forms.Select(choices=(),attrs={"name": "contacts[]", "class": "js-example-basic-multiple field-sel", "style": "width: 100%", "multiple": "multiple"}), label="Kontakty")
     localization = forms.CharField(required=False, label="Lokalizacja")
 
     class Meta:

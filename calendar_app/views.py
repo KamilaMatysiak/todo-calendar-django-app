@@ -178,7 +178,6 @@ def get_context(year, month, day, user):
                     wtt_width[i][1][day_number][y] = (cell, get_span(cell), 100 // len(x[day_number]), y)
             while len(x) < max_week_width[day_number]:
                 x.append("empty")
-    print("cry")
 
 
 
@@ -339,7 +338,8 @@ class AddEventView(BSModalCreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.user = self.request.user
-
+        with_who = self.request.POST.getlist("with_who")
+        obj.with_who = "|".join(with_who)
         if self.request.is_ajax():
             try:
                 service = construct_service(obj.user)
@@ -459,6 +459,9 @@ def edit_meeting(request, pk):
     if request.method == 'POST':
         form = EventModelForm(request.POST, instance=meeting, request=request)
         if form.is_valid():
+            obj = form.save(commit=False)
+            with_who = request.POST.getlist("with_who")
+            obj.with_who = "|".join(with_who)
             form.save()
             return redirect('/calendar')
 
