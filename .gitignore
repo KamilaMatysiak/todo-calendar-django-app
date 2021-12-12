@@ -163,3 +163,6 @@ Thumbs.db
 # End of https://www.toptal.com/developers/gitignore/api/django
 /linvenv/
 users/migrations/0005_auto_20211122_2312.py
+tasks/migrations/0002_auto_20211207_0010.py
+calendar_app/migrations/0002_auto_20211207_0010.py
+users/migrations/0003_alter_userprofile_id.py
