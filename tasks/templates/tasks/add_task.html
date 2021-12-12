@@ -31,14 +31,44 @@
           </div>
         {% endfor %}
       </div>
-    
+
       <div class="modal-footer">
         <button type="button" class="btn order" id="order" onclick="showMore()">Zleć zadanie</button>
         <button type="submit" class="btn btn-primary">Dodaj</button>
       </div>
 
     </form>
+<script>
 
+    $(document).ready( function(e) {
+            const fetchURL = "/retrieve_google_contacts";
+            fetch(fetchURL)
+                  .then((response) => {return response.json();})
+                  .then((body) => {
+                    console.log(body);
+                    if(body.msg == 'success') {
+                        var selector = document.getElementsByName('with_who')[0];
+                        for(let contact of body.data){
+                            var opt = document.createElement('option');
+                            var i = contact.name;
+                            opt.value = i;
+                            opt.innerHTML = i;
+                            selector.appendChild(opt);
+                        }
+                    }
+                    });
+            $('.js-example-basic-multiple').select2({
+                tags: true,
+                language: {
+                      noResults: function (params) {
+                        return "Nie znaleziono kontaktów.";
+                      }
+                    }
+                });
+
+    });
+</script>
+<script type="text/javascript" src="static/js/autocomplete_localization.js" ></script>
     <script>
         function showMore() {
             if(document.getElementById("from_who").style.display !== "none") {
@@ -76,7 +106,6 @@
 
         var place = autocomplete.getPlace();
         var geocoder = new google.maps.Geocoder()
-<!--        var address = "Wieniawskiego 1"-->
         var address = document.getElementsByName('localization')[0].value
 
         geocoder.geocode( { 'address': address}, function(results, status) {
@@ -84,8 +113,6 @@
                 var latitude = results[0].geometry.location.lat();
                 var longitude = results[0].geometry.location.lng();
 
-<!--                $('#id_longitude').val(longitude)-->
-<!--                $('#id_latitude').val(latitude)-->
             }
         });
 

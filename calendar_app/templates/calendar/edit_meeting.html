@@ -4,8 +4,19 @@
 {% load poll_extras %}
 {%load static%}
 {% load avatar_tags %}
-{% block content %}
 
+{% block headcontent %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<title>Edytuj wydarzenie - vToDo</title>
+{% endblock %}
+
+<style>
+.modal { z-index: 1001 !important;}
+.modal-backdrop {z-index: 1000 !important;}
+.pac-container {z-index: 1055 !important;}
+</style>
+{% block content %}
 
     <div class="wrapper">
         <nav id="sidebar" class="small">
@@ -46,7 +57,7 @@
                         <form method="POST" action="">
                             {% csrf_token %}
                                         {{form.media}}
-                        <div class="navbar"><h2>Edytuj spotkanie:</h2></div>
+                        <div class="navbar"><h2>Edytuj wydarzenie:</h2></div>
                         <hr class="hr">
                         <div class="modal-body">
                             {% for field in form %}
@@ -207,8 +218,56 @@
                });
         });
     </script>
+    <script>
+    $(document).ready( function(e) {
+            const fetchURL = "/retrieve_google_contacts";
+            fetch(fetchURL)
+                  .then((response) => {return response.json();})
+                  .then((body) => {
+                    console.log(body);
+                    const words = "{{ meeting.with_who }}".split("|");
+                    console.log("{{ meeting.with_who }}")
+                    console.log(words)
+
+                    var selector = document.getElementsByName('with_who')[0];
+                    var arr = [];
+                    if(body.msg == 'success') {
+                        for(let contact of body.data){
+                            var opt = document.createElement('option');
+                            var i = contact.name;
+                            opt.value = i;
+                            opt.innerHTML = i;
+                            selector.appendChild(opt);
+                            arr.push(i);
+                        }
+                    }
+                    for(let word of words) {
+                        if(arr.includes(word)) {
+                          continue;
+                        }
+                        var opt = document.createElement('option');
+                        var i = word;
+                        opt.value = i;
+                        opt.innerHTML = i;
+                        selector.appendChild(opt);
+                    }
+                    $('.js-example-basic-multiple').val(words).change()
+
+                    });
+            $('.js-example-basic-multiple').select2({
+                  tags: true,
+                  language: {
+                      noResults: function (params) {
+                        return "Nie znaleziono kontaktów.";
+                      }
+                    }
+                  });
+
+    });
+  </script>
 
         <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/autocomplete_localization.js' %}" ></script>
 
 {% endblock %}
 

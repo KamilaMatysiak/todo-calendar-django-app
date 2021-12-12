@@ -50,7 +50,7 @@ def task_list(request, pk=None):
             form.save()
         return redirect('/')
 
-    context = {"categories": categories, "tasks": tasks, 'form': form}
+    context = {"categories": categories, "tasks": tasks, 'form': form, 'API_KEY': settings.GOOGLE_API_KEY}
     if pk is not None:
         context["task_pk"] = pk
     return render(request, 'tasks/task-list.html', context)
@@ -154,7 +154,8 @@ class AddTaskView(BSModalCreateView):
             destination = geolocator.geocode(destination_)
             obj.l_lat = destination.latitude
             obj.l_lon = destination.longitude
-        print(obj.user)
+        with_who = self.request.POST.getlist("with_who")
+        obj.with_who = "|".join(with_who)
         if form.cleaned_data.get('for_who') != "":
             for x in User.objects.all():
                 if x.username == form.cleaned_data.get('for_who'):
@@ -182,6 +183,19 @@ class EditTaskView(BSModalUpdateView):
     success_url = reverse_lazy('list')
 
     @xframe_options_exempt
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        if obj.localization:
+            geolocator = Nominatim(user_agent='measurements')
+            destination_ = form.cleaned_data.get('localization')
+            destination = geolocator.geocode(destination_)
+            obj.l_lat = destination.latitude
+            obj.l_lon = destination.longitude
+        with_who = self.request.POST.getlist("with_who")
+        obj.with_who = "|".join(with_who)
+        return super(EditTaskView, self).form_valid(form)
+
     def get_object(self, queryset=None):
         obj = super(EditTaskView, self).get_object()
         if not obj.user == self.request.user:
@@ -193,6 +207,11 @@ class EditTaskView(BSModalUpdateView):
         kwargs['user'] = self.request.user
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        return context
 
 class DeleteTaskView(BSModalDeleteView):
     template_name = 'tasks/delet.html'
@@ -247,7 +266,7 @@ def finishTask(request):
     else:
         print("saving to false")
         task.complete = False
-    print("im working!")
+
     task.save()
     return HttpResponse('')
 
