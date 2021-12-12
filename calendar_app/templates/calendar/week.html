@@ -166,7 +166,7 @@
                             <a href="{% url 'edit_meeting' meeting.0.id %}">
                             <div class="event table-event {{meeting.0.color}}"
                              style="left: {% offset meeting %}%; width: {{meeting.2}}%; height: {{meeting.1|get_meeting_span}}px;">
-                            {%if meeting.1 > 1%}
+                            {%if meeting.1 > 2 %}
                                 <div class="info">
                                     <h1 style="font-weight: 500;">{{meeting.0.title}}</h1>
                                     <p>{{meeting.0.description}}</p>

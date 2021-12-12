@@ -98,10 +98,7 @@ def get_context(year, month, day, user):
     for i in range(24):
         timetable.append((f"{i}"":00", []))
         for j in range(15, 60, 15):
-            if j % 30 == 0:
-                timetable.append((f"{i}:{j}", []))
-            else:
-                timetable.append(("", []))
+            timetable.append(("", []))
 
     for m in get_meetings(all_events, date):
         interval = m.time_start.hour * 4 + m.time_start.minute // 15
@@ -112,10 +109,7 @@ def get_context(year, month, day, user):
     for i in range(24):
         week_timetable.append((f"{i}"":00", [[], [], [], [], [], [], []]))
         for j in range(15, 60, 15):
-            if j % 30 == 0:
-                week_timetable.append((f"{i}:{j}", [[], [], [], [], [], [], []]))
-            else:
-                week_timetable.append(("", [[], [], [], [], [], [], []]))
+            week_timetable.append(("", [[], [], [], [], [], [], []]))
 
     for i, (week_day, week_meetings) in enumerate(current_week):
         for m in week_meetings:

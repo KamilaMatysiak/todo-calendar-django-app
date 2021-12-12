@@ -47,7 +47,7 @@ def passed(meeting):
 
 @register.filter
 def get_meeting_span(meeting):
-    return meeting * 40
+    return meeting * 20
 
 
 @register.simple_tag
