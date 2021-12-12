@@ -188,11 +188,7 @@ def get_context(year, month, day, user):
             width = 0
             meetings_widths.append(width)
 
-
-
-
-
-
+    scrollPos = int(now.hour) * 80
 
     context = {
         "all_events": all_events,
@@ -217,6 +213,7 @@ def get_context(year, month, day, user):
         "tt_width": tt_width,
         "wtt_width": wtt_width,
         "week": current_week,
+        "scrollPos": scrollPos,
     }
 
     return context

@@ -153,7 +153,7 @@
             {% endfor %}
         </div>
 
-        <div class="tt-container" style="max-height: 75vh;">
+        <div class="tt-container" id="tt-scroll" style="max-height: 75vh;">
             <div>
             {% for hour, week_meetings in wtt_width %}
                 <div style="display: flex;">
@@ -187,11 +187,12 @@
                     <div class="cell"></div>
                     {%endif%}
                 {% endfor %}
-</div>
+                </div>
             {% endfor %}
 
+            </div>
         </div>
-        </div>
+    </div>
 </div>
 
     <script type="text/javascript">
@@ -218,10 +219,12 @@
                 $('.collapse.in').toggleClass('in');
                 $('a[aria-expanded=true]').attr('aria-expanded', 'false');
             });
+
+            document.getElementById("tt-scroll").scrollTo(0,{{scrollPos}});
+
         });
     </script>
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
     {{form.media}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script><script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
-
 {% endblock %}

@@ -143,7 +143,7 @@
         </nav>
         <hr>
 
-        <div class="tt-container">
+        <div class="tt-container" id="tt-scroll">
             {% for hour, meetings in tt_width %}
                 <div style="display: flex;">
                 <div class="hour-column"><p>{{hour}}</p></div>
@@ -204,6 +204,8 @@
             $('.collapse.in').toggleClass('in');
             $('a[aria-expanded=true]').attr('aria-expanded', 'false');
         });
+
+        document.getElementById("tt-scroll").scrollTo(0,{{scrollPos}});
 
         $('#importCalendar').on('click', function () {
             const fetchURL = "/calendar/import_google_calendar_data";
