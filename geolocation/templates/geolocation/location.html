@@ -168,6 +168,29 @@
             }
         };
 
+        function zoomIn() {
+            var mi = {{marker_id}};
+            console.log(mi);
+            if(mi) {
+                for (var i=0; i < tasks.length; ++i ){
+                    var markerID = tasks[i][0];
+                    if (markerID == mi) {
+                        task_markers[i].openPopup()
+                        map.flyTo([tasks[i][1], tasks[i][2]],16);
+                    }
+                }
+
+                for (var i=0; i < events.length; ++i ){
+                    var markerID = events[i][0];
+                    if (markerID == mi) {
+                        event_markers[i].openPopup()
+                        map.flyTo([event[i][1], event[i][2]],16);
+                    }
+                }
+            }
+            else { console.log("fok");}
+        }
+
         function update_position(latitude, longitude) {
             if (!user_location) {
                 user_location = L.marker([latitude,longitude]).bindTooltip("Tu jesteś").addTo(map);
@@ -212,6 +235,7 @@
                         tileLayer.addTo(map);
                         load_tasks();
                         load_events();
+                        zoomIn();
                     }
                     console.log(`Latitude : ${crd.latitude}`);
                     console.log(`Longitude: ${crd.longitude}`);

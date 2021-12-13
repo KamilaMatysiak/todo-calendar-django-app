@@ -35,18 +35,8 @@ def location(request, pk=None):
         .html file with a map of user starting point and places with task assigned to them
 
     """
-    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-    if is_ajax:
-        if request.method == 'POST':
-            data = json.load(request)
-            n_lat = data.get('lat')
-            n_lon = data.get('lon')
-            if n_lat != lat or n_lon != lon:
-                lat = n_lat
-                lon = n_lon
-                return redirect('location-2', n_lat, n_lon)
-        else:
-            return HttpResponse(json.dumps([{'lat': lat, 'lon': lon}]))
+
+
 
     tasks = (x for x in Task.objects.all() if x.user == request.user)
     events = (x for x in Meeting.objects.all() if x.user == request.user)
@@ -76,6 +66,8 @@ def location(request, pk=None):
         'tasks_data': tasks_data,
         'event_data': event_data
     }
+    if pk is not None:
+        context["marker_id"] = pk
 
     t = loader.get_template('geolocation/location.html')
     return HttpResponse(t.render(context, request))

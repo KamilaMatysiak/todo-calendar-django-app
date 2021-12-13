@@ -108,7 +108,7 @@
                                         {{task |to_datetime |timeuntil}}
                                     {% endif %}
                             </p>
-                            {% if task.localization %}<p>∙</p><a href="/location/{{ task.l_lat}}_{{ task.l_lon }}"><p>{{task.localization}}</p></a>{% endif %}
+                            {% if task.localization %}<p>∙</p><a href="/location/{{ task.id}} got"><p>{{task.localization}}</p></a>{% endif %}
                             {% if task.with_who %}<p>∙</p><p>{{task.with_who|get_contacts}}</p>{% endif %}
                             {% if task.from_who %}<p>∙</p><p>Od <strong>{{task.from_who}}</strong></p>{% endif %}</div>
                         </div>
