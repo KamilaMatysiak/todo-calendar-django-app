@@ -84,6 +84,25 @@ text-decoration: none;
     color: #E47676;
 }
 
+
+.searchbar {
+    width: 90vw;
+    margin: 5px auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.searchbar .form-control {
+    flex: 1;
+}
+
+.search {
+    padding: 10px 20px;
+    min-height: calc(1.5em + 0.75rem + 2px);
+    max-height: calc(1.5em + 0.75rem + 2px);
+    margin: auto 5px;
+}
+
 .cancel-button {
     font-size: 0.7em;
     color: #2F9CEB;
@@ -526,7 +545,7 @@ text-decoration: none;
     left: -100%;
     height: auto;
     min-height: 100%;
-    z-index: 999;
+    z-index: 9999999 !important;
     background: #fff;
     color: #111;
     transition: all 0.3s;

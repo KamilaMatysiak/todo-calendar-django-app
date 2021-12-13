@@ -24,6 +24,8 @@ class Meeting(models.Model):
 
     with_who = models.CharField(null=True, max_length=200)
     localization = models.CharField(null=True, max_length=200)
+    l_lat = models.DecimalField(max_digits=15, decimal_places=10, blank=True, null=True, default=None)
+    l_lon = models.DecimalField(max_digits=15, decimal_places=10, blank=True, null=True, default=None)
 
     def __str__(self):
         return self.title
