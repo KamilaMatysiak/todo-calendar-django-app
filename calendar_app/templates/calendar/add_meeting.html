@@ -3,11 +3,15 @@
 {{form.media}}
 {%load static%}
 
-
+<style>
+.modal:focus { z-index: 1001 !important;}
+.modal-backdrop {z-index: 1000 !important;}
+.pac-container {z-index: 1055 !important;}
+</style>
 <form method="post" action="">
       {% csrf_token %}
      <div class="modal-header">
-        <h5 class="modal-title">Dodaj spotkanie</h5>
+        <h5 class="modal-title">Dodaj wydarzenie</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -46,6 +50,7 @@
 
     </form>
 
+    <script type="text/javascript" src="{% static 'js/autocomplete_localization.js' %}" ></script>
     <script type="text/javascript">
         function validate() {
             var start = $('#id_date_start').data("DateTimePicker");
@@ -89,5 +94,40 @@
             $("#id_time_end").on("dp.change", function (e) {
                validate();
                });
+
+            document.getElementsByClassName("dismissButton").onclick(function() {
+              $('.pac-container').style.display = "none";
+            });
         });
     </script>
+    <script>
+
+        $(document).ready( function(e) {
+                const fetchURL = "/retrieve_google_contacts";
+                fetch(fetchURL)
+                      .then((response) => {return response.json();})
+                      .then((body) => {
+                        console.log(body);
+                        if(body.msg == 'success') {
+                            var selector = document.getElementsByName('with_who')[0];
+                            for(let contact of body.data){
+                                var opt = document.createElement('option');
+                                var i = contact.name;
+                                opt.value = i;
+                                opt.innerHTML = i;
+                                selector.appendChild(opt);
+                            }
+                        }
+                        });
+                $('.js-example-basic-multiple').select2({
+                    tags: true,
+                    language: {
+                          noResults: function (params) {
+                            return "Nie znaleziono kontaktów.";
+                          }
+                        }
+                    });
+
+        });
+    </script>
+

@@ -47,7 +47,7 @@ def passed(meeting):
 
 @register.filter
 def get_meeting_span(meeting):
-    return meeting * 40
+    return meeting * 20
 
 
 @register.simple_tag
@@ -136,3 +136,14 @@ def get_meetings(dict, date):
         return dict[date]
     else:
         return []
+
+@register.filter
+def get_contacts(list):
+    contacts = list.split("|")
+    count = len(contacts)
+    if count < 2:
+        message = contacts[0]
+    else:
+        message = f"{contacts[0]} + {count-1}"
+    return message
+

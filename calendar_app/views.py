@@ -98,10 +98,7 @@ def get_context(year, month, day, user):
     for i in range(24):
         timetable.append((f"{i}"":00", []))
         for j in range(15, 60, 15):
-            if j % 30 == 0:
-                timetable.append((f"{i}:{j}", []))
-            else:
-                timetable.append(("", []))
+            timetable.append(("", []))
 
     for m in get_meetings(all_events, date):
         interval = m.time_start.hour * 4 + m.time_start.minute // 15
@@ -112,10 +109,7 @@ def get_context(year, month, day, user):
     for i in range(24):
         week_timetable.append((f"{i}"":00", [[], [], [], [], [], [], []]))
         for j in range(15, 60, 15):
-            if j % 30 == 0:
-                week_timetable.append((f"{i}:{j}", [[], [], [], [], [], [], []]))
-            else:
-                week_timetable.append(("", [[], [], [], [], [], [], []]))
+            week_timetable.append(("", [[], [], [], [], [], [], []]))
 
     for i, (week_day, week_meetings) in enumerate(current_week):
         for m in week_meetings:
@@ -178,7 +172,6 @@ def get_context(year, month, day, user):
                     wtt_width[i][1][day_number][y] = (cell, get_span(cell), 100 // len(x[day_number]), y)
             while len(x) < max_week_width[day_number]:
                 x.append("empty")
-    print("cry")
 
 
 
@@ -195,11 +188,7 @@ def get_context(year, month, day, user):
             width = 0
             meetings_widths.append(width)
 
-
-
-
-
-
+    scrollPos = int(now.hour) * 80
 
     context = {
         "all_events": all_events,
@@ -224,6 +213,7 @@ def get_context(year, month, day, user):
         "tt_width": tt_width,
         "wtt_width": wtt_width,
         "week": current_week,
+        "scrollPos": scrollPos,
     }
 
     return context
@@ -339,7 +329,8 @@ class AddEventView(BSModalCreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.user = self.request.user
-
+        with_who = self.request.POST.getlist("with_who")
+        obj.with_who = "|".join(with_who)
         if self.request.is_ajax():
             try:
                 service = construct_service(obj.user)
@@ -459,6 +450,9 @@ def edit_meeting(request, pk):
     if request.method == 'POST':
         form = EventModelForm(request.POST, instance=meeting, request=request)
         if form.is_valid():
+            obj = form.save(commit=False)
+            with_who = request.POST.getlist("with_who")
+            obj.with_who = "|".join(with_who)
             form.save()
             return redirect('/calendar')
 
