@@ -6,8 +6,8 @@ from . import views
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    url('^(?P<lat>\d+\.?\d*)_(?P<lon>\d+\.?\d*)$', views.location, name="location-2"),
-    path('', views.start, name="location"),
+    path('', views.location, name="location"),
+    path('<str:pk>', views.location, name="location"),
     path('webpush/', include('webpush.urls')),
     path('serviceworker.js', TemplateView.as_view(template_name='serviceworker.js', content_type='application/x'
                                                                                                   '-javascript')),

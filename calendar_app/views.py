@@ -18,6 +18,9 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2.credentials import Credentials
 from allauth.socialaccount.models import SocialToken
+from geopy.geocoders import Nominatim
+from tasks.utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
+from geopy.distance import geodesic
 
 from .custom_variables import colors_event, colors_calendar, months, timezone, vtodo_colors_event
 
@@ -329,6 +332,12 @@ class AddEventView(BSModalCreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.user = self.request.user
+        if obj.localization:
+            geolocator = Nominatim(user_agent='measurements')
+            destination_ = form.cleaned_data.get('localization')
+            destination = geolocator.geocode(destination_)
+            obj.l_lat = destination.latitude
+            obj.l_lon = destination.longitude
         with_who = self.request.POST.getlist("with_who")
         obj.with_who = "|".join(with_who)
         if self.request.is_ajax():
@@ -451,6 +460,12 @@ def edit_meeting(request, pk):
         form = EventModelForm(request.POST, instance=meeting, request=request)
         if form.is_valid():
             obj = form.save(commit=False)
+            if obj.localization:
+                geolocator = Nominatim(user_agent='measurements')
+                destination_ = form.cleaned_data.get('localization')
+                destination = geolocator.geocode(destination_)
+                obj.l_lat = destination.latitude
+                obj.l_lon = destination.longitude
             with_who = request.POST.getlist("with_who")
             obj.with_who = "|".join(with_who)
             form.save()
