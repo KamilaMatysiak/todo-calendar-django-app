@@ -84,6 +84,25 @@ text-decoration: none;
     color: #E47676;
 }
 
+
+.searchbar {
+    width: 90vw;
+    margin: 5px auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.searchbar .form-control {
+    flex: 1;
+}
+
+.search {
+    padding: 10px 20px;
+    min-height: calc(1.5em + 0.75rem + 2px);
+    max-height: calc(1.5em + 0.75rem + 2px);
+    margin: auto 5px;
+}
+
 .cancel-button {
     font-size: 0.7em;
     color: #2F9CEB;
@@ -778,7 +797,7 @@ margin: 0 auto;}
 
 .hour-column p {
     padding: 5px;
-    font-size: 10px;
+    font-size: 8px;
 }
 
 .weekdays {
