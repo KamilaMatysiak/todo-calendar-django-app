@@ -202,7 +202,7 @@ class EditTaskView(BSModalUpdateView):
         return super(EditTaskView, self).form_valid(form)
 
     def get_object(self, queryset=None):
-        obj = supr(EditTaskView, self).get_object()
+        obj = super(EditTaskView, self).get_object()
         if not obj.user == self.request.user:
             raise Http404
         return obj
