@@ -58,16 +58,17 @@ def location(request, lat, lon):
     tasks = (x for x in Task.objects.all() if x.user == request.user)
 
     color = {
-        'H': 'red',
-        'J': 'orange',
-        'L': 'lightgray',
-        'N': 'white'
+        'H': 'hue-rotate(150deg)',
+        'J': 'saturate(0.9) sepia(0.07) brightness(1.5) contrast(3) hue-rotate(254deg)',
+        'L': 'hue-rotate(270deg)',
+        'N': 'grayscale(1) brightness(1.5)'
     }
-
+    tasks_data =[]
     for x in tasks:
         if x.l_lon and x.l_lat:
             path = "/task-list/" + str(x.id)
-            html = f"<strong>{x.title}</strong> <br>{x.localization}<br>{x.date}<br><a style='color: #2F9CEB; width: 100%;' target='_blank' href='{path}'>Zobacz zadanie</a>"
+            html = f"<div><strong>{x.title}</strong> <br>{x.localization}<br>{x.date}<br><a style='color: #2F9CEB; width: 100%;' target='_blank' href='{path}'>Zobacz zadanie</a></div>"
+            tasks_data.append([str(x.id), str(x.l_lat), str(x.l_lon), str(html), str(color[x.priority])])
             iframe = folium.IFrame(html=html, width=200, height=200)
             popup = folium.Popup(max_width=2650, html=html)
 
@@ -80,9 +81,8 @@ def location(request, lat, lon):
     # distance = None
 
     context = {
-        'lat': lat,
-        'lon': lon,
-        'map': m
+        'tasks': tasks,
+        'tasks_data': tasks_data
     }
 
     t = loader.get_template('geolocation/location.html')
