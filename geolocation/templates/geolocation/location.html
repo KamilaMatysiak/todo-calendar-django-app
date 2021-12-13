@@ -149,6 +149,7 @@
         };
 
         function zoomIn() {
+            {% if marker_id %}
             var mi = {{marker_id}};
             console.log(mi);
             if(mi) {
@@ -168,7 +169,7 @@
                     }
                 }
             }
-            else { console.log("fok");}
+            {% endif %}
         }
 
         function update_position(latitude, longitude) {
