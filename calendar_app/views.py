@@ -196,11 +196,6 @@ def get_context(year, month, day, user):
             meetings_widths.append(width)
 
 
-
-
-
-
-
     context = {
         "all_events": all_events,
         "now": now,

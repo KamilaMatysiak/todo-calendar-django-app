@@ -46,6 +46,7 @@ class Task(models.Model):
         choices=Priorities,
         default=None_priority
     )
+    ciclical = models.BooleanField(default=False)
     complete = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, default=1)

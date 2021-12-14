@@ -165,6 +165,15 @@ class AddTaskView(BSModalCreateView):
                     obj.accepted = False
                     return super(AddTaskView, self).form_valid(form)
             return Http404
+        if form.cleaned_data.get('cyclical') == True:
+            if form.cleaned_data.get('cyclical') == 'h':
+                if form.cleaned_data.get('cyclical') == 'h':
+                    obj.cyclical = form.cleaned_data.get('cyclical_week_days_how_often') + 'h' + 'h' + form.cleaned_data.get('cyclical_week_days')
+                else:
+                    obj.cyclical = form.cleaned_data.get('cyclical_number') + 'h' + form.cleaned_data.get('cyclicals_irregular')
+            else:
+                obj.cyclical = form.cleaned_data.get('cyclical_number') + form.cleaned_data.get('cyclicals_regular')
+
         return super(AddTaskView, self).form_valid(form)
 
 

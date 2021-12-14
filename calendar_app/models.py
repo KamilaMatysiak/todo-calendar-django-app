@@ -21,6 +21,7 @@ class Meeting(models.Model):
     date_end = models.DateField(default=datetime.now)
     time_end = models.TimeField(default=datetime.now)
     color = models.CharField(default="blue", max_length=50)
+    cyclical = models.CharField(max_length=20, blank=True, null=True)
 
 
     def __str__(self):

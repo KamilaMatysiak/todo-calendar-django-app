@@ -20,6 +20,31 @@ class EventModelForm(BSModalModelForm):
 
     color = forms.CharField(label="Kolor", widget=forms.RadioSelect(choices=COLORS), initial="blue")
 
+    cyclicals_regular = (('d', 'codziennie'), 
+                        ('w', 'co tydzień'), 
+                        ('m', 'co miesiąc'), 
+                        ('y', 'co roku'),
+                        ('h', 'dostosuj'))
+    cyclicals_irregular = (('d', 'dni'),
+                        ('w', 'tygodni'),
+                        ('m', 'miesięcy'),
+                        ('y', 'lat'),
+                        ('h', 'Wybierz konkretne dni tygodnia'))
+    cyclical_week_days = (('m', 'pn'),
+                        ('t', 'wt'), 
+                        ('w', 'śr'),
+                        ('r', 'czw'), 
+                        ('f', 'pt'),
+                        ('s', 'so'),
+                        ('n', 'nd'))
+
+    cyclical = forms.BooleanField(initial=False)
+    cyclical_number = forms.CharField(initial=1)
+    cyclical_regular = forms.ChoiceField(choices=cyclicals_regular)
+    cyclicals_irregular = forms.ChoiceField(choices=cyclicals_irregular)
+    cyclical_week_days_how_often = cyclical_number = forms.CharField(initial=1)
+    cyclical_irregular_week_days = forms.MultipleChoiceField(choices=cyclical_week_days)
+
     class Meta:
         model = Meeting
         fields = ['color', 'title', 'description', 'date_start', 'time_start', 'time_end', 'date_end']
