@@ -96,8 +96,9 @@ def construct_people_service(user):
 @login_required
 def profile(request):
 
-    userProfile, costam = UserProfile.objects.get_or_create(user=request.user,
-                                                            firstname=request.user.first_name + ' ' + request.user.last_name)
+    #userProfile, costam = UserProfile.objects.get_or_create(user=request.user,
+    #                                                        firstname=request.user.first_name + ' ' + request.user.last_name)
+    userProfile, costam = UserProfile.objects.get_or_create(user=request.user)
     print(userProfile)
     print(costam)
     if costam:
