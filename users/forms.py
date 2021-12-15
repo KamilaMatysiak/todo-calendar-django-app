@@ -10,6 +10,7 @@ from bootstrap_datepicker_plus import DatePickerInput
 from phonenumber_field.formfields import PhoneNumberField
 
 
+
 class UserRegisterForm(PopRequestMixin, CreateUpdateAjaxMixin, UserCreationForm):
     password1 = forms.CharField(max_length=16, widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': 'Podaj hasło', 'data-toggle': 'password'}),
