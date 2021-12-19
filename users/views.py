@@ -96,11 +96,8 @@ def construct_people_service(user):
 @login_required
 def profile(request):
 
-    #userProfile, costam = UserProfile.objects.get_or_create(user=request.user,
-    #                                                        firstname=request.user.first_name + ' ' + request.user.last_name)
     userProfile, costam = UserProfile.objects.get_or_create(user_id=request.user.id)
-    #print(userProfile)
-    #print(costam)
+
     if costam:
 
         google_user = SocialAccount.objects.filter(user=request.user).first()
@@ -117,6 +114,11 @@ def profile(request):
                 phone = res['phoneNumbers'][0]['canonicalForm']
                 print(phone)
                 userProfile.phonenumber = phone
+                userProfile.save()
+            if res.get('names', None):
+                full_name = res['names'][0]['displayName']
+                print(full_name)
+                userProfile.firstname = full_name
                 userProfile.save()
 
     return render(request, 'users/profile.html', {'userProfile': userProfile})
