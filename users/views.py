@@ -118,6 +118,11 @@ def profile(request):
                 print(phone)
                 userProfile.phonenumber = phone
                 userProfile.save()
+            if res.get('names', None):
+                full_name = res['names'][0]['displayName']
+                print(full_name)
+                userProfile.firstname = full_name
+                userProfile.save()
 
     return render(request, 'users/profile.html', {'userProfile': userProfile})
 
