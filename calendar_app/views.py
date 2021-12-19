@@ -24,11 +24,13 @@ from geopy.distance import geodesic
 
 from .custom_variables import colors_event, colors_calendar, months, timezone, vtodo_colors_event
 
+
 def get_meetings(dict, date):
     if date in dict:
         return dict[date]
     else:
         return []
+
 
 def get_context(year, month, day, user):
     meetings = Meeting.objects.filter(user=user)
@@ -96,7 +98,6 @@ def get_context(year, month, day, user):
         week_day = date + timedelta(days=i)
         current_week.append((week_day, get_meetings(all_events, week_day)))
 
-
     timetable = []
     for i in range(24):
         timetable.append((f"{i}"":00", []))
@@ -106,7 +107,6 @@ def get_context(year, month, day, user):
     for m in get_meetings(all_events, date):
         interval = m.time_start.hour * 4 + m.time_start.minute // 15
         timetable[interval][1].append(m)
-
 
     week_timetable = []
     for i in range(24):
@@ -118,7 +118,6 @@ def get_context(year, month, day, user):
         for m in week_meetings:
             interval = m.time_start.hour * 4 + m.time_start.minute // 15
             week_timetable[interval][1][i].append(m)
-
 
     max_width = 1
     tt_width = [["", []] for i in range(24 * 60 // 15)]
@@ -135,7 +134,7 @@ def get_context(year, month, day, user):
             tt_width[index][1].append(event)
             for j in range(1, length):
                 if (index + j) < len(tt_width):
-                    while len(tt_width[index + j][1]) < i-1:
+                    while len(tt_width[index + j][1]) < i - 1:
                         tt_width[index + j][1].append("temp")
                     tt_width[index + j][1].append("busy")
         if len(tt_width[index][1]) > max_width:
@@ -148,8 +147,8 @@ def get_context(year, month, day, user):
         while len(x) < max_width:
             x.append("empty")
 
-    max_week_width = [1,1,1,1,1,1,1]
-    wtt_width = [["", [[],[],[],[],[],[],[]]] for i in range(24 * 60 // 15)]
+    max_week_width = [1, 1, 1, 1, 1, 1, 1]
+    wtt_width = [["", [[], [], [], [], [], [], []]] for i in range(24 * 60 // 15)]
     for day_number in range(len(current_week)):
         for index, (label, time_periods) in enumerate(week_timetable):
             wtt_width[index][0] = label
@@ -163,7 +162,7 @@ def get_context(year, month, day, user):
                 wtt_width[index][1][day_number].append(event)
                 for j in range(1, length):
                     if (index + j) < len(wtt_width):
-                        while len(wtt_width[index + j][1][day_number]) < i-1:
+                        while len(wtt_width[index + j][1][day_number]) < i - 1:
                             wtt_width[index + j][1][day_number].append("temp")
                         wtt_width[index + j][1][day_number].append("busy")
             if len(wtt_width[index][1][day_number]) > max_week_width[day_number]:
@@ -176,13 +175,10 @@ def get_context(year, month, day, user):
             while len(x) < max_week_width[day_number]:
                 x.append("empty")
 
-
-
-
     meetings_widths = [["", []] for i in range(24 * 60 // 15)]
     for x, m in timetable:
         if len(m) > 1:
-            width = 100/len(m)
+            width = 100 / len(m)
             meetings_widths.append(width)
         elif len(m) == 1:
             width = 100
@@ -217,9 +213,11 @@ def get_context(year, month, day, user):
         "wtt_width": wtt_width,
         "week": current_week,
         "scrollPos": scrollPos,
+        'API_KEY': settings.GOOGLE_API_KEY,
     }
 
     return context
+
 
 @login_required
 def home(request, year, month, day):
@@ -350,6 +348,7 @@ class AddEventView(BSModalCreateView):
                 print("Error is", e)
         return super(AddEventView, self).form_valid(form)
 
+
 class AddNoteView(BSModalCreateView):
     template_name = 'calendar/add_note.html'
     form_class = NoteModelForm
@@ -366,6 +365,7 @@ class AddNoteView(BSModalCreateView):
         self.success_url = reverse_lazy("edit_meeting", args=[obj.meeting.id])
         return super(AddNoteView, self).form_valid(form)
 
+
 class EditNoteView(BSModalUpdateView):
     model = Notes
     template_name = 'calendar/edit_note.html'
@@ -379,6 +379,7 @@ class EditNoteView(BSModalUpdateView):
             raise Http404
         return obj
 
+
 class DeleteNoteView(BSModalDeleteView):
     template_name = 'calendar/delete_note.html'
     model = Notes
@@ -390,6 +391,7 @@ class DeleteNoteView(BSModalDeleteView):
         if not obj.user == self.request.user:
             raise Http404
         return obj
+
 
 @login_required
 def import_google_calendar_data(request):
@@ -478,10 +480,17 @@ def edit_meeting(request, pk):
 
     notes = [x for x in Notes.objects.all() if x.user == request.user]
 
-
-    context = {'form': form, 'id': pk, 'meeting': meeting, 'tasks': tasks, 'count': count, 'notes': notes}
+    context = {
+        'form': form,
+        'id': pk,
+        'meeting': meeting,
+        'tasks': tasks,
+        'count': count,
+        'notes': notes,
+        'API_KEY': settings.GOOGLE_API_KEY}
 
     return render(request, 'calendar/edit_meeting.html', context)
+
 
 class ConnectTaskView(BSModalUpdateView):
     model = Meeting
@@ -513,10 +522,10 @@ class ConnectTaskView(BSModalUpdateView):
             task.save()
         return HttpResponseRedirect(self.get_success_url())
 
-
     def form_invalid(self, form):
         """If the form is invalid, render the invalid form."""
         return self.form_valid(form)
+
 
 def delete_meeting(request, pk):
     item = Meeting.objects.get(id=pk)
