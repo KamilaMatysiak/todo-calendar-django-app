@@ -164,18 +164,29 @@
                         {% for meeting in day %}
                             {% if meeting|check_cell %}
                             <a href="{% url 'edit_meeting' meeting.0.id %}">
-                            <div class="event table-event {{meeting.0.color}}"
+                            <div class="event table-event week-table {{meeting.0.color}}"
                              style="left: {% offset meeting %}%; width: {{meeting.2}}%; height: {{meeting.1|get_meeting_span}}px;">
                             {%if meeting.1 > 2 %}
                                 <div class="info">
-                                    <h1 style="font-weight: 500;">{{meeting.0.title}}</h1>
-                                    <p>{{meeting.0.description}}</p>
+                                    <h1 class="week-title">{{meeting.0.title}}</h1>
+                                    <div class="info">
+                                    <p>{{meeting.0.time_start |date:"H:i"}} - {{meeting.0.time_end |date:"H:i"}}</p>
+                                        </div>
+
                                 </div>
-                                <div class="date">{{meeting.0.time_start |date:"H:i"}} - {{meeting.0.time_end |date:"H:i"}}</div>
+                            {% elif meeting.1 > 1 %}
+                            <div class="medium-info">
+                                <div class="info">
+                                    <h1 class="week-title">{{meeting.0.title}}</h1>
+                                    <div class="info">
+                                    <p>{{meeting.0.time_start |date:"H:i"}} - {{meeting.0.time_end |date:"H:i"}}</p>
+                                    </div>
+                                </div>
+                            </div>
                             {% else %}
                             <div class="small-info">
-                                <h1 style="font-weight: 500;">{{meeting.0.title}}</h1>
-                                <div class="date">{{meeting.0.time_start |date:"H:i"}} - {{meeting.0.time_end |date:"H:i"}}</div>
+                                <h1 class="week-title">{{meeting.0.title}}</h1>
+                                <p>{{meeting.0.time_start |date:"H:i"}} - {{meeting.0.time_end |date:"H:i"}}</p>
                             </div>
                             {% endif %}
                         </div>

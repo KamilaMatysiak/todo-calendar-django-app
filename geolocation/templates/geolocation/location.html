@@ -55,6 +55,7 @@
         <nav class="navbar">
         <div class="left">
             <h1>Lokalizacja</h1>
+            <img id="warning-info" src="{% static 'image/icons/nogps-icon.svg' %}">
         </div>
         <div class="right">
         <div class="modal fade" tabindex="-1" role="dialog" id="modal">
@@ -78,12 +79,11 @@
             <i class="bi bi-search"></i>
           </button>
         </div>
-        <div id="map-div" style="width: 90vw; height: 78vh; margin: auto;"></div>
+        <div id="map-div" style="width: 85vw; height: 78vh; margin: auto;"></div>
     </div>
 
 
 </div>
-
     <script type="text/javascript">
         $(document).ready(function () {
             $("#mobile-sidebar").mCustomScrollbar({
@@ -202,28 +202,50 @@
 
         function error(err) {
             console.warn(`ERROR(${err.code}): ${err.message}`);
+            document.getElementById("warning-info").style.display = "block";
+            if (!map) {
+
+                map = L.map('map-div').setView([52.29541804778165, 19.4519922035855], 6);
+                var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                });
+
+                tileLayer.addTo(map);
+                load_tasks();
+                load_events();
+                zoomIn();
+            }
         }
 
-                function success(pos) {
-                    var crd = pos.coords;
-                    if (!map) {
-                        map = L.map('map-div').setView([crd.latitude, crd.longitude], 13);
-                        var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            maxZoom: 19,
-                            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                        });
+        function success(pos) {
+            var crd = pos.coords;
+            if (!map) {
+                if(!crd) {
+                    map = L.map('map-div').setView([0, 0], 13);
+                }
+                else {
+                    console.log(crd.latitude, crd.longitude);
+                    map = L.map('map-div').setView([crd.latitude, crd.longitude], 13);
+                }
 
-                        tileLayer.addTo(map);
-                        load_tasks();
-                        load_events();
-                        zoomIn();
-                    }
-                    console.log(`Latitude : ${crd.latitude}`);
-                    console.log(`Longitude: ${crd.longitude}`);
-                    update_position(crd.latitude, crd.longitude)
 
-                };
-                const watchPosition = navigator.geolocation.watchPosition(success, error, options);
+                var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                });
+
+                tileLayer.addTo(map);
+                load_tasks();
+                load_events();
+                zoomIn();
+            }
+            console.log(`Latitude : ${crd.latitude}`);
+            console.log(`Longitude: ${crd.longitude}`);
+            update_position(crd.latitude, crd.longitude)
+
+        };
+        const watchPosition = navigator.geolocation.watchPosition(success, error, options);
 
 
 

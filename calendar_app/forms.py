@@ -34,7 +34,7 @@ class EventModelForm(BSModalModelForm):
 
         }
         labels = {
-            'title': ('Nazwa spotkania'),
+            'title': ('Nazwa wydarzenia'),
             'date_start': ('Data rozpoczęcia'),
             'time_start': ('Godzina rozpoczęcie'),
             'time_end': ('Godzina zakończenia'),
