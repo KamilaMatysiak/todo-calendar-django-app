@@ -529,6 +529,27 @@ text-decoration: none;
     margin: 5px 0;
 }
 
+#importCalendar {
+    font-size: 0.9rem;
+    font-weight: 300;
+    width: 100%;
+    text-align: left;
+    padding: 5px 5%;
+    border-radius: 4px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+#importCalendar img {
+    margin: 10px;
+}
+
+#importCalendar:hover {
+    background: #f1f1f1;
+}
+
 .menu-buttons li {
     padding: 10px 15px;
 }
