@@ -397,12 +397,16 @@ class DeleteNoteView(BSModalDeleteView):
 def import_google_calendar_data(request):
     import re
 
+    def parse_google_date(data):
+        parsed = re.split(r"[TZ]", data.get('dateTime', datetime.now()))
+        _date, _time = parsed[:2]
+        if any(s in _time for s in ('+', '-')):
+            _time = re.split(r'[+-]', _time)[0]
+        return _date, _time
+
     user = request.user
     try:
         service = construct_service(user)
-
-        # colors = service.colors().get().execute()
-        # print('colors')
 
         events_result = service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z',
                                               maxResults=10, singleEvents=True,
@@ -410,8 +414,8 @@ def import_google_calendar_data(request):
         events = events_result.get('items', [])
         for event in events:
             print(event)
-            date_start, time_start, _ = re.split(r"[TZ]", event['start'].get('dateTime', datetime.now()))
-            date_end, time_end, _ = re.split(r"[TZ]", event['end'].get('dateTime', datetime.now()))
+            date_start, time_start = parse_google_date(event['start'])
+            date_end, time_end = parse_google_date(event['end'])
 
             meeting_kwargs = {
                 'user': user,
