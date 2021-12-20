@@ -54,9 +54,7 @@
                     {% endfor %}
                                 </table>
                             </div>
-                           <ul class="menu-buttons">
-                                <li class="option-dropdown"><a>Połącz z Kalendarzem Google</a></li>
-                            </ul>
+                           <button class="option-dropdown button menu-buttons" id="importCalendar"><a>Połącz z Kalendarzem Google</a></button>
         </nav>
     </nav>
 
@@ -203,6 +201,17 @@
             });
         });
 
+        $('#importCalendar').on('click', function () {
+            const fetchURL = "/calendar/import_google_calendar_data";
+            fetch(fetchURL)
+            .then((response) => {return response.json();})
+            .then((body) => {
+              console.log(body);
+              if(body.msg == "success"){
+                  location.reload();
+              }
+            })
+        });
 
     </script>
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
