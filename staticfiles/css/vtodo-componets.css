@@ -84,9 +84,8 @@ text-decoration: none;
     color: #E47676;
 }
 
-
 .searchbar {
-    width: 90vw;
+    width: 85vw;
     margin: 5px auto;
     display: flex;
     justify-content: space-between;
@@ -102,6 +101,14 @@ text-decoration: none;
     max-height: calc(1.5em + 0.75rem + 2px);
     margin: auto 5px;
 }
+
+#warning-info{
+    display: none;
+    height: 20px;
+    margin: 5px;
+
+}
+
 
 .cancel-button {
     font-size: 0.7em;
@@ -193,9 +200,6 @@ text-decoration: none;
     padding: 0;
     font-size: 0.7rem;
     width: 100%;
-    justify-self: right;
-    align-self: flex-end;
-    text-align: right;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -237,29 +241,59 @@ text-decoration: none;
 }
 
 .table-event h1 {
-    display: block;
-    width: 70%;
-    height: 90%;
     font-size: 1rem;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+    width: auto;
+}
+
+.table-event p {
+    font-size: 0.8 rem;
+    padding: 0;
+    margin: 0;
+    width: auto;
+}
+
+.table-event .small-info {
+    padding: 0;
+    margin: 0;
+    display: inline-flex !important;
+    align-items: center;
+}
+
+.table-event .small-info h1 {
+    margin: 0 10px 0 0;
+    padding: 0;
+    font-size: 1rem;
+}
+.table-event .small-info p {
+    margin: 0;
+    padding: 0;
+    font-size: 0.8rem;
+}
+
+.week-table .small-info {
+    padding: 0;
+    margin: 0;
+    display: inline-flex !important;
+    align-items: flex-start;
+}
+
+.week-table .small-info p {
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    font-size: 0.5rem;
+}
+
+.week-title {
+    display: block;
+    width: 50%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-
-.table-event .small-info {
-    width: 100%;
-    height: 90%;
-    padding: 2px;
-    display: inline-flex;
-}
-
-.table-event .small-info .date {
-    width: 70%;
-    align-self: flex-start;
-    justify-self: flex-end;
-    align-text: right;
-}
-
 
 /*---------------------
         INPUT
@@ -493,6 +527,27 @@ text-decoration: none;
     width: 100%;
     padding: 0;
     margin: 5px 0;
+}
+
+#importCalendar {
+    font-size: 0.9rem;
+    font-weight: 300;
+    width: 100%;
+    text-align: left;
+    padding: 5px 5%;
+    border-radius: 4px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+#importCalendar img {
+    margin: 10px;
+}
+
+#importCalendar:hover {
+    background: #f1f1f1;
 }
 
 .menu-buttons li {
@@ -1428,13 +1483,6 @@ PROFILE
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
-@media (max-width: 1288px) {
-
-    .table-event h1 {
-        width: 75px;
-    }
-}
-
 @media (max-width: 1024px) {
 
     .profile-panel {
@@ -1446,10 +1494,10 @@ PROFILE
         font-size: 0.9em;
     }
 
+    .table-event #loc {
+    display: none;
+}
 
-    .table-event p {
-        display: none;
-    }
 
 }
 
@@ -1673,12 +1721,26 @@ td {
     padding: 0;
 }
 
-.table-event h1 {
-    width: 50px;
+.table-event.small-info {
+    padding: 0;
+    margin: 0;
+    display: inline-flex !important;
+    align-items: flex-start;
 }
 
-.table-event p {
-    display: none;
+.table-event .small-info h1 {
+    display: block;
+    width: 50%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.table-event .small-info p {
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    font-size: 0.5rem;
 }
 
 }
