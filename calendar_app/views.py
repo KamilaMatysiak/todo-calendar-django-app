@@ -18,6 +18,8 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2.credentials import Credentials
 from allauth.socialaccount.models import SocialToken
+from dateutil import relativedelta
+import re
 
 from .custom_variables import colors_event, colors_calendar, months, timezone, vtodo_colors_event
 
@@ -26,6 +28,22 @@ def get_meetings(dict, date):
         return dict[date]
     else:
         return []
+
+def add_days(date, cycle):
+    if len(cycle) > 1:
+        number = int(cycle[1:])
+    else:
+        number = 1
+    if cycle[0] == 'd':
+        d = timedelta(days = number)
+    elif cycle[0] == 'w':
+        d = timedelta(weeks = number)
+    elif cycle[0] == 'm':
+        d = relativedelta.relativedelta(months = number)
+    elif cycle[0] == 'y':
+        d = relativedelta.relativedelta(years = number)
+    date += d
+    return(date)
 
 def get_context(year, month, day, user):
     meetings = Meeting.objects.filter(user=user)
@@ -47,6 +65,18 @@ def get_context(year, month, day, user):
             all_events[meeting_date].append(m)
         else:
             all_events[meeting_date] = [m]
+        if m.cyclical:
+            next_month = date + relativedelta.relativedelta(months=1)
+            next_month = next_month.replace(day=1)
+            if m.date_start < next_month:
+                temp_date = m.date_start
+                while temp_date < next_month:
+                    temp_date = add_days(temp_date, m.cyclical)
+                    if temp_date.month == month:
+                        if temp_date in all_events:
+                            all_events[temp_date].append(m)
+                        else:
+                            all_events[temp_date] = [m]
 
     days = []
     for d in cal.itermonthdays2(year, month):
@@ -343,6 +373,16 @@ class AddEventView(BSModalCreateView):
                              meeting_obj=obj)
             except Exception as e:
                 print("Error is", e)
+
+        if form.cleaned_data.get('cyclical') == True:
+            if form.cleaned_data.get('cyclical_regular') == 'h':
+                # if form.cleaned_data.get('cyclical_irregular') == 'h':
+                #     obj.cyclical = form.cleaned_data.get('cyclical_week_days_how_often') + 'h' + 'h' + form.cleaned_data.get('cyclical_week_days')
+                # else:
+                obj.cyclical = str(form.cleaned_data.get('cyclical_irregular')) + str(form.cleaned_data.get('cyclical_number'))
+            else:
+                obj.cyclical = str(form.cleaned_data.get('cyclical_regular'))
+            print(obj.cyclical)
         return super(AddEventView, self).form_valid(form)
 
 class AddNoteView(BSModalCreateView):
