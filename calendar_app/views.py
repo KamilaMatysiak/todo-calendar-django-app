@@ -414,8 +414,10 @@ def import_google_calendar_data(request):
         events = events_result.get('items', [])
         for event in events:
             print(event)
-            date_start, time_start = parse_google_date(event['start']) if event['start'].get('dateTime') else (event['start']['date'], '00:00:00')
-            date_end, time_end = parse_google_date(event['end']) if event['end'].get('dateTime') else (event['end']['date'], '23:59:00')
+            date_start, time_start = parse_google_date(event['start']) \
+                if event['start'].get('dateTime') else (event['start']['date'], '00:00:00')
+            date_end, time_end = parse_google_date(event['end']) \
+                if event['end'].get('dateTime') else (event['end']['date'], '23:59:00')
 
             meeting_kwargs = {
                 'user': user,
