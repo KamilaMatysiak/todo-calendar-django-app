@@ -113,10 +113,10 @@
             $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
         });
         // TODO: replace with django filters
-        var tel = document.getElementsByClassName('data')[0].getElementsByTagName('p')[3];
-        var old_tel = tel.innerText;
+        let tel = document.getElementsByClassName('data')[0].getElementsByTagName('p')[3];
+        let old_tel = tel.innerText;
         tel.innerText = tel.innerText.split('tel:')[1];
-        if(tel.innerText == 'undefined'){ tel.innerText = old_tel; }
+        if(tel.innerText === 'undefined'){ tel.innerText = old_tel; }
     });
     </script>
     <script type="text/javascript">
