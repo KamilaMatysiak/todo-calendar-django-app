@@ -43,6 +43,7 @@ class CustomAuthenticationForm(AuthenticationForm):
 
 class UserProfileForm(BSModalModelForm):
     phonenumber = PhoneNumberField(label="Numer telefonu")
+    phonenumber.error_messages['invalid'] = 'Niepoprawny numer telefonu! Prosimy o wpisanie poprawnego numeru, np. +48-123-456-789'
 
     class Meta:
         model = UserProfile
