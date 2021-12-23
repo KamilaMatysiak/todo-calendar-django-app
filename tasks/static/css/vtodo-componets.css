@@ -179,27 +179,27 @@ text-decoration: none;
     }
 
     .grey {
-        #e1e1e1;
+        background: #e1e1e1;
     }
 
     .cyan {
-        #46d6db;
+        background: #46d6db;
     }
 
     .yellow {
-        #fbd75b;
+        background: #fbd75b;
     }
 
     .pink {
-        #ff887c;
+        background: #ff887c;
     }
 
     .salad {
-        #7ae7bf;
+        background: #7ae7bf;
     }
 
     .gray {
-        #a4bdfc;
+        background: #a4bdfc;
     }
 
 .event .info {
