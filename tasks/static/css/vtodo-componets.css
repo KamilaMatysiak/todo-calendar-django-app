@@ -182,6 +182,26 @@ text-decoration: none;
         #e1e1e1;
     }
 
+    .cyan {
+        #46d6db;
+    }
+
+    .yellow {
+        #fbd75b;
+    }
+
+    .pink {
+        #ff887c;
+    }
+
+    .salad {
+        #7ae7bf;
+    }
+
+    .gray {
+        #a4bdfc;
+    }
+
 .event .info {
     width: 100%;
     flex: 1;
