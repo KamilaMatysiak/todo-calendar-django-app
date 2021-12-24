@@ -46,14 +46,14 @@ class Task(models.Model):
         choices=Priorities,
         default=None_priority
     )
-    ciclical = models.BooleanField(default=False)
     complete = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, default=1)
     from_who = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='+', validators=[temporary_user_validation])
     accepted = models.BooleanField(default=True)
     meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, blank=True, null=True, default=None)
-
+    cyclical = models.CharField(max_length=20, blank=True, null=True)
+    
     def __str__(self):
         """Returns title of task"""
         return f"{self.title}"

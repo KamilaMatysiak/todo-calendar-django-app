@@ -24,6 +24,20 @@ class TaskModelForm(BSModalModelForm):
     localization = forms.CharField(required=False, label="Lokalizacja")
     for_who = forms.CharField(required=False, label="Zlecenie", validators=[temporary_user_validation])
     
+    cyclicals_regular = (('d', 'codziennie'), 
+                        ('w', 'co tydzień'), 
+                        ('m', 'co miesiąc'), 
+                        ('y', 'co roku'),
+                        ('h', 'dostosuj'))
+    cyclicals_irregular = (('d', 'dni'),
+                        ('w', 'tygodni'),
+                        ('m', 'miesięcy'),
+                        ('y', 'lat'))
+
+    cyclical = forms.BooleanField(initial=False, required=False)
+    cyclical_regular = forms.ChoiceField(choices=cyclicals_regular, required=False)
+    cyclical_number = forms.CharField(initial=1, required=False)
+    cyclical_irregular = forms.ChoiceField(choices=cyclicals_irregular, required=False)
     class Meta:
         model = Task
         fields = ['title', 'localization', 'with_who', 'date', 'time', 'priority', 'category']

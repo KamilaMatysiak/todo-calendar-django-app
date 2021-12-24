@@ -1,3 +1,4 @@
+from dateutil.relativedelta import relativedelta
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.conf import settings
@@ -37,10 +38,10 @@ def test(request):
     return render(request, 'tasks/components.html')
 
 
+
 @login_required
 def task_list(request, pk=None):
     tasks = [x for x in Task.objects.all() if x.user == request.user and x.accepted == True]
-
     categories = [x for x in Category.objects.all() if x.user == request.user]
     form = TaskModelForm(request.user)
 
@@ -96,6 +97,8 @@ def index(request):
     priority = []
     here = []
     late = []
+    form = TaskModelForm(request.user)
+    print(form)
 
     events = [x for x in Meeting.objects.all() if x.user == request.user]
     not_accepted_tasks = [x for x in Task.objects.all() if x.user == request.user and x.accepted == False]
@@ -166,13 +169,10 @@ class AddTaskView(BSModalCreateView):
                     return super(AddTaskView, self).form_valid(form)
             return Http404
         if form.cleaned_data.get('cyclical') == True:
-            if form.cleaned_data.get('cyclical') == 'h':
-                if form.cleaned_data.get('cyclical') == 'h':
-                    obj.cyclical = form.cleaned_data.get('cyclical_week_days_how_often') + 'h' + 'h' + form.cleaned_data.get('cyclical_week_days')
-                else:
-                    obj.cyclical = form.cleaned_data.get('cyclical_number') + 'h' + form.cleaned_data.get('cyclicals_irregular')
+            if form.cleaned_data.get('cyclical_regular') == 'h':
+                obj.cyclical = str(form.cleaned_data.get('cyclical_irregular')) + str(form.cleaned_data.get('cyclical_number'))
             else:
-                obj.cyclical = form.cleaned_data.get('cyclical_number') + form.cleaned_data.get('cyclicals_regular')
+                obj.cyclical = str(form.cleaned_data.get('cyclical_regular'))
 
         return super(AddTaskView, self).form_valid(form)
 
@@ -244,6 +244,20 @@ def updateTask(request, pk):
 
     return render(request, 'tasks/update_task.html', context)
 
+def add_days(date, cycle):
+    if len(cycle) > 1:
+        number = int(cycle[1:])
+    else:
+        number = 1
+    if cycle[0] == 'd':
+        date += datetime.timedelta(days = number)
+    elif cycle[0] == 'w':
+        date += datetime.timedelta(weeks = number)
+    elif cycle[0] == 'm':
+        date += relativedelta(months = number)
+    elif cycle[0] == 'y':
+        date += relativedelta(years = number)
+    return(date)
 
 def finishTask(request):
     taskID = request.POST['taskID']
@@ -253,6 +267,19 @@ def finishTask(request):
     if complete == 'true':
         print("saving to true")
         task.complete = True
+        if task.cyclical:
+            d = task.date
+            while datetime.datetime.combine(d, task.time) < datetime.datetime.now():
+                print('here i am')
+                d = add_days(d, task.cyclical)
+            print(d)
+            if d == task.date:
+                d = add_days(d, task.cyclical)
+            Task.objects.create(user = task.user, title = task.title, 
+                localization = task.localization, with_who = task.with_who, date = d,
+                time = task.time, priority = task.priority, category = task.category,
+                cyclical = task.cyclical, complete = False, created = datetime.datetime.now(),
+                from_who = task.from_who, accepted = True, meeting = task.meeting)
     else:
         print("saving to false")
         task.complete = False

@@ -376,13 +376,9 @@ class AddEventView(BSModalCreateView):
 
         if form.cleaned_data.get('cyclical') == True:
             if form.cleaned_data.get('cyclical_regular') == 'h':
-                # if form.cleaned_data.get('cyclical_irregular') == 'h':
-                #     obj.cyclical = form.cleaned_data.get('cyclical_week_days_how_often') + 'h' + 'h' + form.cleaned_data.get('cyclical_week_days')
-                # else:
                 obj.cyclical = str(form.cleaned_data.get('cyclical_irregular')) + str(form.cleaned_data.get('cyclical_number'))
             else:
                 obj.cyclical = str(form.cleaned_data.get('cyclical_regular'))
-            print(obj.cyclical)
         return super(AddEventView, self).form_valid(form)
 
 class AddNoteView(BSModalCreateView):
@@ -492,8 +488,15 @@ def edit_meeting(request, pk):
         raise Http404
 
     if request.method == 'POST':
+        print(request.POST)
         form = EventModelForm(request.POST, instance=meeting, request=request)
         if form.is_valid():
+            if form.cleaned_data.get('cyclical') == True:
+                obj = form.save(commit=False)
+                if form.cleaned_data.get('cyclical_regular') == 'h':
+                    obj.cyclical = str(form.cleaned_data.get('cyclical_irregular')) + str(form.cleaned_data.get('cyclical_number'))
+                else:
+                    obj.cyclical = str(form.cleaned_data.get('cyclical_regular'))
             form.save()
             return redirect('/calendar')
 
@@ -504,6 +507,12 @@ def edit_meeting(request, pk):
 
     notes = [x for x in Notes.objects.all() if x.user == request.user]
 
+        #         if form.cyclical == True:
+        # obj = form.save(commit=False)
+        # if form.cyclical_regular == 'h':
+        #     obj.cyclical = str(form.cyclical_irregular) + str(form.cyclical_number)
+        # else:
+        #     obj.cyclical = str(form.cyclical_regular)
 
     context = {'form': form, 'id': pk, 'meeting': meeting, 'tasks': tasks, 'count': count, 'notes': notes}
 

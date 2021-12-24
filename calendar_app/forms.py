@@ -29,21 +29,11 @@ class EventModelForm(BSModalModelForm):
                         ('w', 'tygodni'),
                         ('m', 'miesięcy'),
                         ('y', 'lat'))
-                        # ('h', 'Wybierz konkretne dni tygodnia'))
-    # cyclical_week_days = (('m', 'pn'),
-    #                     ('t', 'wt'), 
-    #                     ('w', 'śr'),
-    #                     ('r', 'czw'), 
-    #                     ('f', 'pt'),
-    #                     ('s', 'so'),
-    #                     ('n', 'nd'))
 
     cyclical = forms.BooleanField(initial=False, required=False)
     cyclical_regular = forms.ChoiceField(choices=cyclicals_regular, required=False)
     cyclical_number = forms.CharField(initial=1, required=False)
     cyclical_irregular = forms.ChoiceField(choices=cyclicals_irregular, required=False)
-    # cyclical_week_days_how_often = cyclical_number = forms.CharField(initial=1, required=False)
-    # cyclical_irregular_week_days = forms.MultipleChoiceField(choices=cyclical_week_days, required=False)
 
     class Meta:
         model = Meeting
