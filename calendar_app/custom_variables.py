@@ -51,17 +51,18 @@ colors_event = {'1': {'background': '#a4bdfc', 'foreground': '#1d1d1d', 'name': 
                 '11': {'background': '#dc2127', 'foreground': '#1d1d1d', 'name': 'red'},        # real name: Alizarin
                 }
 vtodo_colors_event = {
+    'blue': '9',
+    'orange': '6',
+    'green': '10',
+    'purple': '3',
+    'red': '11',
     'gray': '1',
     'salad': '2',
-    'purple': '3',
     'pink': '4',
     'yellow': '5',
-    'orange': '6',
     'cyan': '7',
     'grey': '8',
-    'blue': '9',
-    'green': '10',
-    'red': '11',
+
 }
 
 COLORS = [(c, c) for c in vtodo_colors_event.keys()]

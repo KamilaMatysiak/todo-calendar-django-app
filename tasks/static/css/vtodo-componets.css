@@ -451,6 +451,57 @@ text-decoration: none;
     flex-direction: column;
 }
 
+
+/* -----------------------------
+    COLOR CAROUSEL
+-------------------------------*/
+
+.carousel-container {
+    position: relative;
+    margin: 15px 0 25px 0;
+    padding-bottom: 5px;
+    width: 100%;
+}
+
+.carousel-container a {
+    color: #fff;
+}
+
+.carousel-container .slide {
+    display: none;
+    justify-content: space-between;
+    padding: 0 5px;
+    width: 80%;
+}
+
+.carousel-container .prev-c,
+.carousel-container .next-c {
+    display: block;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    margin-top: -22px;
+    padding: 12px;
+    font-weight: bold;
+    font-size: 12px;
+    transition: 0.6s ease;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    z-index: 999;
+    background: rgba(0,0,0,0.25);
+}
+
+.carousel-container .prev-c:hover,
+.carousel-container .next-c:hover {
+    background: rgba(0,0,0,0.75);
+}
+
+.carousel-container .next-c {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+
 /*----------------------
         WRAPPER
 -----------------------*/
@@ -509,7 +560,7 @@ text-decoration: none;
 
 .menu {
     width: 225px;
-        flex-direction: column;
+    flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     box-shadow: 0px 4px 4px rgba(0,0,0,0.2);
