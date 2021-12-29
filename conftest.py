@@ -1,6 +1,6 @@
 import pytest
 
-
+"""
 @pytest.fixture(scope='session')
 def django_db_setup():
     settings.DATABASES['default'] = {
@@ -13,3 +13,4 @@ def django_db_setup():
             "PORT": '5432',
         }
     }
+"""
