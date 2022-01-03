@@ -1,7 +1,7 @@
-"""import pytest
+import pytest
 from users.models import User
 
-
+"""
 @pytest.mark.django_db
 def test_user_create():
     User.objects.create_user('Adam Osiowy', 'addammmm@o2.pl', 'dsfgfgggf22234@$sa')
@@ -13,6 +13,20 @@ def test_username():
     User.objects.create_user('Grzegorz Nowak', 'grzegorznowak12@gmail.com', '12345dsfeggggg')
     me = User.objects.get(username='Grzegorz Nowak')
     assert me.username == 'Grzegorz Nowak'
+
+
+@pytest.mark.django_db
+def test_mail():
+    User.objects.create_user('Grzegorz Nowak', 'grzegorznowak12@gmail.com', '12345dsfeggggg')
+    me = User.objects.get(username='Grzegorz Nowak')
+    assert me.email == 'grzegorznowak12@gmail.com'
+
+
+@pytest.mark.django_db
+def test_password():
+    User.objects.create_user('Grzegorz Nowak', 'grzegorznowak12@gmail.com', '12345dsfeggggg')
+    me = User.objects.get(username='Grzegorz Nowak')
+    assert me.password == '12345dsfeggggg'
 
 
 @pytest.mark.django_db
