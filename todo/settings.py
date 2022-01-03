@@ -119,8 +119,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'todo.wsgi.application'
 
-
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -128,7 +126,7 @@ DATABASES = {
     }
 }
 
-#DATABASES = {
+# DATABASES = {
 #   'default': {
 #       'ENGINE': 'django.db.backends.postgresql',
 #       'NAME': 'postgres',
@@ -137,7 +135,7 @@ DATABASES = {
 #       "HOST": 'v-todo.c7619xurnc1g.eu-central-1.rds.amazonaws.com',
 #       "PORT": '5432',
 #   }
-#}
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
