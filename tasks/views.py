@@ -97,8 +97,6 @@ def index(request):
     priority = []
     here = []
     late = []
-    form = TaskModelForm(request.user)
-    print(form)
 
     events = [x for x in Meeting.objects.all() if x.user == request.user]
     not_accepted_tasks = [x for x in Task.objects.all() if x.user == request.user and x.accepted == False]
