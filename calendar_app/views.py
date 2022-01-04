@@ -17,12 +17,18 @@ from django.http import Http404, JsonResponse
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2.credentials import Credentials
-from allauth.socialaccount.models import SocialToken
+from allauth.socialaccount.models import SocialToken, SocialAccount
 from geopy.geocoders import Nominatim
 from tasks.utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
 from geopy.distance import geodesic
 
 from .custom_variables import colors_event, colors_calendar, months, timezone, vtodo_colors_event
+
+
+def is_google_user(user):
+    resp = SocialAccount.objects.filter(user=user).first()
+    print(resp)
+    return True if resp else False
 
 
 def get_meetings(dict, date):
@@ -397,6 +403,10 @@ class DeleteNoteView(BSModalDeleteView):
 def import_google_calendar_data(request):
     import re
 
+    def construct_response(msg, data):
+        return {'msg': msg,
+                'data': data}
+
     def parse_google_date(data):
         parsed = re.split(r"[TZ]", data.get('dateTime', datetime.now()))
         _date, _time = parsed[:2]
@@ -405,40 +415,41 @@ def import_google_calendar_data(request):
         return _date, _time
 
     user = request.user
-    try:
-        service = construct_service(user)
+    if is_google_user(user):
+        try:
+            service = construct_service(user)
 
-        events_result = service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z',
-                                              maxResults=10, singleEvents=True,
-                                              orderBy='startTime').execute()
-        events = events_result.get('items', [])
-        for event in events:
-            print(event)
-            date_start, time_start = parse_google_date(event['start']) \
-                if event['start'].get('dateTime') else (event['start']['date'], '00:00:00')
-            date_end, time_end = parse_google_date(event['end']) \
-                if event['end'].get('dateTime') else (event['end']['date'], '23:59:00')
+            events_result = service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z',
+                                                  maxResults=10, singleEvents=True,
+                                                  orderBy='startTime').execute()
+            events = events_result.get('items', [])
+            for event in events:
+                print(event)
+                date_start, time_start = parse_google_date(event['start']) \
+                    if event['start'].get('dateTime') else (event['start']['date'], '00:00:00')
+                date_end, time_end = parse_google_date(event['end']) \
+                    if event['end'].get('dateTime') else (event['end']['date'], '23:59:00')
 
-            meeting_kwargs = {
-                'user': user,
-                'title': event.get('summary', 'brak tytułu'),
-                'description': event.get('description', 'brak opisu'),
-                'date_start': date_start,
-                'time_start': time_start,
-                'date_end': date_end,
-                'time_end': time_end,
-                'color': colors_event[event.get('colorId', '9')].get('name', 'blue'),
-            }
+                meeting_kwargs = {
+                    'user': user,
+                    'title': event.get('summary', 'brak tytułu'),
+                    'description': event.get('description', 'brak opisu'),
+                    'date_start': date_start,
+                    'time_start': time_start,
+                    'date_end': date_end,
+                    'time_end': time_end,
+                    'color': colors_event[event.get('colorId', '9')].get('name', 'blue'),
+                }
 
-            Meeting.objects.get_or_create(**meeting_kwargs)
+                Meeting.objects.get_or_create(**meeting_kwargs)
 
-        response = {'msg': 'success',
-                    'data': events}
-    except Exception as e:
-        e = 'Got this exception: ' + str(e)
-        print(e)
-        response = {'msg': 'error',
-                    'data': e}
+            response = construct_response('success', events)
+        except Exception as e:
+            e = 'Got this exception: ' + str(e)
+            print(e)
+            response = construct_response('error', e)
+    else:
+        response = construct_response('issue', 'not google')
 
     return JsonResponse(response)
 
