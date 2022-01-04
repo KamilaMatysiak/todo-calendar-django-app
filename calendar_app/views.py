@@ -403,6 +403,10 @@ class DeleteNoteView(BSModalDeleteView):
 def import_google_calendar_data(request):
     import re
 
+    def construct_response(msg, data):
+        return {'msg': msg,
+                'data': data}
+
     def parse_google_date(data):
         parsed = re.split(r"[TZ]", data.get('dateTime', datetime.now()))
         _date, _time = parsed[:2]
@@ -439,16 +443,13 @@ def import_google_calendar_data(request):
 
                 Meeting.objects.get_or_create(**meeting_kwargs)
 
-            response = {'msg': 'success',
-                        'data': events}
+            response = construct_response('success', events)
         except Exception as e:
             e = 'Got this exception: ' + str(e)
             print(e)
-            response = {'msg': 'error',
-                        'data': e}
+            response = construct_response('error', e)
     else:
-        response = {'msg': 'issue',
-                    'data': 'not google'}
+        response = construct_response('issue', 'not google')
 
     return JsonResponse(response)
 
