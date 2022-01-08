@@ -5,6 +5,8 @@
 
 
 {% block headcontent %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <title>Kalendarz - vToDo</title>
 {% endblock %}
 
@@ -52,7 +54,8 @@
                     {% endfor %}
                 </table>
             </div>
-            <button class="option-dropdown button menu-buttons" id="importCalendar"><a>Połącz z Kalendarzem Google</a></button>
+            <hr>
+            <button class="option-dropdown button menu-buttons" id="importCalendar"><img src="{% static 'image/icons/google-icon.svg' %}"><a>Zsynchronizuj z kalendarzem Google</a></button>
         </nav>
     </nav>
 
@@ -141,7 +144,7 @@
         </nav>
         <hr>
 
-        <div class="tt-container">
+        <div class="tt-container" id="tt-scroll">
             {% for hour, meetings in tt_width %}
                 <div style="display: flex;">
                 <div class="hour-column"><p>{{hour}}</p></div>
@@ -152,16 +155,28 @@
                     <a href="{% url 'edit_meeting' meeting.0.id %}">
                         <div class="event table-event {{meeting.0.color}}"
                              style="left: {% offset meeting %}%; width: {{meeting.2}}%; height: {{meeting.1|get_meeting_span}}px;">
-                            {%if meeting.1 > 1%}
+                            {%if meeting.1 > 2 %}
                                 <div class="info">
-                                    <h1 style="font-weight: 500;">{{meeting.0.title}}</h1>
-                                    <p>{{meeting.0.description}}</p>
+                                    <h1>{{meeting.0.title}}</h1>
+                                    <div class="info">
+                                    <p>{{meeting.0.time_start |date:"H:i"}} - {{meeting.0.time_end |date:"H:i"}}</p>
+                                    <p id="loc">{%if meeting.0.localization %} {{meeting.0.localization}} {% endif %}</p>
+                                        </div>
+
                                 </div>
-                                <div class="date">{{meeting.0.time_start |date:"H:i"}} - {{meeting.0.time_end |date:"H:i"}}</div>
+                            {% elif meeting.1 > 1 %}
+                            <div class="medium-info">
+                                <div class="info">
+                                    <h1>{{meeting.0.title}}</h1>
+                                    <div class="info">
+                                    <p>{{meeting.0.time_start |date:"H:i"}} - {{meeting.0.time_end |date:"H:i"}}{%if meeting.0.localization %}, {{meeting.0.localization}}{% endif %}</p>
+                                    </div>
+                                </div>
+                            </div>
                             {% else %}
                             <div class="small-info">
-                                <h1 style="font-weight: 500;">{{meeting.0.title}}</h1>
-                                <div class="date">{{meeting.0.time_start |date:"H:i"}} - {{meeting.0.time_end |date:"H:i"}}</div>
+                                <h1>{{meeting.0.title}}</h1>
+                                <p>{{meeting.0.time_start |date:"H:i"}} - {{meeting.0.time_end |date:"H:i"}}{%if meeting.0.localization %}, {{meeting.0.localization}}{% endif %}</p>
                             </div>
                             {% endif %}
                         </div>
@@ -176,6 +191,25 @@
             {% endfor %}
         </div>
     </div>
+
+    <div id="err_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nie połączono z kontem Google!</h3>
+            </div>
+
+              <div class="modal-body">
+                <p class="delete-text">Żeby skorzystać z tej funkcji zaloguj się przez konto Google.</p>
+              </div>
+
+              <div class="modal-footer">
+                <button type="submit" data-dismiss="modal" class="btn btn-primary">OK</button>
+              </div>
+        </div>
+    </div>
+</div>
+
 </div>
 
     <script type="text/javascript">
@@ -203,6 +237,8 @@
             $('a[aria-expanded=true]').attr('aria-expanded', 'false');
         });
 
+        document.getElementById("tt-scroll").scrollTo(0,{{scrollPos}});
+
         $('#importCalendar').on('click', function () {
             const fetchURL = "/calendar/import_google_calendar_data";
             fetch(fetchURL)
@@ -211,7 +247,11 @@
               console.log(body);
               if(body.msg == "success"){
                   location.reload();
-              }
+              } else {
+                if(body.data == "not google") {
+                        $('#err_modal').modal('show');
+                    }
+                }
             })
         });
         });
@@ -219,5 +259,6 @@
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
     {{form.media}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script><script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{API_KEY}}&libraries=places"></script>
 
 {% endblock %}

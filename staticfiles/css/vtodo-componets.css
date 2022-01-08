@@ -84,11 +84,60 @@ text-decoration: none;
     color: #E47676;
 }
 
+.searchbar {
+    width: 85vw;
+    margin: 5px auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.searchbar .form-control {
+    flex: 1;
+}
+
+.search {
+    padding: 10px 20px;
+    min-height: calc(1.5em + 0.75rem + 2px);
+    max-height: calc(1.5em + 0.75rem + 2px);
+    margin: auto 5px;
+}
+
+#warning-info{
+    display: none;
+    height: 20px;
+    margin: 5px;
+
+}
+
+
 .cancel-button {
     font-size: 0.7em;
     color: #2F9CEB;
     margin: 0 10px;
 }
+
+.order {
+    color: #2F9CEB;
+    float: right;
+}
+
+#from_who {
+    display: none;
+}
+
+.buttons {
+    display: flex;
+    width: 10%;
+    height: 100%;
+    padding: 0 2%;
+    justify-content: flex-end;
+    align-self: center;
+}
+
+.buttons form {
+    margin: auto;
+}
+
 
 /*---------------------
         EVENTS
@@ -151,9 +200,6 @@ text-decoration: none;
     padding: 0;
     font-size: 0.7rem;
     width: 100%;
-    justify-self: right;
-    align-self: flex-end;
-    text-align: right;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -185,8 +231,7 @@ text-decoration: none;
     margin: 0;
     padding: 2px 5px 0 5px;
     width: 100%;
-    flex-direction: column;
-    justify-content: space-between;
+    display: flex;
 }
 
 .table-event:hover {
@@ -196,20 +241,59 @@ text-decoration: none;
 }
 
 .table-event h1 {
+    font-size: 1rem;
+    font-weight: bold;
+    padding: 0;
+    margin: 0;
+    width: auto;
+}
+
+.table-event p {
+    font-size: 0.8 rem;
+    padding: 0;
+    margin: 0;
+    width: auto;
+}
+
+.table-event .small-info {
+    padding: 0;
+    margin: 0;
+    display: inline-flex !important;
+    align-items: center;
+}
+
+.table-event .small-info h1 {
+    margin: 0 10px 0 0;
+    padding: 0;
+    font-size: 1rem;
+}
+.table-event .small-info p {
+    margin: 0;
+    padding: 0;
+    font-size: 0.8rem;
+}
+
+.week-table .small-info {
+    padding: 0;
+    margin: 0;
+    display: inline-flex !important;
+    align-items: flex-start;
+}
+
+.week-table .small-info p {
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    font-size: 0.5rem;
+}
+
+.week-title {
     display: block;
-    width: 130px;
+    width: 50%;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
-
-.table-event .small-info {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    padding: 2px;
-}
-
 
 /*---------------------
         INPUT
@@ -347,7 +431,6 @@ text-decoration: none;
     flex-direction: column;
 }
 
-
 /*----------------------
         WRAPPER
 -----------------------*/
@@ -446,6 +529,27 @@ text-decoration: none;
     margin: 5px 0;
 }
 
+#importCalendar {
+    font-size: 0.9rem;
+    font-weight: 300;
+    width: 100%;
+    text-align: left;
+    padding: 5px 5%;
+    border-radius: 4px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+#importCalendar img {
+    margin: 10px;
+}
+
+#importCalendar:hover {
+    background: #f1f1f1;
+}
+
 .menu-buttons li {
     padding: 10px 15px;
 }
@@ -496,7 +600,7 @@ text-decoration: none;
     left: -100%;
     height: auto;
     min-height: 100%;
-    z-index: 999;
+    z-index: 9999999 !important;
     background: #fff;
     color: #111;
     transition: all 0.3s;
@@ -719,7 +823,7 @@ margin: 0 auto;}
 ----------------------------------------------------- */
 
 .tt-container {
-    max-height: 80vh;
+    max-height: 85vh;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -727,14 +831,14 @@ margin: 0 auto;}
 .cell {
     position: relative;
     width: 14%;
-    height: 40px;
+    height: 20px;
     border-left: 1px solid rgba(0,0,0,0.12);
     border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
 .long-cell {
     position: relative;
-    height: 40px;
+    height: 20px;
     border-left: 1px solid rgba(0,0,0,0.12);
     border-bottom: 1px solid rgba(0,0,0,0.05);
     width: 100%;
@@ -742,13 +846,13 @@ margin: 0 auto;}
 
 .hour-column{
     width: 40px;
-    height: 40px;
+    height: 20px;
     border-right: 1px solid #F2994A;
 }
 
 .hour-column p {
     padding: 5px;
-    font-size: 10px;
+    font-size: 8px;
 }
 
 .weekdays {
@@ -1248,12 +1352,13 @@ PROFILE
 }
 
 .google {
-    width: 50%;
+    width: 60%;
     margin: 1em auto;
     display: flex;
     justify-content: center;
     color: black;
     font-size: 1em;
+    font-weight: 400;
     box-shadow: 0px 2px 2px rgba(0,0,0,0.12);
 }
 .google img {
@@ -1371,17 +1476,13 @@ PROFILE
     flex-direction: column;
 }
 
+.modal { z-index: 1001 !important;}
+.modal-backdrop {z-index: 1000 !important;}
+.pac-container {z-index: 1055 !important;}
 
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
-@media (max-width: 1288px) {
-
-    .table-event h1 {
-        width: 75px;
-    }
-}
-
 @media (max-width: 1024px) {
 
     .profile-panel {
@@ -1393,10 +1494,10 @@ PROFILE
         font-size: 0.9em;
     }
 
+    .table-event #loc {
+    display: none;
+}
 
-    .table-event p {
-        display: none;
-    }
 
 }
 
@@ -1620,12 +1721,26 @@ td {
     padding: 0;
 }
 
-.table-event h1 {
-    width: 50px;
+.table-event.small-info {
+    padding: 0;
+    margin: 0;
+    display: inline-flex !important;
+    align-items: flex-start;
 }
 
-.table-event p {
-    display: none;
+.table-event .small-info h1 {
+    display: block;
+    width: 50%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.table-event .small-info p {
+    width: 50%;
+    margin: 0;
+    padding: 0;
+    font-size: 0.5rem;
 }
 
 }

@@ -1,24 +1,23 @@
-{% load bootstrap4 %}
-{% bootstrap_css %}
-{% bootstrap_javascript jquery='full' %}
-{{form.media}}
-{% load crispy_forms_tags %}
+{% extends 'base.html' %}
 {% load avatar_tags %}
 {% load poll_extras %}
 {% load static %}
 
-<html>
-<head>
+{% block headcontent %}
     <title>Lokalizacja - vToDo</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+   crossorigin=""></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+{% endblock %}
 
-    {% comment %} <script src="{% static '/js/geolocation.js' %}" type="text/javascript"></script>   {% endcomment %}
-</head>
-<body>
+{% block content %}
 <div class="wrapper">
     <nav id="sidebar" class="small">
         <nav class="sidebar main">
@@ -56,6 +55,7 @@
         <nav class="navbar">
         <div class="left">
             <h1>Lokalizacja</h1>
+            <img id="warning-info" src="{% static 'image/icons/nogps-icon.svg' %}">
         </div>
         <div class="right">
         <div class="modal fade" tabindex="-1" role="dialog" id="modal">
@@ -67,86 +67,23 @@
         <!-- Create book button -->
 
     <div class="avatar">
+
          <a href="{% url 'profile' %}">{% avatar user %}</a>
             </div>
         </div>
     </nav>
     <hr class="hr">
-
-        <div style="width: 90%; height: 80vh; margin: auto;">
-            <script>
-                function getCookie(name) {
-                    let cookieValue = null;
-                    if (document.cookie && document.cookie !== "") {
-                        const cookies = document.cookie.split(";");
-                        for (let i = 0; i < cookies.length; i++) {
-                            const cookie = cookies[i].trim();
-                            // Does this cookie string begin with the name we want?
-                            if (cookie.substring(0, name.length + 1) === (name + "=")) {
-                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                                break;
-                            }
-                        }
-                    }
-                    return cookieValue;
-                }
-                
-                var options = {
-                    enableHighAccuracy: true,
-                    timeout: 5000,
-                    maximumAge: 0
-                };
-
-                function success(pos) {
-                    var crd = pos.coords;
-
-                    console.log(`Latitude : ${crd.latitude}`);
-                    console.log(`Longitude: ${crd.longitude}`);
-                    
-                    $.ajax({
-                        method: 'POST',
-                        url: "{% url 'location-2' lat lon %}",
-                        contentType: 'application/json; charset=utf-8',
-                        data: 
-                            JSON.stringify({
-                                'lon': crd.longitude,
-                                'lat': crd.latitude,
-                            }),
-                        headers: {
-                            "X-Requested-With": "XMLHttpRequest",
-                            "X-CSRFToken": getCookie("csrftoken"),
-                        },
-                        success: function (data) {
-                            var lati = crd.latitude;
-                            var long = crd.longitude;
-
-                            if(lati != '{{lat}}' || long != '{{lon}}') {
-                            window.location.assign("/location/" + lati + "_" + long);
-                            }
-                            console.log("it worked!");
-                        },
-                        error: function (data) {
-                            console.log("it didnt work");
-                        }
-                    });
-
-                }
-
-                function error(err) {
-                console.warn(`ERROR(${err.code}): ${err.message}`);
-                }
-
-                const watchPosition = navigator.geolocation.watchPosition(success, error, options);
-
-
-            </script>
-            {{map | safe}}
-</div>
+        <div class="searchbar">
+            <input type="search" id="search-input" class="form-control"/>
+          <button type="button" id="search-button" class="button add search">
+            <i class="bi bi-search"></i>
+          </button>
+        </div>
+        <div id="map-div" style="width: 85vw; height: 78vh; margin: auto;"></div>
     </div>
 
 
 </div>
-
     <script type="text/javascript">
         $(document).ready(function () {
             $("#mobile-sidebar").mCustomScrollbar({
@@ -164,8 +101,156 @@
             });
         });
     </script>
+    <script>
+
+
+        var user_location;
+        var map;
+        var task_markers = [];
+        var event_markers = [];
+        var tasks;
+        var events;
+
+        function load_tasks() {
+            tasks = {{tasks_data | safe}};
+            for (const task of tasks) {
+                var marker = L.marker([task[1], task[2]]).bindPopup($(task[3])[0]).addTo(map);
+                marker._icon.style.filter = task[4];
+                task_markers.push(marker);
+            }
+        };
+
+        function load_events() {
+            events = {{event_data | safe }};
+            for (const event of events) {
+                var marker = L.marker([event[1], event[2]]).bindPopup($(event[3])[0]).addTo(map);
+                marker._icon.style.filter = "hue-rotate(50deg)";
+                event_markers.push(marker);
+            }
+        };
+
+        document.getElementById("search-button").onclick = search;
+        function search(){
+            var data = document.getElementById("search-input");
+            for (var i=0; i < tasks.length; ++i ){
+                var markerID = tasks[i][5];
+                if (markerID == data.value){
+                    task_markers[i].openPopup()
+                    map.flyTo([tasks[i][1], tasks[i][2]],16);
+                }
+            }
+            for (var i=0; i < events.length; ++i ){
+                var markerID = events[i][4];
+                if (markerID == data.value){
+                    event_markers[i].openPopup()
+                    map.flyTo([event[i][1], event[i][2]],16);
+                }
+            }
+        };
+
+        function zoomIn() {
+            {% if marker_id %}
+            var mi = {{marker_id}};
+            console.log(mi);
+            if(mi) {
+                for (var i=0; i < tasks.length; ++i ){
+                    var markerID = tasks[i][0];
+                    if (markerID == mi) {
+                        task_markers[i].openPopup()
+                        map.flyTo([tasks[i][1], tasks[i][2]],16);
+                    }
+                }
+
+                for (var i=0; i < events.length; ++i ){
+                    var markerID = events[i][0];
+                    if (markerID == mi) {
+                        event_markers[i].openPopup()
+                        map.flyTo([event[i][1], event[i][2]],16);
+                    }
+                }
+            }
+            {% endif %}
+        }
+
+        function update_position(latitude, longitude) {
+            if (!user_location) {
+                user_location = L.marker([latitude,longitude]).bindTooltip("Tu jesteś").addTo(map);
+            }
+            user_location.setLatLng([latitude,longitude]).update();
+        };
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+                const cookies = document.cookie.split(";");
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        };
+
+        function error(err) {
+            console.warn(`ERROR(${err.code}): ${err.message}`);
+            document.getElementById("warning-info").style.display = "block";
+            if (!map) {
+
+                map = L.map('map-div').setView([52.29541804778165, 19.4519922035855], 6);
+                var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                });
+
+                tileLayer.addTo(map);
+                load_tasks();
+                load_events();
+                zoomIn();
+            }
+        }
+
+        function success(pos) {
+            var crd = pos.coords;
+            if (!map) {
+                if(!crd) {
+                    map = L.map('map-div').setView([0, 0], 13);
+                }
+                else {
+                    console.log(crd.latitude, crd.longitude);
+                    map = L.map('map-div').setView([crd.latitude, crd.longitude], 13);
+                }
+
+
+                var tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                });
+
+                tileLayer.addTo(map);
+                load_tasks();
+                load_events();
+                zoomIn();
+            }
+            console.log(`Latitude : ${crd.latitude}`);
+            console.log(`Longitude: ${crd.longitude}`);
+            update_position(crd.latitude, crd.longitude)
+
+        };
+        const watchPosition = navigator.geolocation.watchPosition(success, error, options);
+
+
+
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
 
-</body>
-</html>
+{% endblock %}

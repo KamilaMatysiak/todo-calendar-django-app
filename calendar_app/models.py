@@ -26,6 +26,10 @@ class Meeting(models.Model):
     cycle_interval = models.CharField(max_length=10, null=True, blank=True)
     cycle_number = models.IntegerField(null=True, blank=True)
 
+    with_who = models.CharField(null=True, max_length=200)
+    localization = models.CharField(null=True, max_length=200)
+    l_lat = models.DecimalField(max_digits=15, decimal_places=10, blank=True, null=True, default=None)
+    l_lon = models.DecimalField(max_digits=15, decimal_places=10, blank=True, null=True, default=None)
 
     def __str__(self):
         return self.title

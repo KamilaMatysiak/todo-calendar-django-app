@@ -29,8 +29,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '@&ivg06$5v6#yo+^*y9ixt^^a(7bncddv$p2p7k2d#+@iaoc)i'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = getenv("IS_DEVELOPMENT", True)
-# DEBUG = True
+# DEBUG = getenv("IS_DEVELOPMENT", True)
+DEBUG = True
+# DEBUG = False
 # ALLOWED_HOSTS = ['127.0.0.1', '192.168.100.100', 'localhost', '192.168.100.24', '192.168.18.191', 'vtodo.pl', 'vitodo.pl', 'h22.seohost.pl']
 # ALLOWED_HOSTS = getenv("APP_HOST")
 
@@ -88,8 +89,9 @@ X_FRAME_OPTIONS = 'SAMEORIGIN'
 # Solution: Write custom Middleware
 SITE_ID = 3
 
-PHONENUMBER_DB_FORMAT = 'INTERNATIONAL'
-PHONENUMBER_DEFAULT_FORMAT = 'INTERNATIONAL'
+PHONENUMBER_DB_FORMAT = 'RFC3966'
+PHONENUMBER_DEFAULT_FORMAT = 'RFC3966'
+PHONENUMBER_DEFAULT_REGION = 'PL'
 
 BOOTSTRAP4 = {
     'include_jquery': True,
@@ -120,25 +122,23 @@ WSGI_APPLICATION = 'todo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': str(os.path.join(BASE_DIR, "db.sqlite3")),
-    }
-}
-
 # DATABASES = {
 #     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'postgres',
-#         "USER": 'vtodo',
-#         "PASSWORD": 'ZXC#$mnu4321',
-#         "HOST": 'v-todo.c7619xurnc1g.eu-central-1.rds.amazonaws.com',
-#         "PORT": '5432',
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': str(os.path.join(BASE_DIR, "db.sqlite3")),
 #     }
 # }
 
-
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        "USER": 'vtodo',
+        "PASSWORD": 'ZXC#$mnu4321',
+        "HOST": 'v-todo.c7619xurnc1g.eu-central-1.rds.amazonaws.com',
+        "PORT": '5432',
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -203,6 +203,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details',
 )
 
+GOOGLE_API_KEY = "AIzaSyCfW4uDvbA6ui1pOX-X0qLLcmtj5w6pIqY"
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = "228316449016-s0210ihiktgnnaifeej15m87blo7rb2d.apps.googleusercontent.com"
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
 SOCIAL_AUTH_URL_NAMESPACE = 'social'

@@ -31,3 +31,13 @@
   </div>
 
 </form>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+        // TODO: replace with django filters
+        let tel = document.getElementById("id_phonenumber");
+        let old_tel = tel;
+        tel.value = tel.value.split('tel:')[1];
+        if(tel.value === 'undefined'){ tel.value = old_tel; }
+        });
+         </script>

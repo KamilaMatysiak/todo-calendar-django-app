@@ -1,4 +1,3 @@
-from dateutil.relativedelta import relativedelta
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.conf import settings
@@ -34,6 +33,12 @@ def homepage(request):
     return render(request, 'tasks/index.html')
 
 
+def terms_of_service(request):
+    return render(request, 'tasks/terms_of_service.html')
+
+def user_manual(request):
+    return render(request, 'tasks/manual/user_manual.html')
+
 def test(request):
     return render(request, 'tasks/components.html')
 
@@ -51,15 +56,17 @@ def task_list(request, pk=None):
             form.save()
         return redirect('/')
 
-    context = {"categories": categories, "tasks": tasks, 'form': form}
+    context = {"categories": categories, "tasks": tasks, 'form': form, 'API_KEY': settings.GOOGLE_API_KEY}
     if pk is not None:
         context["task_pk"] = pk
     return render(request, 'tasks/task-list.html', context)
 
+
 def categoryView(request, pk):
     category = Category.objects.get(id=pk)
     categories = [x for x in Category.objects.all() if x.user == request.user]
-    tasks = [x for x in Task.objects.all() if x.user == request.user and x.category is not None and x.category.id == category.id and x.accepted == True]
+    tasks = [x for x in Task.objects.all() if
+             x.user == request.user and x.category is not None and x.category.id == category.id and x.accepted == True]
 
     form = TaskModelForm(request.user)
 
@@ -72,6 +79,7 @@ def categoryView(request, pk):
 
     context = {"categories": categories, "tasks": tasks, 'form': form, 'category': category}
     return render(request, 'tasks/category_template.html', context)
+
 
 def delegateView(request):
     categories = [x for x in Category.objects.all() if x.user == request.user]
@@ -108,13 +116,12 @@ def index(request):
     for x in tasks:
         if not x.complete:
             if x.date == datetime.date.today():
-                count = count+1
+                count = count + 1
                 today.append(x)
                 if not x.complete and x.time < datetime.datetime.now().time():
                     late.append(x)
             if x.priority == "H":
                 priority.append(x)
-
 
     webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
     vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
@@ -155,7 +162,8 @@ class AddTaskView(BSModalCreateView):
             destination = geolocator.geocode(destination_)
             obj.l_lat = destination.latitude
             obj.l_lon = destination.longitude
-        print(obj.user)
+        with_who = self.request.POST.getlist("with_who")
+        obj.with_who = "|".join(with_who)
         if not form.cleaned_data['is_cyclical']:
             obj.cycle_interval = None
             obj.cycle_number = None
@@ -170,10 +178,9 @@ class AddTaskView(BSModalCreateView):
                     obj.accepted = False
                     return super(AddTaskView, self).form_valid(form)
             return Http404
-        
+
 
         return super(AddTaskView, self).form_valid(form)
-
 
     def get_form_kwargs(self):
         kwargs = super(AddTaskView, self).get_form_kwargs()
@@ -189,6 +196,19 @@ class EditTaskView(BSModalUpdateView):
     success_url = reverse_lazy('list')
 
     @xframe_options_exempt
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        if obj.localization:
+            geolocator = Nominatim(user_agent='measurements')
+            destination_ = form.cleaned_data.get('localization')
+            destination = geolocator.geocode(destination_)
+            obj.l_lat = destination.latitude
+            obj.l_lon = destination.longitude
+        with_who = self.request.POST.getlist("with_who")
+        obj.with_who = "|".join(with_who)
+        return super(EditTaskView, self).form_valid(form)
+
     def get_object(self, queryset=None):
         obj = super(EditTaskView, self).get_object()
         if not obj.user == self.request.user:
@@ -200,6 +220,11 @@ class EditTaskView(BSModalUpdateView):
         kwargs['user'] = self.request.user
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super().get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        return context
 
 class DeleteTaskView(BSModalDeleteView):
     template_name = 'tasks/delet.html'
@@ -212,6 +237,7 @@ class DeleteTaskView(BSModalDeleteView):
         if not obj.user == self.request.user:
             raise Http404
         return obj
+
 
 def updateTask(request, pk):
     """
@@ -270,18 +296,19 @@ def finishTask(request):
             print(d)
             if d == task.date:
                 d = add_days(d, task.cycle_interval, task.cycle_number)
-            Task.objects.create(user = task.user, title = task.title, 
+            Task.objects.create(user = task.user, title = task.title,
                 localization = task.localization, with_who = task.with_who, date = d,
                 time = task.time, priority = task.priority, category = task.category,
-                is_cyclical = task.is_cyclical, cycle_interval = task.cycle_interval, cycle_number = task.cycle_number, 
+                is_cyclical = task.is_cyclical, cycle_interval = task.cycle_interval, cycle_number = task.cycle_number,
                 complete = False, created = datetime.datetime.now(),
                 from_who = task.from_who, accepted = True, meeting = task.meeting)
     else:
         print("saving to false")
         task.complete = False
-    print("im working!")
+
     task.save()
     return HttpResponse('')
+
 
 @require_POST
 @csrf_exempt
@@ -300,8 +327,9 @@ def send_push(request):
         data_tasks = how_many_tasks(user, float(data['lat']), float(data['lon']))
         print("DATA_TASKS", data_tasks)
         if data_tasks[1] != None:
-            payload = {'head': 'Zadań w okolicy: ' + data_tasks[0], 'body': 'Najbliższe zadanie: ' + data_tasks[1] + ' - ' +
-                data_tasks[2] + 'km stąd'}
+            payload = {'head': 'Zadań w okolicy: ' + data_tasks[0],
+                       'body': 'Najbliższe zadanie: ' + data_tasks[1] + ' - ' +
+                               data_tasks[2] + 'km stąd'}
         else:
             payload = {'head': 'Brak zadań w okolicy'}
         print(payload)
@@ -312,8 +340,6 @@ def send_push(request):
         return JsonResponse(status=500, data={"message": "An error occurred"})
 
 
-
-        
 class AddCategoryView(BSModalCreateView):
     template_name = 'tasks/add_category.html'
     form_class = CategoryModelForm
@@ -324,6 +350,7 @@ class AddCategoryView(BSModalCreateView):
         obj = form.save(commit=False)
         obj.user = self.request.user
         return super(AddCategoryView, self).form_valid(form)
+
 
 class EditCategoryView(BSModalUpdateView):
     model = Category
@@ -338,6 +365,7 @@ class EditCategoryView(BSModalUpdateView):
             raise Http404
         return obj
 
+
 class DeleteCategoryView(BSModalDeleteView):
     template_name = 'tasks/delete-category.html'
     model = Category
@@ -350,12 +378,13 @@ class DeleteCategoryView(BSModalDeleteView):
             raise Http404
         return obj
 
+
 def refuse_task(request, pk):
     obj = get_object_or_404(Task, pk=pk)  # Get your current cat
 
-    if request.method == 'POST':         # If method is POST,
-        obj.delete()                     # delete the cat.
-    return redirect('vtodo')             # Finally, redirect to the homepage.
+    if request.method == 'POST':  # If method is POST,
+        obj.delete()  # delete the cat.
+    return redirect('vtodo')  # Finally, redirect to the homepage.
 
 
 def accept_task(request, pk):

@@ -7,6 +7,7 @@ from .utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
 from geopy.distance import geodesic
 import folium
 from tasks.models import Task
+from calendar_app.models import Meeting
 from django.conf import settings
 from django.conf.urls.static import static
 from django.http.response import JsonResponse, HttpResponse
@@ -21,10 +22,12 @@ from django.urls import reverse
 from django.template import loader
 from django.http import HttpResponse
 from django.views.decorators.clickjacking import xframe_options_exempt
+import re
+from datetime import *
 
 
 @xframe_options_exempt
-def location(request, lat, lon):
+def location(request, pk=None):
     """Shows a map with starting point of user, based on users location. Also shows the locations of tasks and their priorities.
 
     Args:
@@ -33,71 +36,43 @@ def location(request, lat, lon):
         .html file with a map of user starting point and places with task assigned to them
 
     """
-    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-    if is_ajax:
-        if request.method == 'POST':
-            data = json.load(request)
-            n_lat = data.get('lat')
-            n_lon = data.get('lon')
-            if n_lat != lat or n_lon != lon:
-                lat = n_lat
-                lon = n_lon
-                return redirect('location-2', n_lat, n_lon)
-        else:
-            return HttpResponse(json.dumps([{'lat': lat, 'lon': lon}]))
 
-    m = folium.Map(width='100%', height='100%',
-                   location=get_center_coordinates(lat, lon),
-                   zoom_start=10)
 
-    folium.Marker([lat, lon], tooltip='twoja lokalizacja',
-                  popup="Twoja lokalizacja",
-                  icon=folium.Icon('green')).add_to(m)
 
-    # destination  marker
     tasks = (x for x in Task.objects.all() if x.user == request.user)
+    events = (x for x in Meeting.objects.all() if x.user == request.user)
 
     color = {
-        'H': 'red',
-        'J': 'orange',
-        'L': 'lightgray',
-        'N': 'white'
+        'H': 'hue-rotate(150deg)',
+        'J': 'saturate(0.9) sepia(0.07) brightness(1.5) contrast(3) hue-rotate(254deg)',
+        'L': 'hue-rotate(270deg)',
+        'N': 'grayscale(1) brightness(1.5)'
     }
-
+    tasks_data =[]
+    event_data = []
     for x in tasks:
-        if x.l_lon and x.l_lat:
+        if x.l_lon and x.l_lat and not x.complete:
             path = "/task-list/" + str(x.id)
-            html = f"<strong>{x.title}</strong> <br>{x.localization}<br>{x.date}<br><a style='color: #2F9CEB; width: 100%;' target='_blank' href='{path}'>Zobacz zadanie</a>"
-            iframe = folium.IFrame(html=html, width=200, height=200)
-            popup = folium.Popup(max_width=2650, html=html)
+            html = f"<div><strong>{x.title}</strong> <br>{x.localization}<br>{x.date}<br><a style='color: #2F9CEB; width: 100%;' target='_blank' href='{path}'>Zobacz zadanie</a></div>"
+            tasks_data.append([str(x.id), str(x.l_lat), str(x.l_lon), str(html), str(color[x.priority]), x.title])
 
-            folium.Marker([x.l_lat, x.l_lon], tooltip=x.title,
-                          popup=popup,
-                          icon=folium.Icon(color[x.priority], icon="cloud")
-                          ).add_to(m)
-
-    m = m._repr_html_()
-    # distance = None
+    for x in events:
+        if x.date_end > datetime.now().date():
+            if x.l_lon and x.l_lat:
+                path = "/calendar/day/" + re.sub(r"-", "/", str(x.date_start))
+                html = f"<div><strong>{x.title}</strong> <br>{x.localization}<br>{x.date_start}<br><a style='color: #2F9CEB; width: 100%;' target='_blank' href='{path}'>Przejdź do kalendarza</a></div>"
+                event_data.append([str(x.id), str(x.l_lat), str(x.l_lon), str(html), x.title])
 
     context = {
-        'lat': lat,
-        'lon': lon,
-        'map': m
+        'tasks': tasks,
+        'tasks_data': tasks_data,
+        'event_data': event_data
     }
+    if pk is not None:
+        context["marker_id"] = pk
 
     t = loader.get_template('geolocation/location.html')
     return HttpResponse(t.render(context, request))
-
-
-def start(request):
-    try:
-        ip = get_ip_address(request)
-        country, city, lat, lon = get_geo(ip)
-    except AddressNotFoundError:
-        ip = '109.173.220.158'
-        country, city, lat, lon = get_geo(ip)
-
-    return redirect('location-2', lat, lon)
 
 
 # def send_push(request):

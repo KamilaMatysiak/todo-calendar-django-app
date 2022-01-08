@@ -18,12 +18,14 @@ class EventModelForm(BSModalModelForm):
             ('purple', 'purple'),
             ('green', 'green')]
 
-    cycle_intervals = (('d', 'dni'), 
-                    ('w', 'tygodni'), 
-                    ('m', 'miesięcy'), 
+    cycle_intervals = (('d', 'dni'),
+                    ('w', 'tygodni'),
+                    ('m', 'miesięcy'),
                     ('y', 'lat'))
 
     color = forms.CharField(label="Kolor", widget=forms.RadioSelect(choices=COLORS), initial="blue")
+    with_who = forms.CharField(required=False, widget=forms.Select(choices=(),attrs={"name": "contacts[]", "class": "js-example-basic-multiple field-sel", "style": "width: 100%", "multiple": "multiple"}), label="Kontakty")
+    localization = forms.CharField(required=False, label="Lokalizacja")
 
     is_cyclical = forms.BooleanField(required=False, label="Powtarzanie wydarzenia")
     cycle_interval = forms.ChoiceField(choices=cycle_intervals, required=False, widget=forms.Select(attrs={'class': 'select form-control'}))
@@ -31,7 +33,7 @@ class EventModelForm(BSModalModelForm):
 
     class Meta:
         model = Meeting
-        fields = ['color', 'title', 'description', 'date_start', 'time_start', 'time_end', 'date_end', 'cycle_interval', 'cycle_number', 'is_cyclical']
+        fields = ['color', 'title', 'description','localization', 'with_who', 'date_start', 'time_start', 'time_end', 'date_end', 'cycle_interval', 'cycle_number', 'is_cyclical']
         widgets = {
             # 'x': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl"}),
             'date_start': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl", "useCurrent": False}),
@@ -40,9 +42,9 @@ class EventModelForm(BSModalModelForm):
             'time_start': TimePickerInput(),
         }
         labels = {
-            'title': ('Nazwa spotkania'),
+            'title': ('Nazwa wydarzenia'),
             'date_start': ('Data rozpoczęcia'),
-            'time_start': ('Godzina rozpoczęcie'),
+            'time_start': ('Godzina rozpoczęcia'),
             'time_end': ('Godzina zakończenia'),
             'date_end': ('Data zakończenia'),
             'is_cyclical': ('Powtarzaj wydarzenie')

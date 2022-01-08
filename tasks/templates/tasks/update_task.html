@@ -3,6 +3,11 @@
 {{form.media}}
 {%load static%}
 
+<style>
+.modal { z-index: 1001 !important;}
+.modal-backdrop {z-index: 1000 !important;}
+.pac-container {z-index: 1055 !important;}
+</style>
 <form method="post" action="">
   {% csrf_token %}
 
@@ -33,12 +38,12 @@
           </div>
     {% else %}
         <div class="form-group">
-          
+
           {{ field | as_crispy_field }}
           <div class="{% if field.errors %} invalid{% endif %}">
             {% for error in field.errors %}
               <p class="help-block">{{ error }}</p>
-              
+
               {% endfor %}
           </div>
         </div>
@@ -49,6 +54,54 @@
   <div class="modal-footer">
     <button type="submit" class="btn btn-primary">Zapisz zmiany</button>
   </div>
+
+  <script>
+    $(document).ready( function(e) {
+            const fetchURL = "/retrieve_google_contacts";
+            fetch(fetchURL)
+                  .then((response) => {return response.json();})
+                  .then((body) => {
+                    console.log(body);
+                    const words = "{{ object.with_who }}".split("|");
+                    console.log("{{ object.with_who }}")
+                    console.log(words)
+
+                    var selector = document.getElementsByName('with_who')[0];
+                    var arr = [];
+                    if(body.msg == 'success') {
+                        for(let contact of body.data){
+                            var opt = document.createElement('option');
+                            var i = contact.name;
+                            opt.value = i;
+                            opt.innerHTML = i;
+                            selector.appendChild(opt);
+                            arr.push(i);
+                        }
+                    }
+                    for(let word of words) {
+                        if(arr.includes(word)) {
+                          continue;
+                        }
+                        var opt = document.createElement('option');
+                        var i = word;
+                        opt.value = i;
+                        opt.innerHTML = i;
+                        selector.appendChild(opt);
+                    }
+                    $('.js-example-basic-multiple').val(words).change()
+
+                    });
+            $('.js-example-basic-multiple').select2({
+                  tags: true,
+                  language: {
+                      noResults: function (params) {
+                        return "Nie znaleziono kontaktów.";
+                      }
+                    }
+                  });
+
+    });
+  </script>
 
 </form>
 <script>
@@ -68,3 +121,5 @@
         });
     });
 </script>
+
+<script type="text/javascript" src="static/js/autocomplete_localization.js" ></script>

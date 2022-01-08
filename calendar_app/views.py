@@ -20,8 +20,19 @@ from google.oauth2.credentials import Credentials
 from allauth.socialaccount.models import SocialToken
 from dateutil import relativedelta
 import re
+from allauth.socialaccount.models import SocialToken, SocialAccount
+from geopy.geocoders import Nominatim
+from tasks.utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
+from geopy.distance import geodesic
 
 from .custom_variables import colors_event, colors_calendar, months, timezone, vtodo_colors_event
+
+
+def is_google_user(user):
+    resp = SocialAccount.objects.filter(user=user).first()
+    print(resp)
+    return True if resp else False
+
 
 def get_meetings(dict, date):
     if date in dict:
@@ -119,35 +130,26 @@ def get_context(year, month, day, user):
         week_day = date + timedelta(days=i)
         current_week.append((week_day, get_meetings(all_events, week_day)))
 
-
     timetable = []
     for i in range(24):
         timetable.append((f"{i}"":00", []))
         for j in range(15, 60, 15):
-            if j % 30 == 0:
-                timetable.append((f"{i}:{j}", []))
-            else:
-                timetable.append(("", []))
+            timetable.append(("", []))
 
     for m in get_meetings(all_events, date):
         interval = m.time_start.hour * 4 + m.time_start.minute // 15
         timetable[interval][1].append(m)
 
-
     week_timetable = []
     for i in range(24):
         week_timetable.append((f"{i}"":00", [[], [], [], [], [], [], []]))
         for j in range(15, 60, 15):
-            if j % 30 == 0:
-                week_timetable.append((f"{i}:{j}", [[], [], [], [], [], [], []]))
-            else:
-                week_timetable.append(("", [[], [], [], [], [], [], []]))
+            week_timetable.append(("", [[], [], [], [], [], [], []]))
 
     for i, (week_day, week_meetings) in enumerate(current_week):
         for m in week_meetings:
             interval = m.time_start.hour * 4 + m.time_start.minute // 15
             week_timetable[interval][1][i].append(m)
-
 
     max_width = 1
     tt_width = [["", []] for i in range(24 * 60 // 15)]
@@ -164,7 +166,7 @@ def get_context(year, month, day, user):
             tt_width[index][1].append(event)
             for j in range(1, length):
                 if (index + j) < len(tt_width):
-                    while len(tt_width[index + j][1]) < i-1:
+                    while len(tt_width[index + j][1]) < i - 1:
                         tt_width[index + j][1].append("temp")
                     tt_width[index + j][1].append("busy")
         if len(tt_width[index][1]) > max_width:
@@ -177,8 +179,8 @@ def get_context(year, month, day, user):
         while len(x) < max_width:
             x.append("empty")
 
-    max_week_width = [1,1,1,1,1,1,1]
-    wtt_width = [["", [[],[],[],[],[],[],[]]] for i in range(24 * 60 // 15)]
+    max_week_width = [1, 1, 1, 1, 1, 1, 1]
+    wtt_width = [["", [[], [], [], [], [], [], []]] for i in range(24 * 60 // 15)]
     for day_number in range(len(current_week)):
         for index, (label, time_periods) in enumerate(week_timetable):
             wtt_width[index][0] = label
@@ -192,7 +194,7 @@ def get_context(year, month, day, user):
                 wtt_width[index][1][day_number].append(event)
                 for j in range(1, length):
                     if (index + j) < len(wtt_width):
-                        while len(wtt_width[index + j][1][day_number]) < i-1:
+                        while len(wtt_width[index + j][1][day_number]) < i - 1:
                             wtt_width[index + j][1][day_number].append("temp")
                         wtt_width[index + j][1][day_number].append("busy")
             if len(wtt_width[index][1][day_number]) > max_week_width[day_number]:
@@ -204,15 +206,11 @@ def get_context(year, month, day, user):
                     wtt_width[i][1][day_number][y] = (cell, get_span(cell), 100 // len(x[day_number]), y)
             while len(x) < max_week_width[day_number]:
                 x.append("empty")
-    print("cry")
-
-
-
 
     meetings_widths = [["", []] for i in range(24 * 60 // 15)]
     for x, m in timetable:
         if len(m) > 1:
-            width = 100/len(m)
+            width = 100 / len(m)
             meetings_widths.append(width)
         elif len(m) == 1:
             width = 100
@@ -221,6 +219,7 @@ def get_context(year, month, day, user):
             width = 0
             meetings_widths.append(width)
 
+    scrollPos = int(now.hour) * 80
 
     context = {
         "all_events": all_events,
@@ -245,9 +244,12 @@ def get_context(year, month, day, user):
         "tt_width": tt_width,
         "wtt_width": wtt_width,
         "week": current_week,
+        "scrollPos": scrollPos,
+        'API_KEY': settings.GOOGLE_API_KEY,
     }
 
     return context
+
 
 @login_required
 def home(request, year, month, day):
@@ -360,6 +362,14 @@ class AddEventView(BSModalCreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.user = self.request.user
+        if obj.localization:
+            geolocator = Nominatim(user_agent='measurements')
+            destination_ = form.cleaned_data.get('localization')
+            destination = geolocator.geocode(destination_)
+            obj.l_lat = destination.latitude
+            obj.l_lon = destination.longitude
+        with_who = self.request.POST.getlist("with_who")
+        obj.with_who = "|".join(with_who)
         if not form.cleaned_data['is_cyclical']:
             obj.cycle_interval = None
             obj.cycle_number = None
@@ -372,6 +382,7 @@ class AddEventView(BSModalCreateView):
             except Exception as e:
                 print("Error is", e)
         return super(AddEventView, self).form_valid(form)
+
 
 class AddNoteView(BSModalCreateView):
     template_name = 'calendar/add_note.html'
@@ -389,6 +400,7 @@ class AddNoteView(BSModalCreateView):
         self.success_url = reverse_lazy("edit_meeting", args=[obj.meeting.id])
         return super(AddNoteView, self).form_valid(form)
 
+
 class EditNoteView(BSModalUpdateView):
     model = Notes
     template_name = 'calendar/edit_note.html'
@@ -402,6 +414,7 @@ class EditNoteView(BSModalUpdateView):
             raise Http404
         return obj
 
+
 class DeleteNoteView(BSModalDeleteView):
     template_name = 'calendar/delete_note.html'
     model = Notes
@@ -414,46 +427,58 @@ class DeleteNoteView(BSModalDeleteView):
             raise Http404
         return obj
 
+
 @login_required
 def import_google_calendar_data(request):
     import re
 
+    def construct_response(msg, data):
+        return {'msg': msg,
+                'data': data}
+
+    def parse_google_date(data):
+        parsed = re.split(r"[TZ]", data.get('dateTime', datetime.now()))
+        _date, _time = parsed[:2]
+        if any(s in _time for s in ('+', '-')):
+            _time = re.split(r'[+-]', _time)[0]
+        return _date, _time
+
     user = request.user
-    try:
-        service = construct_service(user)
+    if is_google_user(user):
+        try:
+            service = construct_service(user)
 
-        # colors = service.colors().get().execute()
-        # print('colors')
+            events_result = service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z',
+                                                  maxResults=10, singleEvents=True,
+                                                  orderBy='startTime').execute()
+            events = events_result.get('items', [])
+            for event in events:
+                print(event)
+                date_start, time_start = parse_google_date(event['start']) \
+                    if event['start'].get('dateTime') else (event['start']['date'], '00:00:00')
+                date_end, time_end = parse_google_date(event['end']) \
+                    if event['end'].get('dateTime') else (event['end']['date'], '23:59:00')
 
-        events_result = service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z',
-                                              maxResults=10, singleEvents=True,
-                                              orderBy='startTime').execute()
-        events = events_result.get('items', [])
-        for event in events:
-            print(event)
-            date_start, time_start, _ = re.split(r"[TZ]", event['start'].get('dateTime', datetime.now()))
-            date_end, time_end, _ = re.split(r"[TZ]", event['end'].get('dateTime', datetime.now()))
+                meeting_kwargs = {
+                    'user': user,
+                    'title': event.get('summary', 'brak tytułu'),
+                    'description': event.get('description', 'brak opisu'),
+                    'date_start': date_start,
+                    'time_start': time_start,
+                    'date_end': date_end,
+                    'time_end': time_end,
+                    'color': colors_event[event.get('colorId', '9')].get('name', 'blue'),
+                }
 
-            meeting_kwargs = {
-                'user': user,
-                'title': event.get('summary', 'brak tytułu'),
-                'description': event.get('description', 'brak opisu'),
-                'date_start': date_start,
-                'time_start': time_start,
-                'date_end': date_end,
-                'time_end': time_end,
-                'color': colors_event[event.get('colorId', '9')].get('name', 'blue'),
-            }
+                Meeting.objects.get_or_create(**meeting_kwargs)
 
-            Meeting.objects.get_or_create(**meeting_kwargs)
-
-        response = {'msg': 'success',
-                    'data': events}
-    except Exception as e:
-        e = 'Got this exception: ' + str(e)
-        print(e)
-        response = {'msg': 'error',
-                    'data': e}
+            response = construct_response('success', events)
+        except Exception as e:
+            e = 'Got this exception: ' + str(e)
+            print(e)
+            response = construct_response('error', e)
+    else:
+        response = construct_response('issue', 'not google')
 
     return JsonResponse(response)
 
@@ -474,28 +499,48 @@ class DeleteEventView(BSModalDeleteView):
 def edit_meeting(request, pk):
     count = 0
     meeting = Meeting.objects.get(id=pk)
+
     form = EventModelForm(instance=meeting)
     if not meeting.user == request.user:
         raise Http404
+
     if request.method == 'POST':
-        print(request.POST)
         form = EventModelForm(request.POST, instance=meeting, request=request)
         if form.is_valid():
             obj = form.save(commit=False)
+            if obj.localization:
+                geolocator = Nominatim(user_agent='measurements')
+                destination_ = form.cleaned_data.get('localization')
+                destination = geolocator.geocode(destination_)
+                obj.l_lat = destination.latitude
+                obj.l_lon = destination.longitude
+            with_who = request.POST.getlist("with_who")
+            obj.with_who = "|".join(with_who)
             if not obj.is_cyclical:
                 obj.cycle_interval = None
                 obj.cycle_number = None
             obj.save()
+            form.save()
             return redirect('/calendar')
+
     tasks = [x for x in Task.objects.all() if x.user == request.user]
     for x in tasks:
         if x.meeting == meeting:
             count += 1
 
     notes = [x for x in Notes.objects.all() if x.user == request.user]
-    context = {'form': form, 'id': pk, 'meeting': meeting, 'tasks': tasks, 'count': count, 'notes': notes}
+
+    context = {
+        'form': form,
+        'id': pk,
+        'meeting': meeting,
+        'tasks': tasks,
+        'count': count,
+        'notes': notes,
+        'API_KEY': settings.GOOGLE_API_KEY}
 
     return render(request, 'calendar/edit_meeting.html', context)
+
 
 class ConnectTaskView(BSModalUpdateView):
     model = Meeting
@@ -531,6 +576,7 @@ class ConnectTaskView(BSModalUpdateView):
     def form_invalid(self, form):
         """If the form is invalid, render the invalid form."""
         return self.form_valid(form)
+
 
 def delete_meeting(request, pk):
     item = Meeting.objects.get(id=pk)

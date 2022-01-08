@@ -4,6 +4,8 @@
 {% load static %}
 
 {% block headcontent %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
    <title>Lista zadań - vToDo</title>
 {% endblock %}
 
@@ -106,8 +108,8 @@
                                         {{task |to_datetime |timeuntil}}
                                     {% endif %}
                             </p>
-                            {% if task.localization %}<p>∙</p><a href="/location/{{ task.l_lat}}_{{ task.l_lon }}"><p>{{task.localization}}</p></a>{% endif %}
-                            {% if task.with_who %}<p>∙</p><p>{{task.with_who}}</p>{% endif %}
+                            {% if task.localization %}<p>∙</p><a href="/location/{{ task.id}}"><p>{{task.localization}}</p></a>{% endif %}
+                            {% if task.with_who %}<p>∙</p><p>{{task.with_who|get_contacts}}</p>{% endif %}
                             {% if task.from_who %}<p>∙</p><p>Od <strong>{{task.from_who}}</strong></p>{% endif %}</div>
                         </div>
                         <div class="important-tag">
@@ -175,7 +177,6 @@
 
     <script>
         function taskFinish(element, task) {
-            console.log("i should work");
             link = "{% url 'finish-task' %}";
             $.ajax({
               type:'POST',
@@ -207,7 +208,7 @@
     {{form.media}}
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
-
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key={{API_KEY}}&libraries=places"></script>
 
 
 {% endblock %}

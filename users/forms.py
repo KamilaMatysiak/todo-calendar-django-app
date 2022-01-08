@@ -10,6 +10,7 @@ from bootstrap_datepicker_plus import DatePickerInput
 from phonenumber_field.formfields import PhoneNumberField
 
 
+
 class UserRegisterForm(PopRequestMixin, CreateUpdateAjaxMixin, UserCreationForm):
     password1 = forms.CharField(max_length=16, widget=forms.PasswordInput(
         attrs={'class': 'form-control', 'placeholder': 'Podaj hasło', 'data-toggle': 'password'}),
@@ -42,6 +43,7 @@ class CustomAuthenticationForm(AuthenticationForm):
 
 class UserProfileForm(BSModalModelForm):
     phonenumber = PhoneNumberField(label="Numer telefonu")
+    phonenumber.error_messages['invalid'] = 'Niepoprawny numer telefonu! Prosimy o wpisanie poprawnego numeru, np. +48-123-456-789'
 
     class Meta:
         model = UserProfile
