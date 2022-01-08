@@ -13,13 +13,17 @@ function switchLanguage() {
   if (document.getElementById("engpol").style.display === "none") {
     document.getElementById("engpol").style.display = "block"
     document.getElementById("poleng").style.display = "none";
+
+    document.getElementById("back").innerHTML = "GO BACK";
   } else {
     document.getElementById("engpol").style.display = "none"
     document.getElementById("poleng").style.display = "block";
+
+    document.getElementById("back").innerHTML = "POWRÓT";
   }
 }
 </script>
-
+<a id="back" class="button blue" style="position: fixed; bottom: 15px; right: 15px; color: white;" href="{% url 'index' %}">POWRÓT</a>
 <div id="poleng">
     <div class="page">
         <div class="header">
