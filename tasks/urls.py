@@ -19,6 +19,7 @@ urlpatterns = [
     path('delete/<str:pk>/', views.DeleteTaskView.as_view(), name="delete"),
     path('delete_cat/<str:pk>', views.DeleteCategoryView.as_view(), name="delete_cat"),
     path('terms_of_service/', views.terms_of_service, name="terms_of_service"),
+    path('user_manual/', views.user_manual, name="user_manual"),
     path('home/<str:pk>/reject', views.refuse_task, name='reject'),
     path('home/<str:pk>/confirm', views.accept_task, name='confirm'),
     path('send_push', views.send_push),

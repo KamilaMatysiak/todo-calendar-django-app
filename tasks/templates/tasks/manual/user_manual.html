@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block headcontent %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/>
+<title>Instrukcja użytkownika - vToDo</title>
+{% endblock %}
+
+{% block content %}
+<div class="um-sidebar navy">
+    <img id="um-logo" src="{% static 'image/logo.svg' %}">
+    <ul>
+        <li><a href="#logowanie">Logowanie i rejestracja</a></li>
+        <li><a href="#taski">Lista zadań</a></li>
+        <li><a href="#wydarzenia">Kalendarz</a></li>
+        <li><a href="#profil">Profil użytkownika</a></li>
+    </ul>
+</div>
+<div class="um-content">
+    <div class="section" id="logowanie">
+        <h1>Logowanie i rejestracja</h1>
+        <ol>
+            <li>Rejestracja</li>
+            <li>Logowanie</li>
+            <li>Logowanie przez Google</li>
+        </ol>
+    </div>
+    <div class="section" id="taski">
+        <h1>Lista Zadań</h1>
+        <ol>
+            <li>Dodawanie zadania</li>
+            <li>Edycja zadania</li>
+            <li>Usuwanie zadania</li>
+            <li>Kategorie</li>
+            <li>Zlecanie zadań</li>
+        </ol>
+    </div>
+    <div class="section" id="wydarzenia">
+        <h1>Kalendarz</h1>
+        <ol>
+            <li>Dodawanie wydarzeń</li>
+            <li>Edycja wydarzeń</li>
+            <li>Przypisanie zadań do wydarzeń</li>
+            <li>Notatki</li>
+        </ol>
+    </div>
+    <div class="section" id="profil">
+        <h1>Profil użytkownika</h1>
+        <ol>
+            <li>Edycja profilu</li>
+            <li>Zmiana hasła</li>
+            <li>Usuwanie konta</li>
+        </ol>
+    </div>
+</div>
+{% endblock %}
+
+<script>
+    function showContent() {
+        this.show()
+    }
+
+</script>

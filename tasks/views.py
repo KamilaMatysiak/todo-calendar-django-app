@@ -36,6 +36,8 @@ def homepage(request):
 def terms_of_service(request):
     return render(request, 'tasks/terms_of_service.html')
 
+def user_manual(request):
+    return render(request, 'tasks/manual/user_manual.html')
 
 def test(request):
     return render(request, 'tasks/components.html')
