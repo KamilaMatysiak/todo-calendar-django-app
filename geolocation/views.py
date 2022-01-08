@@ -23,6 +23,7 @@ from django.template import loader
 from django.http import HttpResponse
 from django.views.decorators.clickjacking import xframe_options_exempt
 import re
+from datetime import *
 
 
 @xframe_options_exempt
@@ -50,16 +51,17 @@ def location(request, pk=None):
     tasks_data =[]
     event_data = []
     for x in tasks:
-        if x.l_lon and x.l_lat:
+        if x.l_lon and x.l_lat and not x.complete:
             path = "/task-list/" + str(x.id)
             html = f"<div><strong>{x.title}</strong> <br>{x.localization}<br>{x.date}<br><a style='color: #2F9CEB; width: 100%;' target='_blank' href='{path}'>Zobacz zadanie</a></div>"
             tasks_data.append([str(x.id), str(x.l_lat), str(x.l_lon), str(html), str(color[x.priority]), x.title])
 
     for x in events:
-        if x.l_lon and x.l_lat:
-            path = "/calendar/day/" + re.sub(r"-", "/", str(x.date_start))
-            html = f"<div><strong>{x.title}</strong> <br>{x.localization}<br>{x.date_start}<br><a style='color: #2F9CEB; width: 100%;' target='_blank' href='{path}'>Przejdź do kalendarza</a></div>"
-            event_data.append([str(x.id), str(x.l_lat), str(x.l_lon), str(html), x.title])
+        if x.date_end > datetime.now().date():
+            if x.l_lon and x.l_lat:
+                path = "/calendar/day/" + re.sub(r"-", "/", str(x.date_start))
+                html = f"<div><strong>{x.title}</strong> <br>{x.localization}<br>{x.date_start}<br><a style='color: #2F9CEB; width: 100%;' target='_blank' href='{path}'>Przejdź do kalendarza</a></div>"
+                event_data.append([str(x.id), str(x.l_lat), str(x.l_lon), str(html), x.title])
 
     context = {
         'tasks': tasks,
