@@ -24,23 +24,18 @@ class TaskModelForm(BSModalModelForm):
     localization = forms.CharField(required=False, label="Lokalizacja")
     for_who = forms.CharField(required=False, label="Zlecenie", validators=[temporary_user_validation])
     
-    cyclicals_regular = (('d', 'codziennie'), 
-                        ('w', 'co tydzień'), 
-                        ('m', 'co miesiąc'), 
-                        ('y', 'co roku'),
-                        ('h', 'dostosuj'))
-    cyclicals_irregular = (('d', 'dni'),
-                        ('w', 'tygodni'),
-                        ('m', 'miesięcy'),
-                        ('y', 'lat'))
+    cycle_intervals = (('d', 'dni'), 
+                    ('w', 'tygodni'), 
+                    ('m', 'miesięcy'), 
+                    ('y', 'lat'))
 
-    cyclical = forms.BooleanField(initial=False, required=False)
-    cyclical_regular = forms.ChoiceField(choices=cyclicals_regular, required=False)
-    cyclical_number = forms.CharField(initial=1, required=False)
-    cyclical_irregular = forms.ChoiceField(choices=cyclicals_irregular, required=False)
+    is_cyclical = forms.BooleanField(required=False)
+    cycle_interval = forms.ChoiceField(choices=cycle_intervals, required=False)
+    cycle_number = forms.CharField(required=False, initial='1')
+
     class Meta:
         model = Task
-        fields = ['title', 'localization', 'with_who', 'date', 'time', 'priority', 'category']
+        fields = ['title', 'localization', 'with_who', 'date', 'time', 'priority', 'category', 'is_cyclical', 'cycle_interval', 'cycle_number']
         widgets = {
             'date': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl"}),
             'time': TimePickerInput()
@@ -52,8 +47,6 @@ class TaskModelForm(BSModalModelForm):
             'priority': ('Priorytet'),
             'category': ('Kategoria'),
         }
-
-    
 
 class CategoryModelForm(BSModalModelForm):
 

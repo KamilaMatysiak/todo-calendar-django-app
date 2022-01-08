@@ -156,6 +156,10 @@ class AddTaskView(BSModalCreateView):
             obj.l_lat = destination.latitude
             obj.l_lon = destination.longitude
         print(obj.user)
+        if not form.cleaned_data['is_cyclical']:
+            obj.cycle_interval = None
+            obj.cycle_number = None
+        print(obj.cycle_interval)
         if form.cleaned_data.get('for_who') != "":
             for x in User.objects.all():
                 if x.username == form.cleaned_data.get('for_who'):
@@ -166,11 +170,7 @@ class AddTaskView(BSModalCreateView):
                     obj.accepted = False
                     return super(AddTaskView, self).form_valid(form)
             return Http404
-        if form.cleaned_data.get('cyclical') == True:
-            if form.cleaned_data.get('cyclical_regular') == 'h':
-                obj.cyclical = str(form.cleaned_data.get('cyclical_irregular')) + str(form.cleaned_data.get('cyclical_number'))
-            else:
-                obj.cyclical = str(form.cleaned_data.get('cyclical_regular'))
+        
 
         return super(AddTaskView, self).form_valid(form)
 
@@ -242,19 +242,16 @@ def updateTask(request, pk):
 
     return render(request, 'tasks/update_task.html', context)
 
-def add_days(date, cycle):
-    if len(cycle) > 1:
-        number = int(cycle[1:])
-    else:
-        number = 1
-    if cycle[0] == 'd':
-        date += datetime.timedelta(days = number)
-    elif cycle[0] == 'w':
-        date += datetime.timedelta(weeks = number)
-    elif cycle[0] == 'm':
-        date += relativedelta(months = number)
-    elif cycle[0] == 'y':
-        date += relativedelta(years = number)
+def add_days(date, interval, number):
+    if interval == 'd':
+        d = datetime.timedelta(days = number)
+    elif interval == 'w':
+        d = datetime.timedelta(weeks = number)
+    elif interval == 'm':
+        d = relativedelta.relativedelta(months = number)
+    elif interval == 'y':
+        d = relativedelta.relativedelta(years = number)
+    date += d
     return(date)
 
 def finishTask(request):
@@ -265,18 +262,19 @@ def finishTask(request):
     if complete == 'true':
         print("saving to true")
         task.complete = True
-        if task.cyclical:
+        if task.is_cyclical:
             d = task.date
             while datetime.datetime.combine(d, task.time) < datetime.datetime.now():
                 print('here i am')
-                d = add_days(d, task.cyclical)
+                d = add_days(d, task.cycle_interval, task.cycle_number)
             print(d)
             if d == task.date:
-                d = add_days(d, task.cyclical)
+                d = add_days(d, task.cycle_interval, task.cycle_number)
             Task.objects.create(user = task.user, title = task.title, 
                 localization = task.localization, with_who = task.with_who, date = d,
                 time = task.time, priority = task.priority, category = task.category,
-                cyclical = task.cyclical, complete = False, created = datetime.datetime.now(),
+                is_cyclical = task.is_cyclical, cycle_interval = task.cycle_interval, cycle_number = task.cycle_number, 
+                complete = False, created = datetime.datetime.now(),
                 from_who = task.from_who, accepted = True, meeting = task.meeting)
     else:
         print("saving to false")

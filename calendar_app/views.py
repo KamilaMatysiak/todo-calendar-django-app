@@ -29,18 +29,14 @@ def get_meetings(dict, date):
     else:
         return []
 
-def add_days(date, cycle):
-    if len(cycle) > 1:
-        number = int(cycle[1:])
-    else:
-        number = 1
-    if cycle[0] == 'd':
+def add_days(date, interval, number):
+    if interval == 'd':
         d = timedelta(days = number)
-    elif cycle[0] == 'w':
+    elif interval == 'w':
         d = timedelta(weeks = number)
-    elif cycle[0] == 'm':
+    elif interval == 'm':
         d = relativedelta.relativedelta(months = number)
-    elif cycle[0] == 'y':
+    elif interval == 'y':
         d = relativedelta.relativedelta(years = number)
     date += d
     return(date)
@@ -65,13 +61,13 @@ def get_context(year, month, day, user):
             all_events[meeting_date].append(m)
         else:
             all_events[meeting_date] = [m]
-        if m.cyclical:
+        if m.is_cyclical:
             next_month = date + relativedelta.relativedelta(months=1)
             next_month = next_month.replace(day=1)
             if m.date_start < next_month:
                 temp_date = m.date_start
                 while temp_date < next_month:
-                    temp_date = add_days(temp_date, m.cyclical)
+                    temp_date = add_days(temp_date, m.cycle_interval, m.cycle_number)
                     if temp_date.month == month:
                         if temp_date in all_events:
                             all_events[temp_date].append(m)
@@ -364,7 +360,9 @@ class AddEventView(BSModalCreateView):
     def form_valid(self, form):
         obj = form.save(commit=False)
         obj.user = self.request.user
-
+        if not form.cleaned_data['is_cyclical']:
+            obj.cycle_interval = None
+            obj.cycle_number = None
         if self.request.is_ajax():
             try:
                 service = construct_service(obj.user)
@@ -373,12 +371,6 @@ class AddEventView(BSModalCreateView):
                              meeting_obj=obj)
             except Exception as e:
                 print("Error is", e)
-
-        if form.cleaned_data.get('cyclical') == True:
-            if form.cleaned_data.get('cyclical_regular') == 'h':
-                obj.cyclical = str(form.cleaned_data.get('cyclical_irregular')) + str(form.cleaned_data.get('cyclical_number'))
-            else:
-                obj.cyclical = str(form.cleaned_data.get('cyclical_regular'))
         return super(AddEventView, self).form_valid(form)
 
 class AddNoteView(BSModalCreateView):
@@ -482,38 +474,25 @@ class DeleteEventView(BSModalDeleteView):
 def edit_meeting(request, pk):
     count = 0
     meeting = Meeting.objects.get(id=pk)
-
     form = EventModelForm(instance=meeting)
     if not meeting.user == request.user:
         raise Http404
-
     if request.method == 'POST':
         print(request.POST)
         form = EventModelForm(request.POST, instance=meeting, request=request)
         if form.is_valid():
-            if form.cleaned_data.get('cyclical') == True:
-                obj = form.save(commit=False)
-                if form.cleaned_data.get('cyclical_regular') == 'h':
-                    obj.cyclical = str(form.cleaned_data.get('cyclical_irregular')) + str(form.cleaned_data.get('cyclical_number'))
-                else:
-                    obj.cyclical = str(form.cleaned_data.get('cyclical_regular'))
-            form.save()
+            obj = form.save(commit=False)
+            if not obj.is_cyclical:
+                obj.cycle_interval = None
+                obj.cycle_number = None
+            obj.save()
             return redirect('/calendar')
-
     tasks = [x for x in Task.objects.all() if x.user == request.user]
     for x in tasks:
         if x.meeting == meeting:
             count += 1
 
     notes = [x for x in Notes.objects.all() if x.user == request.user]
-
-        #         if form.cyclical == True:
-        # obj = form.save(commit=False)
-        # if form.cyclical_regular == 'h':
-        #     obj.cyclical = str(form.cyclical_irregular) + str(form.cyclical_number)
-        # else:
-        #     obj.cyclical = str(form.cyclical_regular)
-
     context = {'form': form, 'id': pk, 'meeting': meeting, 'tasks': tasks, 'count': count, 'notes': notes}
 
     return render(request, 'calendar/edit_meeting.html', context)

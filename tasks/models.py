@@ -52,7 +52,10 @@ class Task(models.Model):
     from_who = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='+', validators=[temporary_user_validation])
     accepted = models.BooleanField(default=True)
     meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, blank=True, null=True, default=None)
-    cyclical = models.CharField(max_length=20, blank=True, null=True)
+    is_cyclical = models.BooleanField(default=False)
+    cycle_interval = models.CharField(max_length=10, null=True, blank=True)
+    cycle_number = models.IntegerField(null=True, blank=True)
+
     
     def __str__(self):
         """Returns title of task"""

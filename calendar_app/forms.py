@@ -18,33 +18,26 @@ class EventModelForm(BSModalModelForm):
             ('purple', 'purple'),
             ('green', 'green')]
 
+    cycle_intervals = (('d', 'dni'), 
+                    ('w', 'tygodni'), 
+                    ('m', 'miesięcy'), 
+                    ('y', 'lat'))
+
     color = forms.CharField(label="Kolor", widget=forms.RadioSelect(choices=COLORS), initial="blue")
 
-    cyclicals_regular = (('d', 'codziennie'), 
-                        ('w', 'co tydzień'), 
-                        ('m', 'co miesiąc'), 
-                        ('y', 'co roku'),
-                        ('h', 'dostosuj'))
-    cyclicals_irregular = (('d', 'dni'),
-                        ('w', 'tygodni'),
-                        ('m', 'miesięcy'),
-                        ('y', 'lat'))
-
-    cyclical = forms.BooleanField(initial=False, required=False)
-    cyclical_regular = forms.ChoiceField(choices=cyclicals_regular, required=False)
-    cyclical_number = forms.CharField(initial=1, required=False)
-    cyclical_irregular = forms.ChoiceField(choices=cyclicals_irregular, required=False)
+    is_cyclical = forms.BooleanField(required=False)
+    cycle_interval = forms.ChoiceField(choices=cycle_intervals, required=False)
+    cycle_number = forms.CharField(required=False, initial='1')
 
     class Meta:
         model = Meeting
-        fields = ['color', 'title', 'description', 'date_start', 'time_start', 'time_end', 'date_end']
+        fields = ['color', 'title', 'description', 'date_start', 'time_start', 'time_end', 'date_end', 'cycle_interval', 'cycle_number', 'is_cyclical']
         widgets = {
             # 'x': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl"}),
             'date_start': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl", "useCurrent": False}),
             'date_end': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl", "useCurrent": False}),
             'time_end': TimePickerInput(),
             'time_start': TimePickerInput(),
-
         }
         labels = {
             'title': ('Nazwa spotkania'),
