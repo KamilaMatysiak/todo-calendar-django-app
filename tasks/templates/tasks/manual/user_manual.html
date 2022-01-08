@@ -8,7 +8,7 @@
 
 {% block content %}
 <div class="um-sidebar navy">
-    <img id="um-logo" src="{% static 'image/logo.svg' %}">
+    <a href="{% url 'index' %}"><img id="um-logo" src="{% static 'image/logo.svg' %}"></a>
     <ul>
         <li><a href="#logowanie">Logowanie i rejestracja</a></li>
         <li><a href="#taski">Lista zadań</a></li>
@@ -68,6 +68,9 @@
             <li>Kategorie</li>
             <li>Zlecanie zadań</li>
         </ol>
+
+        <h3>Rozdział w budowie!</h3>
+        <p>Developerzy usilnie pracują, by dostarczyć ten rozdział jak najszybciej!</p>
     </div>
     <div class="section" id="wydarzenia">
         <h1>Kalendarz</h1>
@@ -77,6 +80,9 @@
             <li>Przypisanie zadań do wydarzeń</li>
             <li>Notatki</li>
         </ol>
+
+        <h3>Rozdział w budowie!</h3>
+        <p>Developerzy usilnie pracują, by dostarczyć ten rozdział jak najszybciej!</p>
     </div>
     <div class="section" id="profil">
         <h1>Profil użytkownika</h1>
@@ -85,6 +91,9 @@
             <li>Zmiana hasła</li>
             <li>Usuwanie konta</li>
         </ol>
+
+        <h3>Rozdział w budowie!</h3>
+        <p>Developerzy usilnie pracują, by dostarczyć ten rozdział jak najszybciej!</p>
     </div>
 </div>
 {% endblock %}

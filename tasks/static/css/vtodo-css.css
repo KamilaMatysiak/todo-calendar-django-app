@@ -20,13 +20,18 @@ html {scroll-behavior: smooth;}
 
 .um-content {
     margin-left: 250px;
+    overflow-x: hidden;
 }
 
 .section {
     min-height: 100vh;
-    width: calc(100vw - 250px);
-    padding: 50px;
+    width: calc(100vw - 255px);
+    padding: 50px 5%;
     transition: 2s all ease;
+}
+
+h2 {
+    margin: 25px 0;
 }
 
 .um-sidebar ul {
@@ -41,16 +46,17 @@ html {scroll-behavior: smooth;}
 
 .contents {
     color: #aaa;
+    padding: 40px;
 }
 
 .big-scr {
     width: 90%;
-    margin: 10px 5%;
+    margin: 50px 5%;
     box-shadow: 0 0 4px rgba(0,0,0,0.2);
 }
 
 .small-scr {
     width: 40%;
-    margin: 15px 30%;
+    margin: 50px 30%;
     box-shadow: 0 0 4px rgba(0,0,0,0.2);
 }
