@@ -25,9 +25,9 @@ class EventModelForm(BSModalModelForm):
 
     color = forms.CharField(label="Kolor", widget=forms.RadioSelect(choices=COLORS), initial="blue")
 
-    is_cyclical = forms.BooleanField(required=False)
-    cycle_interval = forms.ChoiceField(choices=cycle_intervals, required=False)
-    cycle_number = forms.CharField(required=False, initial='1')
+    is_cyclical = forms.BooleanField(required=False, label="Powtarzanie wydarzenia")
+    cycle_interval = forms.ChoiceField(choices=cycle_intervals, required=False, widget=forms.Select(attrs={'class': 'select form-control'}))
+    cycle_number = forms.CharField(required=False, initial='1', widget=forms.TextInput(attrs={'class': 'textinput textInput form-control'}))
 
     class Meta:
         model = Meeting
@@ -44,7 +44,8 @@ class EventModelForm(BSModalModelForm):
             'date_start': ('Data rozpoczęcia'),
             'time_start': ('Godzina rozpoczęcie'),
             'time_end': ('Godzina zakończenia'),
-            'date_end': ('Data zakończenia')
+            'date_end': ('Data zakończenia'),
+            'is_cyclical': ('Powtarzaj wydarzenie')
         }
 
 class ConnectTaskForm(BSModalModelForm):

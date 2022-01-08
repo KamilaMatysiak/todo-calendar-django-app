@@ -22,6 +22,17 @@
           <div class="form-group{% if field.errors %} invalid{% endif %}">
             {% if field.name == "for_who" %}
               <div id="from_who">{{ field | as_crispy_field }}</div>
+
+            {% elif field.name == 'cycle_number' or field.name == 'cycle_interval' %}
+
+            {% elif field.name == 'is_cyclical' %}
+                {{field | as_crispy_field}}
+                <div class="cyclical-form" style="display: flex; justify-content: space-between;">
+                    <p style="width: 33%;">Powtarzaj co:</p>
+                    <div style="width: 33%;"> {{ form.cycle_number }}</div>
+                    <div style="width: 33%;">{{ form.cycle_interval }}</div>
+                </div>
+
             {% else %}
                 {{ field | as_crispy_field }}
               {% endif %}
@@ -46,6 +57,23 @@
                 document.getElementById("order").style.display= "none";
             }
         }
+</script>
+<script>
+        $(document).ready(function() {
+             if("{{meeting.is_cyclical}}" == "True") {
+                $('.cyclical-form').show();
+            } else {
+                $('.cyclical-form').hide();
+            }
+
+            $('input[type=checkbox]').change(function() {
+                if (this.checked) {
+                    $('.cyclical-form').show();
+                } else {
+                    $('.cyclical-form').hide();
+                }
+            });
+        });
     </script>
 
 

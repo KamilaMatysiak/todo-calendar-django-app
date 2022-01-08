@@ -22,7 +22,16 @@
     </div>
 
     {% for field in form %}
-      {% if field.name != "for_who" %}
+      {% if field.name == "for_who" or field.name == 'cycle_number' or field.name == 'cycle_interval' %}
+
+      {% elif field.name == 'is_cyclical' %}
+          {{field | as_crispy_field}}
+          <div class="cyclical-form" style="display: flex; justify-content: space-between;">
+              <p style="width: 33%;">Powtarzaj co:</p>
+              <div style="width: 33%;"> {{ form.cycle_number }}</div>
+              <div style="width: 33%;">{{ form.cycle_interval }}</div>
+          </div>
+    {% else %}
         <div class="form-group">
           
           {{ field | as_crispy_field }}
@@ -42,3 +51,20 @@
   </div>
 
 </form>
+<script>
+    $(document).ready(function() {
+        if("{{meeting.is_cyclical}}" == "True") {
+            $('.cyclical-form').show();
+        } else {
+            $('.cyclical-form').hide();
+        }
+
+        $('input[type=checkbox]').change(function() {
+            if (this.checked) {
+                $('.cyclical-form').show();
+            } else {
+                $('.cyclical-form').hide();
+            }
+        });
+    });
+</script>

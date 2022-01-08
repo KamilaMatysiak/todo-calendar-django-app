@@ -29,9 +29,9 @@ class TaskModelForm(BSModalModelForm):
                     ('m', 'miesięcy'), 
                     ('y', 'lat'))
 
-    is_cyclical = forms.BooleanField(required=False)
-    cycle_interval = forms.ChoiceField(choices=cycle_intervals, required=False)
-    cycle_number = forms.CharField(required=False, initial='1')
+    is_cyclical = forms.BooleanField(required=False, label="Powtarzanie zadania")
+    cycle_interval = forms.ChoiceField(choices=cycle_intervals, required=False, widget=forms.Select(attrs={'class': 'select form-control'}))
+    cycle_number = forms.CharField(required=False, initial='1', widget=forms.TextInput(attrs={'class': 'textinput textInput form-control'}))
 
     class Meta:
         model = Task
