@@ -24,6 +24,7 @@ html {scroll-behavior: smooth;}
 
 .section {
     min-height: 100vh;
+    width: calc(100vw - 250px);
     padding: 50px;
     transition: 2s all ease;
 }
@@ -38,6 +39,18 @@ html {scroll-behavior: smooth;}
 .um-sidebar  li a {display: block; width: 100%; color: #eee;}
 .um-sidebar li a:hover {color: #fff; }
 
-ol {
+.contents {
     color: #aaa;
+}
+
+.big-scr {
+    width: 90%;
+    margin: 10px 5%;
+    box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
+.small-scr {
+    width: 40%;
+    margin: 15px 30%;
+    box-shadow: 0 0 4px rgba(0,0,0,0.2);
 }
