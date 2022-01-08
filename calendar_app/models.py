@@ -21,6 +21,10 @@ class Meeting(models.Model):
     date_end = models.DateField(default=datetime.now)
     time_end = models.TimeField(default=datetime.now)
     color = models.CharField(default="blue", max_length=50)
+    cyclical = models.CharField(max_length=20, blank=True, null=True)
+    is_cyclical = models.BooleanField(default=False)
+    cycle_interval = models.CharField(max_length=10, null=True, blank=True)
+    cycle_number = models.IntegerField(null=True, blank=True)
 
     with_who = models.CharField(null=True, max_length=200)
     localization = models.CharField(null=True, max_length=200)

@@ -17,6 +17,9 @@ from django.http import Http404, JsonResponse
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2.credentials import Credentials
+from allauth.socialaccount.models import SocialToken
+from dateutil import relativedelta
+import re
 from allauth.socialaccount.models import SocialToken, SocialAccount
 from geopy.geocoders import Nominatim
 from tasks.utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
@@ -37,6 +40,17 @@ def get_meetings(dict, date):
     else:
         return []
 
+def add_days(date, interval, number):
+    if interval == 'd':
+        d = timedelta(days = number)
+    elif interval == 'w':
+        d = timedelta(weeks = number)
+    elif interval == 'm':
+        d = relativedelta.relativedelta(months = number)
+    elif interval == 'y':
+        d = relativedelta.relativedelta(years = number)
+    date += d
+    return(date)
 
 def get_context(year, month, day, user):
     meetings = Meeting.objects.filter(user=user)
@@ -58,6 +72,18 @@ def get_context(year, month, day, user):
             all_events[meeting_date].append(m)
         else:
             all_events[meeting_date] = [m]
+        if m.is_cyclical:
+            next_month = date + relativedelta.relativedelta(months=1)
+            next_month = next_month.replace(day=1)
+            if m.date_start < next_month:
+                temp_date = m.date_start
+                while temp_date < next_month:
+                    temp_date = add_days(temp_date, m.cycle_interval, m.cycle_number)
+                    if temp_date.month == month:
+                        if temp_date in all_events:
+                            all_events[temp_date].append(m)
+                        else:
+                            all_events[temp_date] = [m]
 
     days = []
     for d in cal.itermonthdays2(year, month):
@@ -344,6 +370,9 @@ class AddEventView(BSModalCreateView):
             obj.l_lon = destination.longitude
         with_who = self.request.POST.getlist("with_who")
         obj.with_who = "|".join(with_who)
+        if not form.cleaned_data['is_cyclical']:
+            obj.cycle_interval = None
+            obj.cycle_number = None
         if self.request.is_ajax():
             try:
                 service = construct_service(obj.user)
@@ -487,6 +516,10 @@ def edit_meeting(request, pk):
                 obj.l_lon = destination.longitude
             with_who = request.POST.getlist("with_who")
             obj.with_who = "|".join(with_who)
+            if not obj.is_cyclical:
+                obj.cycle_interval = None
+                obj.cycle_number = None
+            obj.save()
             form.save()
             return redirect('/calendar')
 
@@ -538,6 +571,7 @@ class ConnectTaskView(BSModalUpdateView):
             task.meeting = self.object
             task.save()
         return HttpResponseRedirect(self.get_success_url())
+
 
     def form_invalid(self, form):
         """If the form is invalid, render the invalid form."""

@@ -69,6 +69,21 @@
                                     </div>
                                     {% endfor %}
                                 </div>
+                            {% elif field.name == 'time_start' %}
+                            <div style="width: 100%; display: flex; justify-content: space-between;">
+                                <div style="width: 48%;">{{form.time_start | as_crispy_field}}</div>
+                                <div style="width: 48%;">{{form.time_end | as_crispy_field}}</div>
+                            </div>
+
+                            {% elif field.name == 'cycle_number' or field.name == 'cycle_interval' or field.name == 'time_end' %}
+
+                            {% elif field.name == 'is_cyclical' %}
+                                {{field | as_crispy_field}}
+                                <div class="cyclical-form" style="display: flex; justify-content: space-between;">
+                                    <p style="width: 33%;">Powtarzaj co:</p>
+                                    <div style="width: 33%;"> {{ form.cycle_number }}</div>
+                                    <div style="width: 33%;">{{ form.cycle_interval }}</div>
+                                </div>
                             {% else %}
                                 <div class="form-group{% if field.errors %} invalid{% endif %}">
                                     {{ field | as_crispy_field }}
@@ -144,30 +159,6 @@
         </div>
     </div>
 
-        <script type="text/javascript">
-        $(document).ready(function() {
-
-            $(".delete-event").each(function () {
-                $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
-            });
-
-            $("#connect-task").each(function () {
-              $(this).modalForm({
-                formURL: $(this).data("form-url")});
-            });
-
-            $("#add-note").each(function () {
-              $(this).modalForm({
-                formURL: $(this).data("form-url")});
-            });
-
-            $(".edit_note").each(function () {
-              $(this).modalForm({
-                formURL: $(this).data("form-url")});
-            });
-
-        });
-        </script>
     <script type="text/javascript">
         function validate() {
             var start = $('#id_date_start').data("DateTimePicker");
@@ -196,6 +187,25 @@
 }
 
         $(document).ready(function() {
+            $(".delete-event").each(function () {
+                $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
+            });
+
+            $("#connect-task").each(function () {
+              $(this).modalForm({
+                formURL: $(this).data("form-url")});
+            });
+
+            $("#add-note").each(function () {
+              $(this).modalForm({
+                formURL: $(this).data("form-url")});
+            });
+
+            $(".edit_note").each(function () {
+              $(this).modalForm({
+                formURL: $(this).data("form-url")});
+            });
+
             $("#id_date_start").on("dp.change", function (e) {
                 validate();
                 });
@@ -211,6 +221,21 @@
             $("#id_time_end").on("dp.change", function (e) {
                validate();
                });
+
+
+            if("{{meeting.is_cyclical}}" == "True") {
+                $('.cyclical-form').show();
+            } else {
+                $('.cyclical-form').hide();
+            }
+
+            $('input[type=checkbox]').change(function() {
+                if (this.checked) {
+                    $('.cyclical-form').show();
+                } else {
+                    $('.cyclical-form').hide();
+                }
+            });
         });
     </script>
     <script>
