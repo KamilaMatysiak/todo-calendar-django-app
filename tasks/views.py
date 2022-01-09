@@ -19,13 +19,12 @@ from django.views.decorators.http import require_GET, require_POST
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
+from dateutil import relativedelta
 from django.template import loader
 import datetime
-import folium
 import json
 from django.http import HttpResponse
 from django.views.decorators.clickjacking import xframe_options_exempt
-
 
 # Create your views here.
 
@@ -47,6 +46,13 @@ def test(request):
 @login_required
 def task_list(request, pk=None):
     tasks = [x for x in Task.objects.all() if x.user == request.user and x.accepted == True]
+    tasks = []
+    for x in Task.objects.all():
+        if x.user == request.user and x.accepted == True:
+            if x.complete:
+                if (datetime.datetime.now(timezone.utc)-x.completed_date).days > 7:
+                    continue
+            tasks.append(x)
     categories = [x for x in Category.objects.all() if x.user == request.user]
     form = TaskModelForm(request.user)
 
@@ -65,8 +71,13 @@ def task_list(request, pk=None):
 def categoryView(request, pk):
     category = Category.objects.get(id=pk)
     categories = [x for x in Category.objects.all() if x.user == request.user]
-    tasks = [x for x in Task.objects.all() if
-             x.user == request.user and x.category is not None and x.category.id == category.id and x.accepted == True]
+    tasks = []
+    for x in Task.objects.all():
+        if x.user == request.user and x.category is not None and x.category.id == category.id and x.accepted == True:
+            if x.complete:
+                if (datetime.datetime.now(timezone.utc)-x.completed_date).days > 7:
+                    continue
+            tasks.append(x)
 
     form = TaskModelForm(request.user)
 
@@ -80,11 +91,29 @@ def categoryView(request, pk):
     context = {"categories": categories, "tasks": tasks, 'form': form, 'category': category}
     return render(request, 'tasks/category_template.html', context)
 
+def archiveView(request):
+    categories = [x for x in Category.objects.all() if x.user == request.user]
+    tasks = []
+    for x in Task.objects.all():
+        if x.user == request.user and x.accepted == True and x.completed_date:
+            if (datetime.datetime.now(timezone.utc)-x.completed_date).days > 7:
+                tasks.append(x)
+
+    form = TaskModelForm(request.user)
+
+    if request.method == 'POST':
+        form = TaskModelForm(request.user, request.POST)
+
+        if form.is_valid():
+            form.save()
+        return redirect('/')
+
+    context = {"categories": categories, "tasks": tasks, 'form': form}
+    return render(request, 'tasks/archive.html', context)
 
 def delegateView(request):
     categories = [x for x in Category.objects.all() if x.user == request.user]
     tasks = [x for x in Task.objects.all() if x.from_who is not None and x.from_who == request.user]
-
     form = TaskModelForm(request.user)
 
     if request.method == 'POST':
@@ -286,14 +315,13 @@ def finishTask(request):
     task = Task.objects.get(pk=taskID)
 
     if complete == 'true':
-        print("saving to true")
         task.complete = True
+        task.completed_date = datetime.datetime.now(timezone.utc)
+        print(task.completed_date)
         if task.is_cyclical:
             d = task.date
             while datetime.datetime.combine(d, task.time) < datetime.datetime.now():
-                print('here i am')
                 d = add_days(d, task.cycle_interval, task.cycle_number)
-            print(d)
             if d == task.date:
                 d = add_days(d, task.cycle_interval, task.cycle_number)
             Task.objects.create(user = task.user, title = task.title,

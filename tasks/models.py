@@ -48,6 +48,7 @@ class Task(models.Model):
     )
     complete = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
+    completed_date = models.DateTimeField(blank=True, null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, null=True, default=1)
     from_who = models.ForeignKey(User, on_delete=models.SET_NULL, blank=True, null=True, related_name='+', validators=[temporary_user_validation])
     accepted = models.BooleanField(default=True)
@@ -55,7 +56,6 @@ class Task(models.Model):
     is_cyclical = models.BooleanField(default=False)
     cycle_interval = models.CharField(max_length=10, null=True, blank=True)
     cycle_number = models.IntegerField(null=True, blank=True)
-
     
     def __str__(self):
         """Returns title of task"""

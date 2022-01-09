@@ -28,6 +28,7 @@
                     <li><a href="{% url 'category' cat.id %}"> {{cat}} </a></li>
                 {% endfor %}
                 <li class="add-category"><a>+ Dodaj kategorię</a></li>
+                <li><a href="{% url 'archive' %}"> Archiwum zadań </a></li>
             </ul>
         </nav>
     </nav>
@@ -48,6 +49,7 @@
                         <li><a href="{% url 'delegate' %}"> Zlecone zadania </a></li>
                         {% for cat in categories %}
                             <li><a href="{% url 'category' cat.id %}"> {{cat}} </a></li>
+                        <li><a href="{% url 'archive' %}"> Archiwum zadań </a></li>
                         {% endfor %}
 
                     </ul>

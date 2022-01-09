@@ -13,31 +13,23 @@
 <div class="wrapper">
     <nav id="sidebar">
         <nav class="sidebar main">
-
             <a href="{% url 'vtodo' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/home-icon.svg' %}"></div></a>
             <a href="{% url 'date' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
-            <div class="sidebar-btn active"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div>
+            <a href="#"><div class="sidebar-btn active"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div></a>
             <a href="{% url 'location' %}"><div class="sidebar-btn"><img id="map" src="{%static 'image/icons/map.svg' %}"></div></a>
             <!--<div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>-->
         </nav>
         <nav class="sidebar menu">
-                        <div class="scroll">
             <div class="header"><img src="{%static 'image/icons/todolist-dark.svg' %}"><h1>LISTA ZADAŃ</h1></div>
             <ul class="menu-buttons">
-                    <li><a href="{% url 'list'%}">WSZYSTKIE</a></li>
-                    <li><a href="{% url 'delegate' %}"> Zlecone zadania </a></li>
-                    {% for cat in categories %}
-                    {% if category.title == cat.title %}
-                        <li class="active"><a class="active" href=#> {{cat}} </a></li>
-                    {% else %}
-                        <li><a href="{% url 'category' cat.pk %}"> {{cat}} </a></li>
-                    {% endif %}
-                    {% endfor %}
-                    <li class="add-category"><a>+ Dodaj kategorię</a></li>
-                    <li><a href="{% url 'archive' %}"> Archiwum zadań </a></li>
-
+                <li><a href="{% url 'list'%}">WSZYSTKIE</a></li>
+                <li><a href="{% url 'delegate' %}"> Zlecone zadania </a></li>
+                {% for cat in categories %}
+                    <li><a href="{% url 'category' cat.id %}"> {{cat}} </a></li>
+                {% endfor %}
+                <li class="add-category"><a>+ Dodaj kategorię</a></li>
+                <li class="active"><a class="active" href=#> Archiwum zadań </a></li>
             </ul>
-                            </div>
         </nav>
     </nav>
 
@@ -55,19 +47,15 @@
                     <ul class="list-unstyled">
                         <li><a href="{% url 'list'%}">WSZYSTKIE</a></li>
                         <li><a href="{% url 'delegate' %}"> Zlecone zadania </a></li>
+                        
                         {% for cat in categories %}
-                        {% if category == cat.title %}
-                            <li class="active"><a class="active" href=#> {{cat}} </a></li>
-                        {%else%}
-                            <li><a href="{% url 'category' cat.pk %}"> {{cat}} </a></li>
-                        {% endif %}
+                            <li><a href="{% url 'category' cat.id %}"> {{cat}} </a></li>
                         {% endfor %}
-                        <li class="add-category"><a>+ Dodaj kategorię</a></li>
-                        <li><a href="{% url 'archive' %}"> Archiwum zadań </a></li>
+                        <li class="active"><a class="active" href=#> Archiwum zadań </a></li>
                     </ul>
                 </li>
                 <li><a href="{% url 'location' %}"><img src="{%static 'image/icons/mobile/map-icon-black.svg' %}"> Mapa</a></li>
-                <li><a href="#"><img src="{%static 'image/icons/mobile/set-icon-black.svg' %}"> Ustawienia</a></li>
+                <!--<div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>-->
             </ul>
             <ul class="list-unstyled"><li><a href="{% url 'logout' %}"><img src="{%static 'image/icons/mobile/logout.svg' %}"> Wyloguj się</a></li></ul>
         </div>
@@ -82,11 +70,7 @@
         </div>
         <nav class="navbar">
             <div class="left">
-                <h1>{{category.title}}</h1>
-                    <button class="button category-edit small-button" data-toggle="modal" data-form-url="{% url 'edit_cat' category.id %}"><img src="{% static 'image/icons/outline-edit-icon.svg'%}" alt="Edytuj"></button>
-                    <button type="button" class="delete-category button category-edit small-button" data-form-url="{% url 'delete_cat' category.id %}">
-                        <img src="{% static 'image/icons/outline-delete-icon.svg'%}" alt="Usuń">
-                    </button>
+                <h1>ARCHIWUM</h1>
             </div>
             <div class="right">
                 <div class="modal fade" tabindex="-1" role="dialog" id="modal">
@@ -109,24 +93,19 @@
                 <div class="vcontainer">
                     {% if task.complete %}
                     <div class="task passed">
-                        <input type="checkbox" checked onclick='taskFinish(this,"{{task.id}}")'>
+                        <input type="checkbox" checked disabled=true>
 
                     {% else %}
                     <div class="task">
-                        <input type="checkbox" onclick='taskFinish(this,"{{task.id}}")'>
+                        <input type="checkbox" disabled=true>
                     {% endif %}
                         <div class="task-content">
-                        <div class="task-content">
                             <h1>{{task}}</h1><div class="task-info"><p id="date">
-                            {% if task|to_datetime|is_expired and not task.complete %}
-                                <p class="warning"><b>Spóźnienie</b></p>
-                            {% elif task.complete %}
-                                <p><b>Zakończone</b></p>
-                            {% else %}
-                                {{task |to_datetime |timeuntil}}
-                            {% endif %}
-                            </p><p>∙</p><p>{{task.localization}}</p><p>∙</p><p>{{task.with_who}}</p></div>
-                        </div>
+                                <p><b>Skończono: {{task.completed_date}}</b></p>
+                            </p>
+                            {% if task.localization %}<p>∙</p><a href="/location/{{ task.l_lat}}_{{ task.l_lon }}"><p>{{task.localization}}</p></a>{% endif %}
+                            {% if task.with_who %}<p>∙</p><p>{{task.with_who}}</p>{% endif %}
+                            {% if task.from_who %}<p>∙</p><p>Dla <strong>{{task.user}}</strong></p>{% endif %}</div>
                         </div>
                         <div class="important-tag">
                             {% if task.priority == "H" %}
@@ -139,12 +118,6 @@
                             <div style="width: 15px; height: 15px;"></div>
                             {% endif %}
                         </div>
-                    </div>
-                    <div class="edit">
-                        <button class="button task-edit" data-toggle="modal" data-form-url="{% url 'update_task' task.pk %}"><img src="{% static 'image/icons/edit-icon.svg'%}" alt="Edytuj"></button>
-                        <button type="button" class="delete-task button task-edit" data-form-url="{% url 'delete' task.pk %}">
-                            <img src="{% static 'image/icons/delete-icon.svg'%}" alt="Usuń">
-                        </button>
                     </div>
                 </div>
 
@@ -169,16 +142,7 @@
             $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
         });
 
-        $(".delete-category").each(function () {
-            $(this).modalForm({formURL: $(this).data("form-url"), isDeleteForm: true});
-        });
-
         $(".task-edit").each(function () {
-              $(this).modalForm({
-                formURL: $(this).data("form-url")});
-        });
-
-        $(".category-edit").each(function () {
               $(this).modalForm({
                 formURL: $(this).data("form-url")});
         });
@@ -217,8 +181,10 @@
             });
         }
     </script>
-{{form.media}}
+    {{form.media}}
     <script src="{% static 'js/jquery.bootstrap.modal.forms.min.js' %}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.concat.min.js"></script>
+
+
 
 {% endblock %}
