@@ -40,17 +40,19 @@ def get_meetings(dict, date):
     else:
         return []
 
+
 def add_days(date, interval, number):
     if interval == 'd':
-        d = timedelta(days = number)
+        d = timedelta(days=number)
     elif interval == 'w':
-        d = timedelta(weeks = number)
+        d = timedelta(weeks=number)
     elif interval == 'm':
-        d = relativedelta.relativedelta(months = number)
+        d = relativedelta.relativedelta(months=number)
     elif interval == 'y':
-        d = relativedelta.relativedelta(years = number)
+        d = relativedelta.relativedelta(years=number)
     date += d
-    return(date)
+    return (date)
+
 
 def get_context(year, month, day, user):
     meetings = Meeting.objects.filter(user=user)
@@ -428,20 +430,19 @@ class DeleteNoteView(BSModalDeleteView):
         return obj
 
 
+def parse_google_date(data):
+    parsed = re.split(r"[TZ]", data.get('dateTime', datetime.now()))
+    _date, _time = parsed[:2]
+    if any(s in _time for s in ('+', '-')):
+        _time = re.split(r'[+-]', _time)[0]
+    return _date, _time
+
+
 @login_required
 def import_google_calendar_data(request):
-    import re
-
     def construct_response(msg, data):
         return {'msg': msg,
                 'data': data}
-
-    def parse_google_date(data):
-        parsed = re.split(r"[TZ]", data.get('dateTime', datetime.now()))
-        _date, _time = parsed[:2]
-        if any(s in _time for s in ('+', '-')):
-            _time = re.split(r'[+-]', _time)[0]
-        return _date, _time
 
     user = request.user
     if is_google_user(user):
@@ -493,6 +494,24 @@ class DeleteEventView(BSModalDeleteView):
         obj = super(DeleteEventView, self).get_object()
         if not obj.user == self.request.user:
             raise Http404
+
+        print(self.request.user)
+        print(obj.__dict__)
+        service = construct_service(self.request.user)
+        events_items = \
+            service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z', singleEvents=True,
+                                  orderBy='startTime').execute()['items']
+        for item in events_items:
+            print(item)
+            date_start, time_start = parse_google_date(item['start'])
+            date_end, time_end = parse_google_date(item['end'])
+            if obj.title == item['summary'] and obj.description == item['description'] \
+                    and str(obj.date_start) == date_start and str(obj.date_end) == date_end:
+                print('PASSED')
+                # kwargs = {'calendarId': 'primary',
+                #           'eventId': item['id'],
+                #           'sendNotifications': False}
+                # service.events().delete(**kwargs).execute()
         return obj
 
 
@@ -571,7 +590,6 @@ class ConnectTaskView(BSModalUpdateView):
             task.meeting = self.object
             task.save()
         return HttpResponseRedirect(self.get_success_url())
-
 
     def form_invalid(self, form):
         """If the form is invalid, render the invalid form."""
