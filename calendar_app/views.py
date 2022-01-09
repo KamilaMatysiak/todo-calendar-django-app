@@ -498,20 +498,23 @@ class DeleteEventView(BSModalDeleteView):
         print(self.request.user)
         print(obj.__dict__)
         service = construct_service(self.request.user)
-        events_items = \
-            service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z', singleEvents=True,
-                                  orderBy='startTime').execute()['items']
-        for item in events_items:
-            print(item)
-            date_start, time_start = parse_google_date(item['start'])
-            date_end, time_end = parse_google_date(item['end'])
-            if obj.title == item['summary'] and obj.description == item['description'] \
-                    and str(obj.date_start) == date_start and str(obj.date_end) == date_end:
-                print('PASSED')
-                # kwargs = {'calendarId': 'primary',
-                #           'eventId': item['id'],
-                #           'sendNotifications': False}
-                # service.events().delete(**kwargs).execute()
+        try:
+            events_items = \
+                service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z', singleEvents=True,
+                                      orderBy='startTime').execute()['items']
+            for item in events_items:
+                print(item)
+                date_start, time_start = parse_google_date(item['start'])
+                date_end, time_end = parse_google_date(item['end'])
+                if obj.title == item['summary'] and obj.description == item['description'] \
+                        and str(obj.date_start) == date_start and str(obj.date_end) == date_end:
+
+                    kwargs = {'calendarId': 'primary',
+                              'eventId': item['id'],
+                              'sendNotifications': False}
+                    service.events().delete(**kwargs).execute()
+        except:
+            pass
         return obj
 
 
