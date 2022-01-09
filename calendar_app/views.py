@@ -450,7 +450,7 @@ def import_google_calendar_data(request):
             service = construct_service(user)
 
             events_result = service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z',
-                                                  maxResults=10, singleEvents=True,
+                                                  singleEvents=True,
                                                   orderBy='startTime').execute()
             events = events_result.get('items', [])
             for event in events:
