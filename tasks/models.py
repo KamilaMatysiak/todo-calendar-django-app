@@ -56,7 +56,10 @@ class Task(models.Model):
     is_cyclical = models.BooleanField(default=False)
     cycle_interval = models.CharField(max_length=10, null=True, blank=True)
     cycle_number = models.IntegerField(null=True, blank=True)
-    
+    note = models.CharField(max_length=300, blank=True, null=True)
+    estimated_time_number = models.CharField(max_length=3, null=True, blank=True)
+    estimated_time_interval = models.CharField(max_length=10, null=True, blank=True)
+
     def __str__(self):
         """Returns title of task"""
         return f"{self.title}"
