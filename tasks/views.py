@@ -39,6 +39,9 @@ def terms_of_service(request):
 def user_manual(request):
     return render(request, 'tasks/manual/user_manual.html')
 
+def pwa_manual(request):
+    return render(request, 'tasks/manual/pwa_instruction.html')
+
 def test(request):
     return render(request, 'tasks/components.html')
 
