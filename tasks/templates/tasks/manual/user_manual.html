@@ -7,7 +7,9 @@
 {% endblock %}
 
 {% block content %}
-<div class="um-sidebar navy">
+<div><button style="position: absolute; top: 15px; left: 15px;" id="um-sidebarCollapse" onclick="showMenu()" class="button add">MENU</button></div>
+<div id="um-sidebar" class="um-sidebar navy">
+    <div style="color: #fff; padding: 5px 15px; text-align:right; cursor: pointer;" onclick="hideMenu()" id="um-dismiss">x</div>
     <a href="{% url 'index' %}"><img id="um-logo" src="{% static 'image/logo.svg' %}"></a>
     <ul>
         <li><a href="#logowanie">Logowanie i rejestracja</a></li>
@@ -97,4 +99,15 @@
         <p>Developerzy usilnie pracują, by dostarczyć ten rozdział jak najszybciej!</p>
     </div>
 </div>
+
+<script type="text/javascript">
+
+        function showMenu() {
+            document.getElementById("um-sidebar").style.display = "block";
+        }
+
+        function hideMenu() {
+            document.getElementById("um-sidebar").style.display = "none";
+        }
+    </script>
 {% endblock %}
