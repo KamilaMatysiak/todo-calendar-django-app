@@ -16,46 +16,29 @@
       <div class="modal-body">
         {% for field in form %}
           {%  if field.name == 'color' %}
-            <label>{{field.label}}</label>
-            <div class="carousel-container">
-                <div class="slide center">
-                    {% for radio in field %}
-                    {% if radio.id_for_label|chooseSlide == 1 %}
-                        <div class="radiocontainer">
-                        {{radio.tag}}
-                        <span class="{{radio.choice_label}} radiobutton" ></span>
-                        <span class="mark"></span>
-                    </div>
-                    {% endif %}
-                    {% endfor %}
-                </div>
+                                <label>{{field.label}}</label>
+                                <div class="center" style="justify-content: space-between; margin-bottom: 25px;">
 
-                <div class="slide center">
-                    {% for radio in field %}
-                    {% if radio.id_for_label|chooseSlide == 2 %}
-                        <div class="radiocontainer">
-                        {{radio.tag}}
-                        <span class="{{radio.choice_label}} radiobutton" ></span>
-                        <span class="mark"></span>
-                    </div>
-                    {% endif %}
-                    {% endfor %}
-                </div>
+                                    {% for radio in field %}
 
-                <a class="prev-c" onclick="plusSlides(-1)">&#10094;</a>
-
-                <a class="next-c" onclick="plusSlides(1)">&#10095;</a>
-            </div>
-        {% else %}
-            <div class="form-group{% if field.errors %} invalid{% endif %}">
-                {{ field | as_crispy_field }}
-                {% for error in field.errors %}
-                  <p class="help-block">{{ error }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
+                                    <div class="radiocontainer">
+                                        {{radio.tag}}
+                                        <span class="{{radio.choice_label}} radiobutton" ></span>
+                                        <span class="mark"></span>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="form-group{% if field.errors %} invalid{% endif %}">
+                                    {{ field | as_crispy_field }}
+                                    {% for error in field.errors %}
+                                      <p class="help-block">{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
         {% endfor %}
       </div>
+
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Anuluj</button>
@@ -144,38 +127,3 @@
 
         });
     </script>
-    <script>
-        var slideIndex = 1;
-        showSlides(slideIndex);
-
-        function plusSlides(n) {
-            showSlides(slideIndex += n);
-        }
-
-        function currentSlide(n) {
-            showSlides(slideIndex = n);
-        }
-
-        function showSlides(n) {
-            var i;
-            var slides = document.getElementsByClassName("slide");
-            if (n > slides.length) {slideIndex = 1;}
-            if (n < 1) {slideIndex = slides.length;}
-            for (i = 0; i < slides.length; i++) {
-              slides[i].style.display = "none";
-            }
-        slides[slideIndex-1].style.display = "flex";
-
-        console.log(slideIndex);
-
-        if (slideIndex == 1) {
-            document.getElementsByClassName("prev-c")[0].style.display = "none";
-            document.getElementsByClassName("next-c")[0].style.display = "block";
-        }
-        else {
-            document.getElementsByClassName("prev-c")[0].style.display = "block";
-            document.getElementsByClassName("next-c")[0].style.display = "none";
-          }
-        }
-    </script>
-
