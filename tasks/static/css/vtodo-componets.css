@@ -1551,6 +1551,17 @@ PROFILE
 .modal-backdrop {z-index: 1000 !important;}
 .pac-container {z-index: 1055 !important;}
 
+.help {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+
+}
+
+.help img {
+    width: 25px;
+}
+
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
