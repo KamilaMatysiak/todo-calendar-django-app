@@ -2,7 +2,6 @@ import pytest
 from users.models import User
 from users.models import UserProfile
 
-"""
 @pytest.mark.django_db
 def test_user_create():
     user = User.objects.create_user('Adam Osiowy', 'addammmm@o2.pl', 'dsfgfgggf22234@$sa')
@@ -48,4 +47,3 @@ def test_unique():
     userprofile2 = UserProfile.objects.create(user=user2, firstname="Grzegorz Nowak", birthdate="1937-04-11",
                                               phonenumber="933356545")
     assert user1 is not user2 and userprofile1 is not userprofile2
-"""

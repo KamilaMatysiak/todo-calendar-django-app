@@ -1,4 +1,4 @@
-"""import pytest
+import pytest
 from django.urls import reverse
 
 
@@ -12,4 +12,3 @@ def test_home_view(client):
     response = client.get(url)
     assert response.status_code == 200
 
-"""
