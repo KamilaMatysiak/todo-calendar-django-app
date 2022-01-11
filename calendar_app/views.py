@@ -483,6 +483,9 @@ def import_google_calendar_data(request):
 
     return JsonResponse(response)
 
+def delete_event_from_google():
+    pass
+
 
 class DeleteEventView(BSModalDeleteView):
     template_name = 'calendar/delete_meeting.html'
@@ -495,26 +498,25 @@ class DeleteEventView(BSModalDeleteView):
         if not obj.user == self.request.user:
             raise Http404
 
-        print(self.request.user)
-        print(obj.__dict__)
-        service = construct_service(self.request.user)
-        try:
-            events_items = \
-                service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z', singleEvents=True,
-                                      orderBy='startTime').execute()['items']
-            for item in events_items:
-                print(item)
-                date_start, time_start = parse_google_date(item['start'])
-                date_end, time_end = parse_google_date(item['end'])
-                if obj.title == item['summary'] and obj.description == item['description'] \
-                        and str(obj.date_start) == date_start and str(obj.date_end) == date_end:
+        if not self.request.is_ajax():
+            try:
+                service = construct_service(self.request.user)
+                events_items = \
+                    service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z', singleEvents=True,
+                                          orderBy='startTime').execute()['items']
+                for item in events_items:
+                    date_start, time_start = parse_google_date(item['start'])
+                    date_end, time_end = parse_google_date(item['end'])
+                    if obj.title == item['summary'] and obj.description == item.get('description', obj.description) \
+                            and str(obj.date_start) == date_start and str(obj.date_end) == date_end:
 
-                    kwargs = {'calendarId': 'primary',
-                              'eventId': item['id'],
-                              'sendNotifications': False}
-                    service.events().delete(**kwargs).execute()
-        except:
-            pass
+                        kwargs = {'calendarId': 'primary',
+                                  'eventId': item['id'],
+                                  'sendNotifications': False}
+                        service.events().delete(**kwargs).execute()
+                        break
+            except:
+                pass
         return obj
 
 
