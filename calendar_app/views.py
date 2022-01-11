@@ -494,8 +494,11 @@ def delete_event_from_google(user, obj):
         for item in events_items:
             date_start, time_start = parse_google_date(item['start'])
             date_end, time_end = parse_google_date(item['end'])
+            print(obj.localization)
+            print(item.get('location', ''))
             if obj.title == item['summary'] and obj.description == item.get('description', '') \
-                    and str(obj.date_start) == date_start and str(obj.date_end) == date_end:
+                    and str(obj.date_start) == date_start and str(obj.date_end) == date_end \
+                    and obj.localization == item.get('location', ''):
                 kwargs = {'calendarId': 'primary',
                           'eventId': item['id'],
                           'sendNotifications': False}
