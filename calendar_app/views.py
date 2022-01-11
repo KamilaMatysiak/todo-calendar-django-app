@@ -487,13 +487,14 @@ def import_google_calendar_data(request):
 def delete_event_from_google(user, obj):
     try:
         service = construct_service(user)
-        events_items = \
-            service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z', singleEvents=True,
-                                  orderBy='startTime').execute()['items']
+        events_items = service.events().list(calendarId='primary',
+                                             timeMin=datetime.utcnow().isoformat() + 'Z',
+                                             singleEvents=True,
+                                             orderBy='startTime').execute()['items']
         for item in events_items:
             date_start, time_start = parse_google_date(item['start'])
             date_end, time_end = parse_google_date(item['end'])
-            if obj.title == item['summary'] and obj.description == item.get('description', obj.description) \
+            if obj.title == item['summary'] and obj.description == item.get('description', '') \
                     and str(obj.date_start) == date_start and str(obj.date_end) == date_end:
                 kwargs = {'calendarId': 'primary',
                           'eventId': item['id'],
