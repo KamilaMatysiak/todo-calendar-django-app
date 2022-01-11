@@ -380,7 +380,8 @@ class AddEventView(BSModalCreateView):
                 service = construct_service(obj.user)
                 print("start: ", obj.date_start, "\n end: ", obj.date_end)
                 create_event(service=service,
-                             meeting_obj=obj)
+                             meeting_obj=obj,
+                             location=obj.localization)
             except Exception as e:
                 print("Error is", e)
         return super(AddEventView, self).form_valid(form)
@@ -460,6 +461,16 @@ def import_google_calendar_data(request):
                 date_end, time_end = parse_google_date(event['end']) \
                     if event['end'].get('dateTime') else (event['end']['date'], '23:59:00')
 
+                location = event.get('location', '')
+                l_lat = None
+                l_lon = None
+                if location:
+                    geolocator = Nominatim(user_agent='measurements')
+
+                    destination = geolocator.geocode(location)
+                    l_lat = destination.latitude
+                    l_lon = destination.longitude
+
                 meeting_kwargs = {
                     'user': user,
                     'title': event.get('summary', 'brak tytułu'),
@@ -469,6 +480,9 @@ def import_google_calendar_data(request):
                     'date_end': date_end,
                     'time_end': time_end,
                     'color': colors_event[event.get('colorId', '9')].get('name', 'blue'),
+                    'localization': location,
+                    'l_lat': l_lat,
+                    'l_lon': l_lon,
                 }
 
                 Meeting.objects.get_or_create(**meeting_kwargs)
