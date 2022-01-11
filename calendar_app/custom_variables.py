@@ -38,29 +38,33 @@ colors_calendar = {'1': {'background': '#ac725e', 'foreground': '#1d1d1d'},
                    '23': {'background': '#cd74e6', 'foreground': '#1d1d1d'},
                    '24': {'background': '#a47ae2', 'foreground': '#1d1d1d'}
                    }
-colors_event = {'1': {'background': '#a4bdfc', 'foreground': '#1d1d1d', 'name': 'cool gray'},
-                '2': {'background': '#7ae7bf', 'foreground': '#1d1d1d', 'name': 'light green'},
-                '3': {'background': '#dbadff', 'foreground': '#1d1d1d', 'name': 'purple'},
-                '4': {'background': '#ff887c', 'foreground': '#1d1d1d', 'name': 'pink'},
-                '5': {'background': '#fbd75b', 'foreground': '#1d1d1d', 'name': 'yellow'},
-                '6': {'background': '#ffb878', 'foreground': '#1d1d1d', 'name': 'orange'},
-                '7': {'background': '#46d6db', 'foreground': '#1d1d1d', 'name': 'cyan'},
-                '8': {'background': '#e1e1e1', 'foreground': '#1d1d1d', 'name': 'grey'},
-                '9': {'background': '#5484ed', 'foreground': '#1d1d1d', 'name': 'blue'},
-                '10': {'background': '#51b749', 'foreground': '#1d1d1d', 'name': 'green'},
-                '11': {'background': '#dc2127', 'foreground': '#1d1d1d', 'name': 'red'},
+colors_event = {#'1': {'background': '#a4bdfc', 'foreground': '#1d1d1d', 'name': 'gray'},   # real name: Perano
+                #'2': {'background': '#7ae7bf', 'foreground': '#1d1d1d', 'name': 'salad'}, # real name: Riptide
+                '3': {'background': '#dbadff', 'foreground': '#1d1d1d', 'name': 'purple'},      # real name: Mauve
+                '4': {'background': '#ff887c', 'foreground': '#1d1d1d', 'name': 'pink'},        # real name: Salmon
+                '5': {'background': '#fbd75b', 'foreground': '#1d1d1d', 'name': 'yellow'},      # real name: Dandelion
+                '6': {'background': '#ffb878', 'foreground': '#1d1d1d', 'name': 'orange'},      # real name: Macaroni And Cheese
+                '7': {'background': '#46d6db', 'foreground': '#1d1d1d', 'name': 'cyan'},        # real name: Medium Turquoise
+                #'8': {'background': '#e1e1e1', 'foreground': '#1d1d1d', 'name': 'grey'},        # real name: Gainsboro
+                '9': {'background': '#5484ed', 'foreground': '#1d1d1d', 'name': 'blue'},        # real name: Cornflower Blue
+                '10': {'background': '#51b749', 'foreground': '#1d1d1d', 'name': 'green'},      # real name: Fruit Salad
+                '11': {'background': '#dc2127', 'foreground': '#1d1d1d', 'name': 'red'},        # real name: Alizarin
                 }
 vtodo_colors_event = {
-    'cool gray': '1',
-    'light green': '2',
+    'blue': '9',
+    'orange': '6',
+    'green': '10',
     'purple': '3',
+    'red': '11',
+    #'gray': '1',
+    #'salad': '2',
     'pink': '4',
     'yellow': '5',
-    'orange': '6',
     'cyan': '7',
-    'grey': '8',
-    'blue': '9',
-    'green': '10',
-    'red': '11',
+    #'grey': '8',
+
 }
+
+COLORS = [(c, c) for c in vtodo_colors_event.keys()]
+print(COLORS)
 timezone = 'Europe/Warsaw'
