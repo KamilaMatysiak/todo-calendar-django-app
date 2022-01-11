@@ -41,7 +41,7 @@ colors_calendar = {'1': {'background': '#ac725e', 'foreground': '#1d1d1d'},
 colors_event = {#'1': {'background': '#a4bdfc', 'foreground': '#1d1d1d', 'name': 'gray'},   # real name: Perano
                 #'2': {'background': '#7ae7bf', 'foreground': '#1d1d1d', 'name': 'salad'}, # real name: Riptide
                 '3': {'background': '#dbadff', 'foreground': '#1d1d1d', 'name': 'purple'},      # real name: Mauve
-                #'4': {'background': '#ff887c', 'foreground': '#1d1d1d', 'name': 'pink'},        # real name: Salmon
+                '4': {'background': '#ff887c', 'foreground': '#1d1d1d', 'name': 'pink'},        # real name: Salmon
                 '5': {'background': '#fbd75b', 'foreground': '#1d1d1d', 'name': 'yellow'},      # real name: Dandelion
                 '6': {'background': '#ffb878', 'foreground': '#1d1d1d', 'name': 'orange'},      # real name: Macaroni And Cheese
                 '7': {'background': '#46d6db', 'foreground': '#1d1d1d', 'name': 'cyan'},        # real name: Medium Turquoise
@@ -58,7 +58,7 @@ vtodo_colors_event = {
     'red': '11',
     #'gray': '1',
     #'salad': '2',
-    #'pink': '4',
+    'pink': '4',
     'yellow': '5',
     'cyan': '7',
     #'grey': '8',

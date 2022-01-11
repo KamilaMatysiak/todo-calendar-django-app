@@ -19,26 +19,41 @@
                                 <label>{{field.label}}</label>
                                 <div class="center" style="justify-content: space-between; margin-bottom: 25px;">
 
-                                    {% for radio in field %}
+                    {% for radio in field %}
 
-                                    <div class="radiocontainer">
-                                        {{radio.tag}}
-                                        <span class="{{radio.choice_label}} radiobutton" ></span>
-                                        <span class="mark"></span>
-                                    </div>
-                                    {% endfor %}
-                                </div>
-                            {% else %}
-                                <div class="form-group{% if field.errors %} invalid{% endif %}">
-                                    {{ field | as_crispy_field }}
-                                    {% for error in field.errors %}
-                                      <p class="help-block">{{ error }}</p>
-                                    {% endfor %}
-                                </div>
-                            {% endif %}
+                    <div class="radiocontainer">
+                        {{radio.tag}}
+                        <span class="{{radio.choice_label}} radiobutton" ></span>
+                        <span class="mark"></span>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% elif field.name == 'time_start' %}
+            <div style="width: 100%; display: flex; justify-content: space-between;">
+                <div style="width: 48%;">{{form.time_start | as_crispy_field}}</div>
+                <div style="width: 48%;">{{form.time_end | as_crispy_field}}</div>
+            </div>
+
+            {% elif field.name == 'cycle_number' or field.name == 'cycle_interval' or field.name == 'time_end' %}
+
+            {% elif field.name == 'is_cyclical' %}
+                {{field | as_crispy_field}}
+                <div class="cyclical-form" style="display: flex; justify-content: space-between;">
+                    <p style="width: 33%;">Powtarzaj co:</p>
+                    <div style="width: 33%;"> {{ form.cycle_number }}</div>
+                    <div style="width: 33%;">{{ form.cycle_interval }}</div>
+                </div>
+
+            {% else %}
+                <div class="form-group{% if field.errors %} invalid{% endif %}">
+                    {{ field | as_crispy_field }}
+                    {% for error in field.errors %}
+                      <p class="help-block">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
         {% endfor %}
       </div>
-
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Anuluj</button>
@@ -92,6 +107,20 @@
                validate();
                });
 
+            if("{{meeting.is_cyclical}}" == "True") {
+                $('.cyclical-form').show();
+            } else {
+                $('.cyclical-form').hide();
+            }
+
+            $('input[type=checkbox]').change(function() {
+                if (this.checked) {
+                    $('.cyclical-form').show();
+                } else {
+                    $('.cyclical-form').hide();
+                }
+            });
+
             document.getElementsByClassName("dismissButton").onclick(function() {
               $('.pac-container').style.display = "none";
             });
@@ -127,3 +156,4 @@
 
         });
     </script>
+

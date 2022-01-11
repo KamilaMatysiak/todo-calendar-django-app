@@ -21,7 +21,7 @@
     </div>
   </div>
 </div>
-<nav id="navbar" class="navbar"><img alt="logo" src="{% static 'image/orange.svg' %}">
+<nav id="navbar" class="navbar"><img alt="vTo-Do" src="{% static 'image/orange.svg' %}">
     {%if user.is_anonymous %}
         <button id="login-btn" class="button inverse">ZALOGUJ SIĘ</button></nav>
     {%else%}
@@ -67,14 +67,73 @@
 <div class="bar add marginbar"></div>
 <div class="bar navy"></div>
 
+<div class="info-cont" style="background-image: url('{% static 'image/waves.png'%}');">
+
+    <!--svg width="100%" height="100%" id="svg" viewBox="0 0 1440 500" xmlns="http://www.w3.org/2000/svg" class=" background transition duration-300 ease-in-out delay-150"><defs><linearGradient id="gradient" x1="0%" y1="48%" x2="100%" y2="52%"><stop offset="5%" stop-color="#f2994a66"></stop><stop offset="95%" stop-color="#2f9ceb66"></stop></linearGradient></defs><path d="M 0,500 C 0,500 0,125 0,125 C 50.84853866074731,141.29586878776666 101.69707732149462,157.59173757553336 153,155 C 204.30292267850538,152.40826242446664 256.0602293747688,130.92891848563323 308,113 C 359.9397706252312,95.07108151436675 412.06200517943023,80.69258848193365 473,82 C 533.9379948205698,83.30741151806635 603.6917499075101,100.30072758663215 654,105 C 704.3082500924899,109.69927241336785 735.170995190529,102.10450117153778 786,105 C 836.829004809471,107.89549882846222 907.6242693303737,121.28126772721667 959,111 C 1010.3757306696263,100.71873227278333 1042.3319274879761,66.77042791959553 1092,78 C 1141.6680725120239,89.22957208040447 1209.048020717721,145.63702059440126 1270,161 C 1330.951979282279,176.36297940559874 1385.4759896411394,150.68148970279935 1440,125 C 1440,125 1440,500 1440,500 Z" stroke="none" stroke-width="0" fill="url(#gradient)" class="transition-all duration-300 ease-in-out delay-150 path-0"></path><defs><linearGradient id="gradient" x1="0%" y1="48%" x2="100%" y2="52%"><stop offset="5%" stop-color="#f2994a88"></stop><stop offset="95%" stop-color="#2f9ceb88"></stop></linearGradient></defs><path d="M 0,500 C 0,500 0,250 0,250 C 54.51375015414972,232.22000246639539 109.02750030829944,214.44000493279074 165,206 C 220.97249969170056,197.55999506720926 278.40374892095195,198.45998273523247 327,214 C 375.59625107904805,229.54001726476753 415.35750400789254,259.7200641262794 473,258 C 530.6424959921075,256.2799358737206 606.1662350474782,222.65976075964977 669,215 C 731.8337649525218,207.34023924035023 781.9775558021951,225.6408928351215 827,230 C 872.0224441978049,234.3591071648785 911.9235417437415,224.77666789986432 964,231 C 1016.0764582562585,237.22333210013568 1080.328277222839,259.25243556542114 1134,261 C 1187.671722777161,262.74756443457886 1230.7633493649032,244.2135898384511 1280,239 C 1329.2366506350968,233.7864101615489 1384.6183253175484,241.89320508077446 1440,250 C 1440,250 1440,500 1440,500 Z" stroke="none" stroke-width="0" fill="url(#gradient)" class="transition-all duration-300 ease-in-out delay-150 path-1"></path><defs><linearGradient id="gradient" x1="0%" y1="48%" x2="100%" y2="52%"><stop offset="5%" stop-color="#f2994aff"></stop><stop offset="95%" stop-color="#2f9cebff"></stop></linearGradient></defs><path d="M 0,500 C 0,500 0,375 0,375 C 48.706671599457394,387.6218769268714 97.41334319891479,400.24375385374276 158,403 C 218.5866568010852,405.75624614625724 291.05329880379827,398.6468615119004 342,393 C 392.94670119620173,387.3531384880996 422.3734615858923,383.1688000986558 470,388 C 517.6265384141077,392.8311999013442 583.4528548526329,406.67793809347637 635,411 C 686.5471451473671,415.32206190652363 723.8151190035762,410.11944752743864 775,409 C 826.1848809964238,407.88055247256136 891.2866691330619,410.8442717967691 958,394 C 1024.7133308669381,377.1557282032309 1093.0382044641756,340.5034652854852 1144,329 C 1194.9617955358244,317.4965347145148 1228.5605130102356,331.14186706128993 1275,343 C 1321.4394869897644,354.85813293871007 1380.719743494882,364.929066469355 1440,375 C 1440,375 1440,500 1440,500 Z" stroke="none" stroke-width="0" fill="url(#gradient)" class="transition-all duration-300 ease-in-out delay-150 path-2"></path></svg>
+-->
+    <h1 class="title">Dlaczego vTo-Do?</h1>
+    <div class="bar orange" style="height: 3px"></div>
+
+
+    <div class="tile">
+        <div class="content">
+            <h3>Rozbudowane listy zadań</h3>
+            <p>Kiedy? Z kim? Gdzie? Dzięki rozbudowanej liście zadań możesz dokładnie zaplanować swój dzień. Dziel zadania na kategorie i nadawaj im priorytet, by jeszcze lepiej zarządzać swoim czasem.</p>
+        </div>
+    </div>
+    <div class="tile">
+        <div class="content">
+            <h3>Zobacz swoje wydarzenia na mapie</h3>
+            <p>Ustalając lokalizację zadania lub wydarzenia możesz zobaczyć jego fizyczne umiejscowienie na mapie. Dzięki temu możesz sprawnie zaplanować swój dzień zależnie od lokacji w jakiej sie znajdujesz!</p>
+        </div>
+    </div>
+    <div class="tile">
+        <div class="content">
+            <h3> Zawsze z Tobą </h3>
+            <p> Dzięki wykorzystaniu Progressive Web App (PWA) możemy Ci towarzyszyć także na ekranie Twojego telefonu. Dodaj aplikację do ekranu głównego i korzystaj vTo-Do w telefonie!</p>
+        </div>
+    </div>
+
+    <div class="tile">
+        <div class="content">
+            <h3> Integracja z Google</h3>
+            <p> Zaloguj się za pomocą swojego konta Google i zbierz swoje wydarzenia w jedno miejsce. Dzięki integracji z Google bez problemu możesz zsynchronizować swój kalendarz z kalendarzem Google.</p>
+        </div>
+    </div>
+</div></div>
+
+<div class="bar blue" style="height: 2px"></div>
+
+<div style="width: 70%; margin: 20px auto; display: flex; align-items: center; flex-direction: column;">
+<strong style="padding: 15px;">Nie czekaj! Załóż konto już dziś!</strong>
+<button id="signup-btn2" class="button add">ZAREJESTRUJ SIĘ</button>
+</div>
+
+<div class="bar orange"></div>
+<div class="bar navy"></div>
+
+<div class="footer" style="">
+    <img id="footer-logo" alt="vTo-Do" src="{% static 'image/orange.svg' %}">
+    <ul>
+        <li><a style="color: #333;" href="#"><strong>Korzystamy z ciasteczek</strong></a></li>
+        <li><a href="{% url 'terms_of_service' %}">Polityka Prywatności i warunki użytkowania serwisu</a></li>
+    </ul>
+
+    <ul>
+        <li><a href="{% url 'pwa_manual' %}">Pobieranie aplikacji vTo-Do</a></li>
+        <li><a href="{% url 'user_manual' %}">Pomoc</a></li>
+    </ul>
+
+</div>
+
 <script>
 window.onscroll = function() {scrollFunction()};
 
 function scrollFunction() {
   if (document.body.scrollTop > 30 || document.documentElement.scrollTop > 30) {
-    document.getElementById("navbar").style.background = "rgba(255,255,255,0.7)";
+    document.getElementById("navbar").style.opacity = "50%";
   } else {
-    document.getElementById("navbar").style.background = "rgba(255,255,255,1)";
+    document.getElementById("navbar").style.opacity = "100%";
   }
 }
 </script>
@@ -87,6 +146,11 @@ function scrollFunction() {
           });
 
           $("#signup-btn").modalForm({
+            formURL: "{% url 'register' %}",
+            errorClass: '.is-invalid',
+          });
+
+          $("#signup-btn2").modalForm({
             formURL: "{% url 'register' %}",
             errorClass: '.is-invalid',
           });

@@ -1,10 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 
-
-
-
-
 <script async src="https://www.googletagmanager.com/gtag/js?id=UA-10195353-21"></script>
 {% block headcontent %}
 <title>vToDo - terms of service</title>
@@ -13,266 +9,205 @@
 
 {% block content %}
 <script>
-function myFunction() {
-  var x = document.getElementById("engpol");
-  var y = document.getElementById("poleng");
-  if (x.style.display === "none") {
-    x.style.display = "block"
-    y.style.display = "none";
+function switchLanguage() {
+  if (document.getElementById("engpol").style.display === "none") {
+    document.getElementById("engpol").style.display = "block"
+    document.getElementById("poleng").style.display = "none";
+
+    document.getElementById("back").innerHTML = "GO BACK";
   } else {
-    x.style.display = "none"
-    y.style.display = "block";
+    document.getElementById("engpol").style.display = "none"
+    document.getElementById("poleng").style.display = "block";
+
+    document.getElementById("back").innerHTML = "POWRÓT";
   }
 }
 </script>
-    <div id="poleng">
-<div class="page">
-<div class="header">
-<div class="container">
-<p class="title">Polityka prywatności v-todo <button style="background-color:#008CBA;border: none; color: white; padding: 10px 22px; text-align: center; text-decoration: none;" onclick="myFunction()">Wyświetl w języku angielskim</button> </p>
+<a id="back" class="button blue" style="position: fixed; bottom: 15px; right: 15px; color: white;" href="{% url 'index' %}">POWRÓT</a>
+<div id="poleng">
+    <div class="page">
+        <div class="header">
+            <div style="width: 100vw; display: flex; justify-content: space-between;">
+                <h1 class="title">Polityka prywatności vTo-Do</h1>
+                <button class="button add" onclick="switchLanguage()">Show in English</button>
+            </div>
+        </div>
+    <div class="translations-content-container">
+        <div class="container" style="margin-top: 25px;">
+            <div class="tab-content translations-content-item en visible" id="pl">
+                <h1>Polityka prywatnosci</h1>
+                    <p>Ostatnia aktualizacja: 08 grudnia 2021 r.</p>
+                    <p>Niniejsza Polityka Prywatności opisuje nasze zasady i procedury dotyczące gromadzenia, wykorzystywania i ujawniania informacji o Użytkowniku podczas korzystania z Serwisu, a także informuje Użytkownika o jego prawach do prywatności oraz o tym, jak chroni go prawo.</p>
+                    <p>Używamy danych osobowych Użytkownika w celu zapewnienia i ulepszenia Usługi. Korzystając z Serwisu, Użytkownik wyraża zgodę na gromadzenie i wykorzystywanie informacji zgodnie z niniejszą Polityką Prywatności. Niniejsza Polityka Prywatności została stworzona przy pomocy Generatora Polityki Prywatności.</p>
+                <h1>Interpretacja i definicje</h1>
+                    <h2>Interpretacja</h2>
+                        <p>Słowa, których pierwsza litera jest wielka, mają znaczenie zdefiniowane w następujących warunkach. Poniższe definicje mają takie samo znaczenie bez względu na to, czy występują w liczbie pojedynczej czy mnogiej.</p>
+                    <h2>Definicje</h2>
+                        <p>Dla celów niniejszej Polityki Prywatności:</p>
+                        <ul>
+                            <li><p><strong>Konto</strong>  oznacza unikalne konto utworzone dla Użytkownika w celu uzyskania dostępu do naszej Usługi lub jej części.</p></li>
+                            <li><p><strong>Firma</strong> (zwana w niniejszej Umowie "Firmą", "My", "Nas" lub "Naszą") odnosi się do vTo-Do.</p></li>
+                            <li><p><strong>Ciasteczka</strong> to małe pliki, które są umieszczane na komputerze, urządzeniu mobilnym lub innym urządzeniu Użytkownika przez stronę internetową, zawierające szczegóły historii przeglądania przez Użytkownika danej strony internetowej, wśród wielu zastosowań. </p></li>
+                            <li><p><strong>Kraj </strong> odnosi się do: Polska </p></li>
+                            <li><p><strong>Urządzenie</strong> oznacza dowolne urządzenie, które może uzyskać dostęp do Serwisu, takie jak komputer, telefon komórkowy lub tablet cyfrowy. </p></li>
+                            <li><p><strong>Dane osobowe</strong> to wszelkie informacje, które odnoszą się do zidentyfikowanej lub możliwej do zidentyfikowania osoby fizycznej.</p></li>
+                            <li><p><strong>Usługa </strong> odnosi się do Serwisu.</p></li>
+                            <li><p><strong>Usługodawca </strong>oznacza każdą osobę fizyczną lub prawną, która przetwarza dane w imieniu Firmy. Odnosi się do firm zewnętrznych lub osób zatrudnionych przez Firmę w celu ułatwienia korzystania z Usługi, świadczenia Usługi w imieniu Firmy, wykonywania usług związanych z Usługą lub pomocy Firmie w analizowaniu sposobu korzystania z Usługi.</p></li>
+                            <li><p><strong>Serwis społecznościowy strony trzeciej</strong> oznacza dowolną stronę internetową lub dowolną stronę sieci społecznościowej, za pośrednictwem której Użytkownik może się zalogować lub utworzyć konto w celu korzystania z Usługi.</p></li>
+                            <li><p><strong>Dane użytkowe</strong>  to dane zbierane automatycznie, generowane w wyniku korzystania z Usługi lub z samej infrastruktury Usługi (np. czas trwania wizyty na stronie).</p></li>
+                            <li><p><strong>Serwis </strong> oznacza vTo-Do, dostępny pod adresem <a href="https://v-todo.com" rel="external nofollow noopener" target="_blank">https://v-todo.com</a></p></li>
+                            <li><p><strong>Użytkownik</strong> oznacza osobę fizyczną uzyskującą dostęp lub korzystającą z Usługi, lub firmę, lub inną osobę prawną, w imieniu której taka osoba uzyskuje dostęp lub korzysta z Usługi, w zależności od przypadku.</p></li>
+                        </ul>
 
-</div>
-</div>
+                <h1>Gromadzenie i wykorzystywanie danych osobowych użytkownika</h1>
+                    <h2>Rodzaje gromadzonych danych</h2>
+                        <h3>Dane osobowe</h3>
+                            <p>Podczas korzystania z naszej Usługi możemy poprosić użytkownika o podanie pewnych danych osobowych, które mogą zostać wykorzystane do skontaktowania się z nim lub zidentyfikowania go. Dane osobowe mogą obejmować, ale nie ograniczają się do:</p>
+                            <ul>
+                                <li><p>Adres e-mail</p></li>
+                                <li><p>Imię i nazwisko</p></li>
+                                <li><p>Numer telefonu</p></li>
+                                <li><p>Adres, stan, województwo, kod pocztowy, miasto</p></li>
+                                <li><p>Dane użytkowe</p> </li>
+                            </ul>
+    <h3>Dane Użytkowania są zbierane automatycznie podczas korzystania z Usługia</h3>
+    <p>Dane Użytkowania mogą zawierać takie informacje, jak adres protokołu internetowego urządzenia Użytkownika (np. adres IP), typ przeglądarki, wersja przeglądarki, strony Usługi odwiedzane przez Użytkownika, godzina i data wizyty, czas spędzony na tych stronach, unikalne identyfikatory urządzeń i inne dane diagnostyczne.</p>
+    <p>Gdy Użytkownik uzyskuje dostęp do Usługi za pośrednictwem urządzenia mobilnego, możemy automatycznie gromadzić pewne informacje, w tym między innymi: typ urządzenia mobilnego, z którego korzysta Użytkownik, unikatowy identyfikator urządzenia mobilnego, adres IP urządzenia mobilnego, system operacyjny urządzenia mobilnego, typ przeglądarki internetowej używanej przez Użytkownika, unikatowe identyfikatory urządzenia oraz inne dane diagnostyczne.
+    </p>
+    <p>Możemy również gromadzić informacje przesyłane przez przeglądarkę Użytkownika za każdym razem, gdy odwiedza on nasz Serwis lub uzyskuje dostęp do Serwisu za pośrednictwem urządzenia mobilnego.</p>
+    <h3>Informacje z serwisów społecznościowych stron trzecich</h3>
+    <p>Firma umożliwia Użytkownikowi utworzenie konta i zalogowanie się w celu korzystania z Usługi za pośrednictwem następujących serwisów społecznościowych stron trzecich:</p>
+    <ul>
+    <li>Google</li>
+    </ul>
+    <p>Jeśli Użytkownik zdecyduje się zarejestrować za pośrednictwem lub w inny sposób udzielić nam dostępu do serwisu społecznościowego innej firmy, Firma może gromadzić dane osobowe, które są już powiązane z kontem Użytkownika w serwisie społecznościowym innej firmy, takie jak imię i nazwisko, adres e-mail Użytkownika, jego działania lub lista kontaktów powiązana z tym kontem.</p>
+    <p>Użytkownik może również mieć możliwość udostępnienia Spółce dodatkowych informacji za pośrednictwem konta w serwisie społecznościowym innej firmy. Jeśli Użytkownik zdecyduje się dostarczyć takie informacje i Dane Osobowe, podczas rejestracji lub w inny sposób, Użytkownik zezwala Spółce na ich wykorzystanie, udostępnianie i przechowywanie w sposób zgodny z niniejszymi Zasadami Prywatności.</p>
+    <h3>Technologie śledzenia i pliki cookie</h3>
+    <p>Używamy plików cookie i podobnych technologii śledzenia w celu śledzenia aktywności w Naszej usłudze i przechowywania pewnych informacji. Technologie śledzenia używane są jako sygnały nawigacyjne, znaczniki i skrypty do zbierania i śledzenia informacji oraz do ulepszania i analizowania naszej usługi. Technologie, których używamy, mogą obejmować:</p>
+    <ul>
+    <li><strong>Ciasteczka lub ciasteczka przeglądarki.</strong> lik cookie to niewielki plik umieszczany na Urządzeniu Użytkownika. Użytkownik może poinstruować swoją przeglądarkę, aby odrzucała wszystkie pliki cookie lub informowała, kiedy plik cookie jest wysyłany. Jeśli jednak Użytkownik nie akceptuje plików cookie, może nie być w stanie korzystać z niektórych części naszej Usługi. Jeżeli Użytkownik nie dostosował ustawień swojej przeglądarki tak, aby odrzucała pliki cookie, nasz Serwis może korzystać z plików cookie.</li>
+    <li><strong>Pliki cookie typu flash.</strong>  Niektóre funkcje naszego Serwisu mogą wykorzystywać obiekty przechowywane lokalnie (lub pliki cookie typu flash) do gromadzenia i przechowywania informacji o preferencjach Użytkownika lub jego aktywności w Serwisie. Pliki cookie typu flash nie są zarządzane przez te same ustawienia przeglądarki, które są używane dla plików cookie przeglądarki. Aby uzyskać więcej informacji na temat sposobu usuwania plików cookie typu Flash, należy przeczytać "Gdzie mogę zmienić ustawienia dotyczące wyłączania lub usuwania lokalnych obiektów współdzielonych?" dostępną pod adresem  <a href="https://helpx.adobe.com/flash-player/kb/disable-local-shared-objects-flash.html#main_Where_can_I_change_the_settings_for_disabling__or_deleting_local_shared_objects_" rel="external nofollow noopener" target="_blank">https://helpx.adobe.com/flash-player/kb/disable-local-shared-objects-flash.html#main_Where_can_I_change_the_settings_for_disabling__or_deleting_local_shared_objects_</a></li>
+    <li><strong>Web Beacons.</strong> Niektóre sekcje Serwisu i wiadomości e-mail mogą zawierać niewielkie pliki elektroniczne znane jako web beacons (zwane również clear gifs, pixel tags i single-pixel gifs), które umożliwiają Firmie na przykład zliczanie użytkowników, którzy odwiedzili te strony lub otworzyli wiadomość e-mail oraz inne powiązane statystyki internetowe (na przykład rejestrowanie popularności danej sekcji oraz sprawdzanie integralności systemu i serwera).</li>
+    </ul>
+    <p>Pliki cookie mogą być plikami "trwałymi" lub "sesyjnymi". Trwałe pliki cookie pozostają na komputerze osobistym lub urządzeniu mobilnym użytkownika, gdy użytkownik przechodzi w tryb offline, natomiast pliki cookie sesji są usuwane natychmiast po zamknięciu przeglądarki internetowej. </p>
+    <p>Używamy zarówno plików cookie sesji, jak i trwałych plików cookie do celów określonych poniżej:</p>
+    <ul>
+    <li>
+    <p><strong>Niezbędne / Zasadnicze pliki cookie</strong></p>
+    <p>Typ: Pliki ciasteczek sesji</p>
+    <p>Zarządzane przez nas</p>
+    <p>Cel: Te pliki cookie są niezbędne do świadczenia Państwu usług dostępnych za pośrednictwem Witryny oraz do umożliwienia Państwu korzystania z niektórych jej funkcji. Pomagają one uwierzytelniać użytkowników i zapobiegać nieuczciwemu korzystaniu z kont użytkowników. Bez tych plików cookie usługi, o które prosiliście Państwo, nie mogą być świadczone, a my używamy tych plików cookie wyłącznie w celu świadczenia Państwu tych usług.</p>
+    </li>
+    <li>
+    <p><strong>Polityka Ciasteczek / Powiadomienie Akceptacji Ciasteczek </strong></p>
+    <p>Typ: Ciasteczka trwałe</p>
+    <p>Zarządzane przez nas</p>
+    <p>Cel: Te pliki cookie identyfikują, czy użytkownicy zaakceptowali użycie plików cookie na stronie internetowej.</p>
+    </li>
+    <li>
+    <p><strong>Pliki ciasteczek dotyczące funkcjonalności</strong></p>
+    <p>Typ: Ciasteczka trwałe </p>
+    <p>Zarządzane przez nas</p>
+    <p>Cel: Te pliki cookie pozwalają nam zapamiętać wybory dokonywane przez użytkownika podczas korzystania z Witryny, takie jak zapamiętanie danych logowania lub preferencji językowych. Celem tych plików cookie jest zapewnienie użytkownikowi bardziej spersonalizowanych doświadczeń i uniknięcie konieczności ponownego wprowadzania preferencji przy każdym korzystaniu z Witryny.</p>
+    </li>
+    </ul>
+    <p>Aby uzyskać więcej informacji na temat używanych przez nas plików cookie oraz możliwości wyboru dotyczących plików cookie, prosimy odwiedzić naszą Politykę dotyczącą plików cookie lub sekcję Pliki cookie w naszej Polityce prywatności..</p>
+    <h2>Wykorzystanie danych osobowych użytkownika</h2>
+    <p>Firma może wykorzystywać Dane osobowe do następujących celów:</p>
+    <ul>
+    <li>
+    <p>W celu świadczenia i utrzymania Usługi, w tym w celu monitorowania korzystania z Usługi.</p>
+    </li>
+    <li>
+    <p>Do zarządzania Kontem Użytkownika: do zarządzania rejestracją Użytkownika jako użytkownika Usługi. Podane przez użytkownika Dane Osobowe mogą umożliwić mu dostęp do różnych funkcji Serwisu, które są dostępne dla zarejestrowanego użytkownika.</p>
+    </li>
+    <li>
+    <p>W celu wykonania umowy: opracowanie, zgodność i podjęcie umowy zakupu produktów, przedmiotów lub usług zakupionych przez użytkownika lub jakiejkolwiek innej umowy z nami za pośrednictwem Usługi.</p>
+    </li>
+    <li>
+    <p>Aby skontaktować się z Użytkownikiem: Aby skontaktować się z Użytkownikiem za pośrednictwem poczty elektronicznej, rozmów telefonicznych, wiadomości SMS lub innych równoważnych form komunikacji elektronicznej, takich jak powiadomienia push aplikacji mobilnej dotyczące aktualizacji lub komunikatów informacyjnych związanych z funkcjonalnościami, produktami lub usługami objętymi umową, w tym aktualizacji zabezpieczeń, gdy jest to konieczne lub uzasadnione w celu ich wdrożenia. </p>
+    </li>
+    <li>
+    <p>Aby zapewnić Państwu wiadomości, oferty specjalne i ogólne informacje na temat innych towarów, usług i wydarzeń, które oferujemy, które są podobne do tych, które już zakupiliście lub o które pytaliście, chyba że zrezygnowaliście Państwo z otrzymywania takich informacji.</p>
+    </li>
+    <li>
+    <p>Aby zarządzać Twoimi żądaniami: Aby uczestniczyć i zarządzać żądaniami użytkownika skierowanymi do nas.</p>
+    </li>
+    <li>
+    <p>W celu przeniesienia działalności: Możemy wykorzystać informacje o użytkowniku w celu oceny lub przeprowadzenia fuzji, zbycia, restrukturyzacji, reorganizacji, rozwiązania lub innej sprzedaży lub przeniesienia części lub całości naszych aktywów, zarówno w ramach kontynuacji działalności, jak i w ramach upadłości, likwidacji lub podobnego postępowania, w którym dane osobowe przechowywane przez nas na temat użytkowników naszych usług są jednym z przekazywanych aktywów.</p>
+    </li>
+    <li>
+    <p>Dla innych celów: Możemy wykorzystywać dane Użytkownika do innych celów, takich jak analiza danych, identyfikacja trendów użytkowania, określanie skuteczności naszych kampanii promocyjnych oraz do oceny i ulepszania naszej Usługi, produktów, usług, marketingu i doświadczeń Użytkownika.</p>
+    </li>
+    </ul>
+    <p>Możemy udostępniać dane osobowe Użytkownika w następujących sytuacjach:</p>
+    <ul>
+    <li><strong>Usługodawcom</strong> Możemy udostępniać dane osobowe Użytkownika Usługodawcom w celu monitorowania i analizowania korzystania z naszej Usługi, kontaktowania się z Użytkownikiem.</li>
+    <li><strong>W celu przeniesienia działalności: </strong> Możemy udostępniać lub przekazywać dane osobowe Użytkownika w związku z lub podczas negocjacji dotyczących fuzji, sprzedaży aktywów Firmy, finansowania lub przejęcia całości lub części Naszej działalności przez inną firmę.</li>
+    <li><strong>Z podmiotami stowarzyszonymi: </strong> Możemy udostępniać informacje o użytkowniku naszym podmiotom stowarzyszonym, w którym to przypadku będziemy wymagać od tych podmiotów przestrzegania niniejszej Polityki prywatności. Podmioty stowarzyszone obejmują naszą spółkę macierzystą i wszelkie inne spółki zależne, partnerów joint venture lub inne firmy, które kontrolujemy lub które są pod wspólną kontrolą z nami. </li>
+    <li><strong>Z partnerami biznesowymi:</strong> Możemy udostępniać informacje o użytkowniku naszym partnerom biznesowym, aby zaoferować użytkownikowi określone produkty, usługi lub promocje.</li>
+    <li><strong>Z innymi użytkownikami: </strong> kiedy użytkownik udostępnia dane osobowe lub w inny sposób wchodzi w interakcje w obszarach publicznych z innymi użytkownikami, takie informacje mogą być przeglądane przez wszystkich użytkowników i mogą być publicznie rozpowszechniane na zewnątrz. Jeśli Użytkownik wchodzi w interakcje z innymi użytkownikami lub rejestruje się za pośrednictwem usługi mediów społecznościowych stron trzecich, osoby kontaktowe Użytkownika w usłudze mediów społecznościowych stron trzecich mogą zobaczyć jego imię i nazwisko, profil, zdjęcia i opis jego aktywności. Podobnie, inni użytkownicy będą mogli przeglądać opisy aktywności Użytkownika, komunikować się z nim i przeglądać jego profil.</li>
+    <li><strong>Za Twoją zgodą</strong>: Możemy ujawnić dane osobowe Użytkownika w dowolnym innym celu za zgodą Użytkownika.</li>
+    </ul>
+    <h2>Przechowywanie Danych Osobowych Użytkownika</h2>
+    <p>Firma będzie przechowywać Dane osobowe Użytkownika tylko tak długo, jak będzie to konieczne do celów określonych w niniejszych Zasadach ochrony prywatności. Firma będzie przechowywać i wykorzystywać dane osobowe Użytkownika w zakresie niezbędnym do wypełnienia zobowiązań prawnych (na przykład, jeśli jest zobowiązana do zachowania danych Użytkownika w celu zachowania zgodności z obowiązującym prawem), rozstrzygania sporów i egzekwowania naszych umów prawnych i zasad.</p>
+    <p>Firma będzie również przechowywać Dane użytkowe dla celów analizy wewnętrznej. Dane Użytkownika są zazwyczaj przechowywane przez krótszy okres czasu, z wyjątkiem sytuacji, gdy dane te są wykorzystywane do wzmocnienia bezpieczeństwa lub poprawy funkcjonalności Usługi, lub gdy Firma jest prawnie zobowiązana do przechowywania tych danych przez dłuższy okres czasu.</p>
+    <h2>Przekazywanie danych osobowych użytkownika</h2>
+    <p>Państwa informacje, w tym Dane Osobowe, są przetwarzane w biurach operacyjnych Firmy oraz w innych miejscach, w których znajdują się strony zaangażowane w przetwarzanie. Oznacza to, że informacje te mogą być przekazywane - i przechowywane - na komputerach znajdujących się poza granicami Państwa stanu, prowincji, kraju lub innej jurysdykcji rządowej, gdzie przepisy dotyczące ochrony danych mogą różnić się od tych obowiązujących w Państwa jurysdykcji.</p>
+    <p>Państwa zgoda na niniejszą Politykę Prywatności, a następnie przesłanie takich informacji stanowi Państwa zgodę na taki transfer.</p>
+    <p>Firma podejmie wszelkie niezbędne kroki, aby zapewnić, że dane Użytkownika są traktowane w sposób bezpieczny i zgodny z niniejszą Polityką Prywatności i żadne przeniesienie Danych Osobowych Użytkownika nie będzie miało miejsca do organizacji lub kraju, chyba że istnieją odpowiednie kontrole obejmujące bezpieczeństwo danych i innych informacji osobowych Użytkownika.</p>
+    <h2>Ujawnianie danych osobowych użytkownika</h2>
+    <h3>Transakcje biznesowe</h3>
+    <p>Jeśli Firma jest zaangażowana w fuzję, przejęcie lub sprzedaż aktywów, dane osobowe Użytkownika mogą zostać przekazane. Firma poinformuje użytkownika o tym fakcie, zanim jego dane osobowe zostaną przeniesione i będą podlegać innym zasadom ochrony prywatności.</p>
+    <h3>Egzekwowanie prawa</h3>
+    <p>W pewnych okolicznościach Firma może być zobowiązana do ujawnienia Danych osobowych Użytkownika, jeśli wymaga tego prawo lub w odpowiedzi na uzasadnione żądania władz publicznych (np. sądu lub agencji rządowej).</p>
+    <h3>Inne wymagania prawne</h3>
+    <p>Firma może ujawnić Dane osobowe użytkownika w dobrej wierze, że takie działanie jest konieczne, aby:</p>
+    <ul>
+    <li>Chronić przed odpowiedzialnością prawną.</li>
+    <li>Zgodności z obowiązkiem prawnym</li>
+    <li>Chronić i bronić praw lub własności Firmy</li>
+    <li>Zapobiegać lub badać ewentualne wykroczenia w związku z Usługą</li>
+    <li>Ochrony bezpieczeństwa osobistego użytkowników serwisu lub społeczeństwa</li>
+    </ul>
+    <h2>Bezpieczeństwo Danych Osobowych Użytkownika</h2>
+    <p>Bezpieczeństwo Twoich danych osobowych jest dla nas ważne, ale pamiętaj, że żadna metoda transmisji przez Internet ani żadna metoda elektronicznego przechowywania danych nie jest w 100% bezpieczna. Chociaż staramy się stosować komercyjnie akceptowalne środki ochrony Danych osobowych, nie możemy zagwarantować ich całkowitego bezpieczeństwa.</p>
+    <h1>Prywatność dzieci</h1>
+    <p>Nasza usługa nie jest skierowana do osób poniżej 13 roku życia. Nie zbieramy świadomie informacji umożliwiających identyfikację osób poniżej 13 roku życia. Jeśli jesteś rodzicem lub opiekunem i wiesz, że Twoje dziecko przekazało nam Dane osobowe, skontaktuj się z nami. Jeśli dowiemy się, że zgromadziliśmy dane osobowe od osób poniżej 13 roku życia bez weryfikacji zgody rodziców, podejmiemy kroki w celu usunięcia tych informacji z naszych serwerów.</p>
+    <p>Jeśli musimy polegać na zgodzie jako podstawie prawnej do przetwarzania informacji o Użytkowniku, a kraj Użytkownika wymaga zgody rodzica, możemy wymagać zgody rodzica przed zebraniem i wykorzystaniem tych informacji.</p>
+    <h1>Łącza do innych stron internetowych</h1>
+    <p>Nasza usługa może zawierać łącza do innych stron internetowych, które nie są przez nas obsługiwane. Jeśli użytkownik kliknie na link strony trzeciej, zostanie przekierowany na jej stronę. Zalecamy, aby użytkownik zapoznał się z polityką prywatności każdej odwiedzanej strony.</p>
+    <p>Nie mamy kontroli i nie ponosimy odpowiedzialności za treść, politykę prywatności lub praktyki stosowane przez strony trzecie lub usługi.</p>
+    <h1>Zmiany w niniejszej Polityce Prywatności</h1>
+    <p>Możemy aktualizować naszą Politykę Prywatności od czasu do czasu. Powiadomimy Cię o wszelkich zmianach, publikując nową Politykę Prywatności na tej stronie.</p>
+    <p>Powiadomimy Cię za pośrednictwem poczty elektronicznej i/lub widocznego powiadomienia w naszym serwisie, zanim zmiana wejdzie w życie i zaktualizujemy datę "Ostatniej aktualizacji" na górze niniejszej Polityki Prywatności.</p>
+    <p>Zaleca się okresowe przeglądanie niniejszej Polityki Prywatności w celu zapoznania się z wszelkimi zmianami. Zmiany w niniejszej Polityce Prywatności wchodzą w życie po ich opublikowaniu na tej stronie.</p>
+    <h1>Kontakt z nami</h1>
+    <p>Jeśli masz jakiekolwiek pytania dotyczące niniejszej Polityki Prywatności, możesz się z nami skontaktować:</p>
+    <ul>
+    <li>Poprzez e-mail:  riraasaa@gmail.com</li>
+    </ul>
+    </div>
+    </div>
+    </div>
 
+    </div>
 
-<div class="translations-content-container">
-<div class="container">
-<div class="tab-content translations-content-item en visible" id="en">
-<h1>Polityka prywatnosci</h1>
-<p>Ostatnia aktualizacja: 08 grudnia 2021 r.</p>
-<p>Niniejsza Polityka Prywatności opisuje nasze zasady i procedury dotyczące gromadzenia, wykorzystywania i ujawniania informacji o Użytkowniku podczas korzystania z Serwisu, a także informuje Użytkownika o jego prawach do prywatności oraz o tym, jak chroni go prawo.</p>
-<p>Używamy danych osobowych Użytkownika w celu zapewnienia i ulepszenia Usługi. Korzystając z Serwisu, Użytkownik wyraża zgodę na gromadzenie i wykorzystywanie informacji zgodnie z niniejszą Polityką Prywatności. Niniejsza Polityka Prywatności została stworzona przy pomocy Generatora Polityki Prywatności.</p>
-<h1>Interpretacja i definicje</h1>
-<h2>Interpretacja</h2>
-<p>Słowa, których pierwsza litera jest wielka, mają znaczenie zdefiniowane w następujących warunkach. Poniższe definicje mają takie samo znaczenie bez względu na to, czy występują w liczbie pojedynczej czy mnogiej.</p>
-<h2>Definicje</h2>
-<p>Dla celów niniejszej Polityki Prywatności:</p>
-<ul>
-<li>
-<p><strong>Konto</strong>  oznacza unikalne konto utworzone dla Użytkownika w celu uzyskania dostępu do naszej Usługi lub jej części.</p>
-</li>
-<li>
-<p><strong>Firma</strong> (zwana w niniejszej Umowie "Firmą", "My", "Nas" lub "Naszą") odnosi się do v-todo.</p>
-</li>
-<li>
-<p><strong>Ciasteczka</strong> to małe pliki, które są umieszczane na komputerze, urządzeniu mobilnym lub innym urządzeniu Użytkownika przez stronę internetową, zawierające szczegóły historii przeglądania przez Użytkownika danej strony internetowej, wśród wielu zastosowań. </p>
-</li>
-<li>
-<p><strong>Kraj </strong> odnosi się do: Polska </p>
-</li>
-<li>
-<p><strong>Urządzenie</strong> oznacza dowolne urządzenie, które może uzyskać dostęp do Serwisu, takie jak komputer, telefon komórkowy lub tablet cyfrowy. </p>
-</li>
-<li>
-<p><strong>Dane osobowe</strong> to wszelkie informacje, które odnoszą się do zidentyfikowanej lub możliwej do zidentyfikowania osoby fizycznej.</p>
-</li>
-<li>
-<p><strong>Usługa </strong> odnosi się do Serwisu.</p>
-</li>
-<li>
-<p><strong>Usługodawca </strong>oznacza każdą osobę fizyczną lub prawną, która przetwarza dane w imieniu Firmy. Odnosi się do firm zewnętrznych lub osób zatrudnionych przez Firmę w celu ułatwienia korzystania z Usługi, świadczenia Usługi w imieniu Firmy, wykonywania usług związanych z Usługą lub pomocy Firmie w analizowaniu sposobu korzystania z Usługi.</p>
-</li>
-<li>
-<p><strong>Serwis społecznościowy strony trzeciej</strong> oznacza dowolną stronę internetową lub dowolną stronę sieci społecznościowej, za pośrednictwem której Użytkownik może się zalogować lub utworzyć konto w celu korzystania z Usługi.</p>
-</li>
-<li>
-<p><strong>Dane użytkowe</strong>  to dane zbierane automatycznie, generowane w wyniku korzystania z Usługi lub z samej infrastruktury Usługi (np. czas trwania wizyty na stronie).</p>
-</li>
-<li>
-<p><strong>Serwis </strong> oznacza v-todo, dostępny pod adresem <a href="https://v-todo.com" rel="external nofollow noopener" target="_blank">https://v-todo.com</a></p>
-</li>
-<li>
-<p><strong>Użytkownik</strong> oznacza osobę fizyczną uzyskującą dostęp lub korzystającą z Usługi, lub firmę, lub inną osobę prawną, w imieniu której taka osoba uzyskuje dostęp lub korzysta z Usługi, w zależności od przypadku.</p>
-</li>
-</ul>
-<h1>Gromadzenie i wykorzystywanie danych osobowych użytkownika</h1>
-<h2>Rodzaje gromadzonych danych</h2>
-<h3>Dane osobowe</h3>
-<p>Podczas korzystania z naszej Usługi możemy poprosić użytkownika o podanie pewnych danych osobowych, które mogą zostać wykorzystane do skontaktowania się z nim lub zidentyfikowania go. Dane osobowe mogą obejmować, ale nie ograniczają się do:</p>
-<ul>
-<li>
-<p>Adres e-mail</p>
-</li>
-<li>
-<p>Imię i nazwisko</p>
-</li>
-<li>
-<p>Numer telefonu</p>
-</li>
-<li>
-<p>Adres, stan, województwo, kod pocztowy, miasto</p>
-</li>
-<li>
-<p>Dane użytkowe</p>
-</li>
-</ul>
-<h3>Dane Użytkowania są zbierane automatycznie podczas korzystania z Usługia</h3>
-<p>Dane Użytkowania mogą zawierać takie informacje, jak adres protokołu internetowego urządzenia Użytkownika (np. adres IP), typ przeglądarki, wersja przeglądarki, strony Usługi odwiedzane przez Użytkownika, godzina i data wizyty, czas spędzony na tych stronach, unikalne identyfikatory urządzeń i inne dane diagnostyczne.</p>
-<p>Gdy Użytkownik uzyskuje dostęp do Usługi za pośrednictwem urządzenia mobilnego, możemy automatycznie gromadzić pewne informacje, w tym między innymi: typ urządzenia mobilnego, z którego korzysta Użytkownik, unikatowy identyfikator urządzenia mobilnego, adres IP urządzenia mobilnego, system operacyjny urządzenia mobilnego, typ przeglądarki internetowej używanej przez Użytkownika, unikatowe identyfikatory urządzenia oraz inne dane diagnostyczne.
-</p>
-<p>Możemy również gromadzić informacje przesyłane przez przeglądarkę Użytkownika za każdym razem, gdy odwiedza on nasz Serwis lub uzyskuje dostęp do Serwisu za pośrednictwem urządzenia mobilnego.</p>
-<h3>Informacje z serwisów społecznościowych stron trzecich</h3>
-<p>Firma umożliwia Użytkownikowi utworzenie konta i zalogowanie się w celu korzystania z Usługi za pośrednictwem następujących serwisów społecznościowych stron trzecich:</p>
-<ul>
-<li>Google</li>
-</ul>
-<p>Jeśli Użytkownik zdecyduje się zarejestrować za pośrednictwem lub w inny sposób udzielić nam dostępu do serwisu społecznościowego innej firmy, Firma może gromadzić dane osobowe, które są już powiązane z kontem Użytkownika w serwisie społecznościowym innej firmy, takie jak imię i nazwisko, adres e-mail Użytkownika, jego działania lub lista kontaktów powiązana z tym kontem.</p>
-<p>Użytkownik może również mieć możliwość udostępnienia Spółce dodatkowych informacji za pośrednictwem konta w serwisie społecznościowym innej firmy. Jeśli Użytkownik zdecyduje się dostarczyć takie informacje i Dane Osobowe, podczas rejestracji lub w inny sposób, Użytkownik zezwala Spółce na ich wykorzystanie, udostępnianie i przechowywanie w sposób zgodny z niniejszymi Zasadami Prywatności.</p>
-<h3>Technologie śledzenia i pliki cookie</h3>
-<p>Używamy plików cookie i podobnych technologii śledzenia w celu śledzenia aktywności w Naszej usłudze i przechowywania pewnych informacji. Technologie śledzenia używane są jako sygnały nawigacyjne, znaczniki i skrypty do zbierania i śledzenia informacji oraz do ulepszania i analizowania naszej usługi. Technologie, których używamy, mogą obejmować:</p>
-<ul>
-<li><strong>Ciasteczka lub ciasteczka przeglądarki.</strong> lik cookie to niewielki plik umieszczany na Urządzeniu Użytkownika. Użytkownik może poinstruować swoją przeglądarkę, aby odrzucała wszystkie pliki cookie lub informowała, kiedy plik cookie jest wysyłany. Jeśli jednak Użytkownik nie akceptuje plików cookie, może nie być w stanie korzystać z niektórych części naszej Usługi. Jeżeli Użytkownik nie dostosował ustawień swojej przeglądarki tak, aby odrzucała pliki cookie, nasz Serwis może korzystać z plików cookie.</li>
-<li><strong>Pliki cookie typu flash.</strong>  Niektóre funkcje naszego Serwisu mogą wykorzystywać obiekty przechowywane lokalnie (lub pliki cookie typu flash) do gromadzenia i przechowywania informacji o preferencjach Użytkownika lub jego aktywności w Serwisie. Pliki cookie typu flash nie są zarządzane przez te same ustawienia przeglądarki, które są używane dla plików cookie przeglądarki. Aby uzyskać więcej informacji na temat sposobu usuwania plików cookie typu Flash, należy przeczytać "Gdzie mogę zmienić ustawienia dotyczące wyłączania lub usuwania lokalnych obiektów współdzielonych?" dostępną pod adresem  <a href="https://helpx.adobe.com/flash-player/kb/disable-local-shared-objects-flash.html#main_Where_can_I_change_the_settings_for_disabling__or_deleting_local_shared_objects_" rel="external nofollow noopener" target="_blank">https://helpx.adobe.com/flash-player/kb/disable-local-shared-objects-flash.html#main_Where_can_I_change_the_settings_for_disabling__or_deleting_local_shared_objects_</a></li>
-<li><strong>Web Beacons.</strong> Niektóre sekcje Serwisu i wiadomości e-mail mogą zawierać niewielkie pliki elektroniczne znane jako web beacons (zwane również clear gifs, pixel tags i single-pixel gifs), które umożliwiają Firmie na przykład zliczanie użytkowników, którzy odwiedzili te strony lub otworzyli wiadomość e-mail oraz inne powiązane statystyki internetowe (na przykład rejestrowanie popularności danej sekcji oraz sprawdzanie integralności systemu i serwera).</li>
-</ul>
-<p>Pliki cookie mogą być plikami "trwałymi" lub "sesyjnymi". Trwałe pliki cookie pozostają na komputerze osobistym lub urządzeniu mobilnym użytkownika, gdy użytkownik przechodzi w tryb offline, natomiast pliki cookie sesji są usuwane natychmiast po zamknięciu przeglądarki internetowej. </p>
-<p>Używamy zarówno plików cookie sesji, jak i trwałych plików cookie do celów określonych poniżej:</p>
-<ul>
-<li>
-<p><strong>Niezbędne / Zasadnicze pliki cookie</strong></p>
-<p>Typ: Pliki ciasteczek sesji</p>
-<p>Zarządzane przez nas</p>
-<p>Cel: Te pliki cookie są niezbędne do świadczenia Państwu usług dostępnych za pośrednictwem Witryny oraz do umożliwienia Państwu korzystania z niektórych jej funkcji. Pomagają one uwierzytelniać użytkowników i zapobiegać nieuczciwemu korzystaniu z kont użytkowników. Bez tych plików cookie usługi, o które prosiliście Państwo, nie mogą być świadczone, a my używamy tych plików cookie wyłącznie w celu świadczenia Państwu tych usług.</p>
-</li>
-<li>
-<p><strong>Polityka Ciasteczek / Powiadomienie Akceptacji Ciasteczek </strong></p>
-<p>Typ: Ciasteczka trwałe</p>
-<p>Zarządzane przez nas</p>
-<p>Cel: Te pliki cookie identyfikują, czy użytkownicy zaakceptowali użycie plików cookie na stronie internetowej.</p>
-</li>
-<li>
-<p><strong>Pliki ciasteczek dotyczące funkcjonalności</strong></p>
-<p>Typ: Ciasteczka trwałe </p>
-<p>Zarządzane przez nas</p>
-<p>Cel: Te pliki cookie pozwalają nam zapamiętać wybory dokonywane przez użytkownika podczas korzystania z Witryny, takie jak zapamiętanie danych logowania lub preferencji językowych. Celem tych plików cookie jest zapewnienie użytkownikowi bardziej spersonalizowanych doświadczeń i uniknięcie konieczności ponownego wprowadzania preferencji przy każdym korzystaniu z Witryny.</p>
-</li>
-</ul>
-<p>Aby uzyskać więcej informacji na temat używanych przez nas plików cookie oraz możliwości wyboru dotyczących plików cookie, prosimy odwiedzić naszą Politykę dotyczącą plików cookie lub sekcję Pliki cookie w naszej Polityce prywatności..</p>
-<h2>Wykorzystanie danych osobowych użytkownika</h2>
-<p>Firma może wykorzystywać Dane osobowe do następujących celów:</p>
-<ul>
-<li>
-<p>W celu świadczenia i utrzymania Usługi, w tym w celu monitorowania korzystania z Usługi.</p>
-</li>
-<li>
-<p>Do zarządzania Kontem Użytkownika: do zarządzania rejestracją Użytkownika jako użytkownika Usługi. Podane przez użytkownika Dane Osobowe mogą umożliwić mu dostęp do różnych funkcji Serwisu, które są dostępne dla zarejestrowanego użytkownika.</p>
-</li>
-<li>
-<p>W celu wykonania umowy: opracowanie, zgodność i podjęcie umowy zakupu produktów, przedmiotów lub usług zakupionych przez użytkownika lub jakiejkolwiek innej umowy z nami za pośrednictwem Usługi.</p>
-</li>
-<li>
-<p>Aby skontaktować się z Użytkownikiem: Aby skontaktować się z Użytkownikiem za pośrednictwem poczty elektronicznej, rozmów telefonicznych, wiadomości SMS lub innych równoważnych form komunikacji elektronicznej, takich jak powiadomienia push aplikacji mobilnej dotyczące aktualizacji lub komunikatów informacyjnych związanych z funkcjonalnościami, produktami lub usługami objętymi umową, w tym aktualizacji zabezpieczeń, gdy jest to konieczne lub uzasadnione w celu ich wdrożenia. </p>
-</li>
-<li>
-<p>Aby zapewnić Państwu wiadomości, oferty specjalne i ogólne informacje na temat innych towarów, usług i wydarzeń, które oferujemy, które są podobne do tych, które już zakupiliście lub o które pytaliście, chyba że zrezygnowaliście Państwo z otrzymywania takich informacji.</p>
-</li>
-<li>
-<p>Aby zarządzać Twoimi żądaniami: Aby uczestniczyć i zarządzać żądaniami użytkownika skierowanymi do nas.</p>
-</li>
-<li>
-<p>W celu przeniesienia działalności: Możemy wykorzystać informacje o użytkowniku w celu oceny lub przeprowadzenia fuzji, zbycia, restrukturyzacji, reorganizacji, rozwiązania lub innej sprzedaży lub przeniesienia części lub całości naszych aktywów, zarówno w ramach kontynuacji działalności, jak i w ramach upadłości, likwidacji lub podobnego postępowania, w którym dane osobowe przechowywane przez nas na temat użytkowników naszych usług są jednym z przekazywanych aktywów.</p>
-</li>
-<li>
-<p>Dla innych celów: Możemy wykorzystywać dane Użytkownika do innych celów, takich jak analiza danych, identyfikacja trendów użytkowania, określanie skuteczności naszych kampanii promocyjnych oraz do oceny i ulepszania naszej Usługi, produktów, usług, marketingu i doświadczeń Użytkownika.</p>
-</li>
-</ul>
-<p>Możemy udostępniać dane osobowe Użytkownika w następujących sytuacjach:</p>
-<ul>
-<li><strong>Usługodawcom</strong> Możemy udostępniać dane osobowe Użytkownika Usługodawcom w celu monitorowania i analizowania korzystania z naszej Usługi, kontaktowania się z Użytkownikiem.</li>
-<li><strong>W celu przeniesienia działalności: </strong> Możemy udostępniać lub przekazywać dane osobowe Użytkownika w związku z lub podczas negocjacji dotyczących fuzji, sprzedaży aktywów Firmy, finansowania lub przejęcia całości lub części Naszej działalności przez inną firmę.</li>
-<li><strong>Z podmiotami stowarzyszonymi: </strong> Możemy udostępniać informacje o użytkowniku naszym podmiotom stowarzyszonym, w którym to przypadku będziemy wymagać od tych podmiotów przestrzegania niniejszej Polityki prywatności. Podmioty stowarzyszone obejmują naszą spółkę macierzystą i wszelkie inne spółki zależne, partnerów joint venture lub inne firmy, które kontrolujemy lub które są pod wspólną kontrolą z nami. </li>
-<li><strong>Z partnerami biznesowymi:</strong> Możemy udostępniać informacje o użytkowniku naszym partnerom biznesowym, aby zaoferować użytkownikowi określone produkty, usługi lub promocje.</li>
-<li><strong>Z innymi użytkownikami: </strong> kiedy użytkownik udostępnia dane osobowe lub w inny sposób wchodzi w interakcje w obszarach publicznych z innymi użytkownikami, takie informacje mogą być przeglądane przez wszystkich użytkowników i mogą być publicznie rozpowszechniane na zewnątrz. Jeśli Użytkownik wchodzi w interakcje z innymi użytkownikami lub rejestruje się za pośrednictwem usługi mediów społecznościowych stron trzecich, osoby kontaktowe Użytkownika w usłudze mediów społecznościowych stron trzecich mogą zobaczyć jego imię i nazwisko, profil, zdjęcia i opis jego aktywności. Podobnie, inni użytkownicy będą mogli przeglądać opisy aktywności Użytkownika, komunikować się z nim i przeglądać jego profil.</li>
-<li><strong>Za Twoją zgodą</strong>: Możemy ujawnić dane osobowe Użytkownika w dowolnym innym celu za zgodą Użytkownika.</li>
-</ul>
-<h2>Przechowywanie Danych Osobowych Użytkownika</h2>
-<p>Firma będzie przechowywać Dane osobowe Użytkownika tylko tak długo, jak będzie to konieczne do celów określonych w niniejszych Zasadach ochrony prywatności. Firma będzie przechowywać i wykorzystywać dane osobowe Użytkownika w zakresie niezbędnym do wypełnienia zobowiązań prawnych (na przykład, jeśli jest zobowiązana do zachowania danych Użytkownika w celu zachowania zgodności z obowiązującym prawem), rozstrzygania sporów i egzekwowania naszych umów prawnych i zasad.</p>
-<p>Firma będzie również przechowywać Dane użytkowe dla celów analizy wewnętrznej. Dane Użytkownika są zazwyczaj przechowywane przez krótszy okres czasu, z wyjątkiem sytuacji, gdy dane te są wykorzystywane do wzmocnienia bezpieczeństwa lub poprawy funkcjonalności Usługi, lub gdy Firma jest prawnie zobowiązana do przechowywania tych danych przez dłuższy okres czasu.</p>
-<h2>Przekazywanie danych osobowych użytkownika</h2>
-<p>Państwa informacje, w tym Dane Osobowe, są przetwarzane w biurach operacyjnych Firmy oraz w innych miejscach, w których znajdują się strony zaangażowane w przetwarzanie. Oznacza to, że informacje te mogą być przekazywane - i przechowywane - na komputerach znajdujących się poza granicami Państwa stanu, prowincji, kraju lub innej jurysdykcji rządowej, gdzie przepisy dotyczące ochrony danych mogą różnić się od tych obowiązujących w Państwa jurysdykcji.</p>
-<p>Państwa zgoda na niniejszą Politykę Prywatności, a następnie przesłanie takich informacji stanowi Państwa zgodę na taki transfer.</p>
-<p>Firma podejmie wszelkie niezbędne kroki, aby zapewnić, że dane Użytkownika są traktowane w sposób bezpieczny i zgodny z niniejszą Polityką Prywatności i żadne przeniesienie Danych Osobowych Użytkownika nie będzie miało miejsca do organizacji lub kraju, chyba że istnieją odpowiednie kontrole obejmujące bezpieczeństwo danych i innych informacji osobowych Użytkownika.</p>
-<h2>Ujawnianie danych osobowych użytkownika</h2>
-<h3>Transakcje biznesowe</h3>
-<p>Jeśli Firma jest zaangażowana w fuzję, przejęcie lub sprzedaż aktywów, dane osobowe Użytkownika mogą zostać przekazane. Firma poinformuje użytkownika o tym fakcie, zanim jego dane osobowe zostaną przeniesione i będą podlegać innym zasadom ochrony prywatności.</p>
-<h3>Egzekwowanie prawa</h3>
-<p>W pewnych okolicznościach Firma może być zobowiązana do ujawnienia Danych osobowych Użytkownika, jeśli wymaga tego prawo lub w odpowiedzi na uzasadnione żądania władz publicznych (np. sądu lub agencji rządowej).</p>
-<h3>Inne wymagania prawne</h3>
-<p>Firma może ujawnić Dane osobowe użytkownika w dobrej wierze, że takie działanie jest konieczne, aby:</p>
-<ul>
-<li>Chronić przed odpowiedzialnością prawną.</li>
-<li>Zgodności z obowiązkiem prawnym</li>
-<li>Chronić i bronić praw lub własności Firmy</li>
-<li>Zapobiegać lub badać ewentualne wykroczenia w związku z Usługą</li>
-<li>Ochrony bezpieczeństwa osobistego użytkowników serwisu lub społeczeństwa</li>
-</ul>
-<h2>Bezpieczeństwo Danych Osobowych Użytkownika</h2>
-<p>Bezpieczeństwo Twoich danych osobowych jest dla nas ważne, ale pamiętaj, że żadna metoda transmisji przez Internet ani żadna metoda elektronicznego przechowywania danych nie jest w 100% bezpieczna. Chociaż staramy się stosować komercyjnie akceptowalne środki ochrony Danych osobowych, nie możemy zagwarantować ich całkowitego bezpieczeństwa.</p>
-<h1>Prywatność dzieci</h1>
-<p>Nasza usługa nie jest skierowana do osób poniżej 13 roku życia. Nie zbieramy świadomie informacji umożliwiających identyfikację osób poniżej 13 roku życia. Jeśli jesteś rodzicem lub opiekunem i wiesz, że Twoje dziecko przekazało nam Dane osobowe, skontaktuj się z nami. Jeśli dowiemy się, że zgromadziliśmy dane osobowe od osób poniżej 13 roku życia bez weryfikacji zgody rodziców, podejmiemy kroki w celu usunięcia tych informacji z naszych serwerów.</p>
-<p>Jeśli musimy polegać na zgodzie jako podstawie prawnej do przetwarzania informacji o Użytkowniku, a kraj Użytkownika wymaga zgody rodzica, możemy wymagać zgody rodzica przed zebraniem i wykorzystaniem tych informacji.</p>
-<h1>Łącza do innych stron internetowych</h1>
-<p>Nasza usługa może zawierać łącza do innych stron internetowych, które nie są przez nas obsługiwane. Jeśli użytkownik kliknie na link strony trzeciej, zostanie przekierowany na jej stronę. Zalecamy, aby użytkownik zapoznał się z polityką prywatności każdej odwiedzanej strony.</p>
-<p>Nie mamy kontroli i nie ponosimy odpowiedzialności za treść, politykę prywatności lub praktyki stosowane przez strony trzecie lub usługi.</p>
-<h1>Zmiany w niniejszej Polityce Prywatności</h1>
-<p>Możemy aktualizować naszą Politykę Prywatności od czasu do czasu. Powiadomimy Cię o wszelkich zmianach, publikując nową Politykę Prywatności na tej stronie.</p>
-<p>Powiadomimy Cię za pośrednictwem poczty elektronicznej i/lub widocznego powiadomienia w naszym serwisie, zanim zmiana wejdzie w życie i zaktualizujemy datę "Ostatniej aktualizacji" na górze niniejszej Polityki Prywatności.</p>
-<p>Zaleca się okresowe przeglądanie niniejszej Polityki Prywatności w celu zapoznania się z wszelkimi zmianami. Zmiany w niniejszej Polityce Prywatności wchodzą w życie po ich opublikowaniu na tej stronie.</p>
-<h1>Kontakt z nami</h1>
-<p>Jeśli masz jakiekolwiek pytania dotyczące niniejszej Polityki Prywatności, możesz się z nami skontaktować:</p>
-<ul>
-<li>Poprzez e-mail:  riraasaa@gmail.com</li>
-</ul>
-</div>
-</div>
-</div>
-
-</div>
-
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    </div>
 
 
 <div id="engpol" style="display: none;">
-<div class="page">
-<div class="header">
-<div class="container">
-<p class="title">Privacy Policy for v-todo <button style="background-color:#008CBA;border: none; color: white; padding: 10px 22px; text-align: center; text-decoration: none;" onclick="myFunction()">Show in polish language</button> </p>
-
-</div>
-</div>
-
-
-</div>
-</div>
+    <div class="page">
+        <div class="header">
+            <div style="width: 100vw; display: flex; justify-content: space-between;">
+                <h1>Privacy Policy for vTo-Do  </h1>
+                <button class="button add" onclick="switchLanguage()">Przeczytaj po polsku</button>
+            </div>
+        </div>
+    </div>
 
 <div class="translations-content-container">
-<div class="container">
+<div class="container" style="margin-top: 25px;">
 <div class="tab-content translations-content-item en visible" id="en">
 <h1>Privacy Policy</h1>
 <p>Last updated: December 08, 2021</p>
@@ -288,7 +223,7 @@ function myFunction() {
 <p><strong>Account</strong> means a unique account created for You to access our Service or parts of our Service.</p>
 </li>
 <li>
-<p><strong>Company</strong> (referred to as either &quot;the Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in this Agreement) refers to v-todo.</p>
+<p><strong>Company</strong> (referred to as either &quot;the Company&quot;, &quot;We&quot;, &quot;Us&quot; or &quot;Our&quot; in this Agreement) refers to vTo-Do.</p>
 </li>
 <li>
 <p><strong>Cookies</strong> are small files that are placed on Your computer, mobile device or any other device by a website, containing the details of Your browsing history on that website among its many uses.</p>
@@ -315,7 +250,7 @@ function myFunction() {
 <p><strong>Usage Data</strong> refers to data collected automatically, either generated by the use of the Service or from the Service infrastructure itself (for example, the duration of a page visit).</p>
 </li>
 <li>
-<p><strong>Website</strong> refers to v-todo, accessible from <a href="https://v-todo.com" rel="external nofollow noopener" target="_blank">https://v-todo.com</a></p>
+<p><strong>Website</strong> refers to vTo-Do, accessible from <a href="https://v-todo.com" rel="external nofollow noopener" target="_blank">https://v-todo.com</a></p>
 </li>
 <li>
 <p><strong>You</strong> means the individual accessing or using the Service, or the company, or other legal entity on behalf of which such individual is accessing or using the Service, as applicable.</p>
@@ -464,7 +399,7 @@ function myFunction() {
 </div>
 </div>
 </div>
-
+</div>
 </div>
 </div>
 

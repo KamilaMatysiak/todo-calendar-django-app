@@ -31,9 +31,18 @@ class TaskModelForm(BSModalModelForm):
     localization = forms.CharField(required=False, label="Lokalizacja")
     for_who = forms.CharField(required=False, label="Zlecenie", validators=[temporary_user_validation])
 
+    cycle_intervals = (('d', 'dni'),
+                    ('w', 'tygodni'),
+                    ('m', 'miesięcy'),
+                    ('y', 'lat'))
+
+    is_cyclical = forms.BooleanField(required=False, label="Powtarzanie zadania")
+    cycle_interval = forms.ChoiceField(choices=cycle_intervals, required=False, widget=forms.Select(attrs={'class': 'select form-control'}))
+    cycle_number = forms.CharField(required=False, initial='1', widget=forms.TextInput(attrs={'class': 'textinput textInput form-control'}))
+
     class Meta:
         model = Task
-        fields = ['title', 'localization', 'with_who', 'date', 'time', 'priority', 'category']
+        fields = ['title', 'localization', 'with_who', 'date', 'time', 'priority', 'category', 'is_cyclical', 'cycle_interval', 'cycle_number']
         widgets = {
             'date': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl"}),
             'time': TimePickerInput()

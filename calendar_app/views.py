@@ -18,11 +18,20 @@ from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.oauth2.credentials import Credentials
 from allauth.socialaccount.models import SocialToken
+from dateutil import relativedelta
+import re
+from allauth.socialaccount.models import SocialToken, SocialAccount
 from geopy.geocoders import Nominatim
 from tasks.utils import get_geo, get_center_coordinates, get_zoom, get_ip_address
 from geopy.distance import geodesic
 
 from .custom_variables import colors_event, colors_calendar, months, timezone, vtodo_colors_event
+
+
+def is_google_user(user):
+    resp = SocialAccount.objects.filter(user=user).first()
+    print(resp)
+    return True if resp else False
 
 
 def get_meetings(dict, date):
@@ -31,6 +40,17 @@ def get_meetings(dict, date):
     else:
         return []
 
+def add_days(date, interval, number):
+    if interval == 'd':
+        d = timedelta(days = number)
+    elif interval == 'w':
+        d = timedelta(weeks = number)
+    elif interval == 'm':
+        d = relativedelta.relativedelta(months = number)
+    elif interval == 'y':
+        d = relativedelta.relativedelta(years = number)
+    date += d
+    return(date)
 
 def get_context(year, month, day, user):
     meetings = Meeting.objects.filter(user=user)
@@ -52,6 +72,18 @@ def get_context(year, month, day, user):
             all_events[meeting_date].append(m)
         else:
             all_events[meeting_date] = [m]
+        if m.is_cyclical:
+            next_month = date + relativedelta.relativedelta(months=1)
+            next_month = next_month.replace(day=1)
+            if m.date_start < next_month:
+                temp_date = m.date_start
+                while temp_date < next_month:
+                    temp_date = add_days(temp_date, m.cycle_interval, m.cycle_number)
+                    if temp_date.month == month:
+                        if temp_date in all_events:
+                            all_events[temp_date].append(m)
+                        else:
+                            all_events[temp_date] = [m]
 
     days = []
     for d in cal.itermonthdays2(year, month):
@@ -338,6 +370,9 @@ class AddEventView(BSModalCreateView):
             obj.l_lon = destination.longitude
         with_who = self.request.POST.getlist("with_who")
         obj.with_who = "|".join(with_who)
+        if not form.cleaned_data['is_cyclical']:
+            obj.cycle_interval = None
+            obj.cycle_number = None
         if self.request.is_ajax():
             try:
                 service = construct_service(obj.user)
@@ -397,6 +432,10 @@ class DeleteNoteView(BSModalDeleteView):
 def import_google_calendar_data(request):
     import re
 
+    def construct_response(msg, data):
+        return {'msg': msg,
+                'data': data}
+
     def parse_google_date(data):
         parsed = re.split(r"[TZ]", data.get('dateTime', datetime.now()))
         _date, _time = parsed[:2]
@@ -405,40 +444,41 @@ def import_google_calendar_data(request):
         return _date, _time
 
     user = request.user
-    try:
-        service = construct_service(user)
+    if is_google_user(user):
+        try:
+            service = construct_service(user)
 
-        events_result = service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z',
-                                              maxResults=10, singleEvents=True,
-                                              orderBy='startTime').execute()
-        events = events_result.get('items', [])
-        for event in events:
-            print(event)
-            date_start, time_start = parse_google_date(event['start']) \
-                if event['start'].get('dateTime') else (event['start']['date'], '00:00:00')
-            date_end, time_end = parse_google_date(event['end']) \
-                if event['end'].get('dateTime') else (event['end']['date'], '23:59:00')
+            events_result = service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z',
+                                                  maxResults=10, singleEvents=True,
+                                                  orderBy='startTime').execute()
+            events = events_result.get('items', [])
+            for event in events:
+                print(event)
+                date_start, time_start = parse_google_date(event['start']) \
+                    if event['start'].get('dateTime') else (event['start']['date'], '00:00:00')
+                date_end, time_end = parse_google_date(event['end']) \
+                    if event['end'].get('dateTime') else (event['end']['date'], '23:59:00')
 
-            meeting_kwargs = {
-                'user': user,
-                'title': event.get('summary', 'brak tytułu'),
-                'description': event.get('description', 'brak opisu'),
-                'date_start': date_start,
-                'time_start': time_start,
-                'date_end': date_end,
-                'time_end': time_end,
-                'color': colors_event[event.get('colorId', '9')].get('name', 'blue'),
-            }
+                meeting_kwargs = {
+                    'user': user,
+                    'title': event.get('summary', 'brak tytułu'),
+                    'description': event.get('description', 'brak opisu'),
+                    'date_start': date_start,
+                    'time_start': time_start,
+                    'date_end': date_end,
+                    'time_end': time_end,
+                    'color': colors_event[event.get('colorId', '9')].get('name', 'blue'),
+                }
 
-            Meeting.objects.get_or_create(**meeting_kwargs)
+                Meeting.objects.get_or_create(**meeting_kwargs)
 
-        response = {'msg': 'success',
-                    'data': events}
-    except Exception as e:
-        e = 'Got this exception: ' + str(e)
-        print(e)
-        response = {'msg': 'error',
-                    'data': e}
+            response = construct_response('success', events)
+        except Exception as e:
+            e = 'Got this exception: ' + str(e)
+            print(e)
+            response = construct_response('error', e)
+    else:
+        response = construct_response('issue', 'not google')
 
     return JsonResponse(response)
 
@@ -476,6 +516,10 @@ def edit_meeting(request, pk):
                 obj.l_lon = destination.longitude
             with_who = request.POST.getlist("with_who")
             obj.with_who = "|".join(with_who)
+            if not obj.is_cyclical:
+                obj.cycle_interval = None
+                obj.cycle_number = None
+            obj.save()
             form.save()
             return redirect('/calendar')
 
@@ -527,6 +571,7 @@ class ConnectTaskView(BSModalUpdateView):
             task.meeting = self.object
             task.save()
         return HttpResponseRedirect(self.get_success_url())
+
 
     def form_invalid(self, form):
         """If the form is invalid, render the invalid form."""

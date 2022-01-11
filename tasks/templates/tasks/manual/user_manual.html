@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block headcontent %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/>
+<title>Instrukcja użytkownika - vToDo</title>
+{% endblock %}
+
+{% block content %}
+<div><button style="position: absolute; top: 15px; left: 15px;" id="um-sidebarCollapse" onclick="showMenu()" class="button add">MENU</button></div>
+<div id="um-sidebar" class="um-sidebar navy">
+    <div style="color: #fff; padding: 5px 15px; text-align:right; cursor: pointer;" onclick="hideMenu()" id="um-dismiss">x</div>
+    <a href="{% url 'index' %}"><img id="um-logo" src="{% static 'image/logo.svg' %}"></a>
+    <ul>
+        <li><a href="#logowanie">Logowanie i rejestracja</a></li>
+        <li><a href="#taski">Lista zadań</a></li>
+        <li><a href="#wydarzenia">Kalendarz</a></li>
+        <li><a href="#profil">Profil użytkownika</a></li>
+        <li><a href="{% url 'pwa_manual' %}">Instalacja aplikacji</a></li>
+    </ul>
+</div>
+<div class="um-content">
+    <div class="section" id="logowanie">
+        <h1>Logowanie i rejestracja</h1>
+        <ol class="contents">
+            <li>Rejestracja</li>
+            <li>Logowanie</li>
+            <li>Logowanie przez Google</li>
+        </ol>
+
+        <p>By rozpocząć korzystanie z naszego serwisu należy posiadać <strong>konto użytkownika</strong>. Można je założyć na dwa sposoby:</p>
+        <ol><li>Założyć konto vTo-Do</li><li>Zalogować się za pomocą konta Google</li></ol>
+
+        <h2> Rejestracja </h2>
+        <p>W pierwszym przypadku należy kliknąć przycisk "Rozpocznij" znajdujący się na banerze.</p>
+
+        <img class="big-scr" alt="Zrzut ekranu przedstawiajacy umiejscowienie guzika Rozpocznij" src="{% static 'image/manual/um-log-1.png'%}">
+
+        <p>Po kliknięciu w przycisk ukaże nam się formularz rejestracji.</p>
+
+        <img class="small-scr" alt="Zrzut ekranu przedstawiający formularz rejestracji" src="{% static 'image/manual/um-log-2.png'%}">
+
+        <ol>
+            <li><strong>Nazwa użytkownika</strong> - unikalna nazwa służąca do logowania</li>
+            <li><strong>E-mail (opcjonalnie)</strong> - e-mail użytkownika</li>
+            <li><strong>Hasło</strong> - hasło użytkownika, dzięki któremu użytkownik będzie się logował do systemu. Powinno zawierać co najmniej 8 znaków w czym przynajmniej jedną literę.</li>
+            <li>Na koniec tworzymy nasze konto za pomocą przycisku <strong>"Zarejestruj"</strong></li>
+        </ol>
+
+        <p>Po udanej rejestracji użytkownik może się zalogować.</p>
+
+        <h2> Logowanie </h2>
+        <p>By zalogować się do aplikacji vTo-Do należy wcisnąć przycisk <strong>Zaloguj się</strong> dostępny w prawym górnym rogu.</p>
+        <img class="big-scr" alt="Zrzut ekranu przedstawiajacy umiejscowienie guzika Rozpocznij" src="{% static 'image/manual/um-log-3.png'%}">
+        <p>Po kliknięciu w przycisk naszym oczom okaże sie formularz logowania, w którym możemy zalogować się na swoje konto za pomocą wcześniej utworzonego konta vTo-Do lub zalogować się za pomocą konta Google.</p>
+        <img class="small-scr" alt="Zrzut ekranu przedstawiający formularz rejestracji" src="{% static 'image/manual/um-log-4.png'%}">
+
+        <h2> Logowanie z pomocą konta Google </h2>
+        <p> Proces rejestracji może zostać całkowicie pominięty jeżeli użytkownik zdecyduje się na zalogowanie się za pomocą swojego konta Google. Konto sprzężone z kontem Google daje takie korzyści jak <strong>możliwość synchronizacji z kalendarzem Google i dostęp do kontaktów Gmail</strong>.</p>
+        <p><strong>Uwaga!</strong> Na obecnym etapie rozwoju aplikacji <strong>nie jest możliwe połączenie istniejącego konta vTo-Do z kontem Google.</strong><br> Prosimy mieć to na uwadze przy zakładniu konta.</p>
+        <p>Żeby zalogować się za pomocą konta Google należy od razu udać się do formularza logowania i wybrać funkcję <strong>Zaloguj się przez Google</strong>. Użytkownik zostanie przekierowany do formularza logowania Google.</p>
+        <img class="small-scr" alt="Zrzut ekranu przedstawiający formularz rejestracji" src="{% static 'image/manual/um-log-5.png'%}">
+
+    </div>
+    <div class="section" id="taski">
+        <h1>Lista Zadań</h1>
+        <ol class="contents">
+            <li>Dodawanie zadania</li>
+            <li>Edycja zadania</li>
+            <li>Usuwanie zadania</li>
+            <li>Kategorie</li>
+            <li>Zlecanie zadań</li>
+        </ol>
+
+        <h3>Rozdział w budowie!</h3>
+        <p>Developerzy usilnie pracują, by dostarczyć ten rozdział jak najszybciej!</p>
+    </div>
+    <div class="section" id="wydarzenia">
+        <h1>Kalendarz</h1>
+        <ol class="contents">
+            <li>Dodawanie wydarzeń</li>
+            <li>Edycja wydarzeń</li>
+            <li>Przypisanie zadań do wydarzeń</li>
+            <li>Notatki</li>
+        </ol>
+
+        <h3>Rozdział w budowie!</h3>
+        <p>Developerzy usilnie pracują, by dostarczyć ten rozdział jak najszybciej!</p>
+    </div>
+    <div class="section" id="profil">
+        <h1>Profil użytkownika</h1>
+        <ol class="contents">
+            <li>Edycja profilu</li>
+            <li>Zmiana hasła</li>
+            <li>Usuwanie konta</li>
+        </ol>
+
+        <h2> Edycja profilu </h2>
+        <p>W każdej chwili można edytować dane w swoim profilu. W tym celu należy przejść do profilu klikając w awatar w prawym górnym rogu.</p>
+        <img class="big-scr" alt="Zrzut ekranu przedstawiajacy umiejscowienie guzika Edytuj profil" src="{% static 'image/manual/um-prof-1.png'%}">
+        <p>Następnie należy wcisnąć przycisk <strong>Edytuj profil</strong> na dole strony. Naszym oczom ukaże się formularz, w którym można zedytować nasze dane:</p>
+        <img class="small-scr" alt="Zrzut ekranu przedstawiający formularz edycji profilu" src="{% static 'image/manual/um-prof-2.png'%}">
+
+        <h2> Zmiana hasła </h2>
+        <p>By zmienić hasło należy wcisnąć przycisk <strong>Zmień hasło</strong> znajdujący się obok rubryki hasło w profilu użytkownika.</p>
+        <img class="big-scr" alt="Zrzut ekranu przedstawiajacy umiejscowienie guzika Zmień hasło" src="{% static 'image/manual/um-prof-3.png'%}">
+        <p>Po kliknięciu w przycisk naszym oczom okaże sie formularz zmiany hasła. Nowe hasło musi zawierać co najmniej 8 znaków w czym co najmniej jedną literę!</p>
+        <img class="small-scr" alt="Zrzut ekranu przedstawiający formularz rejestracji" src="{% static 'image/manual/um-prof-4.png'%}">
+
+        <h2> Usuwanie konta </h2>
+        <p>By zmienić usunąć konto należy wcisnąć przycisk <strong>Usuń konto</strong> znajdujący się pod przyciskiem edycji na dole strony.</p>
+        <p>Po jego wciśnięciu system poprosi o potwierdzenie operacji.</p>
+        <p><strong>Uwaga!</strong> Usunięcie konta jest <strong>nieowracalne!</strong></p>
+        <img class="small-scr" alt="Zrzut ekranu przedstawiajacy okienko z potwierdzeniem" src="{% static 'image/manual/um-prof-5.png'%}">
+    </div>
+</div>
+
+<script type="text/javascript">
+
+        function showMenu() {
+            document.getElementById("um-sidebar").style.display = "block";
+        }
+
+        function hideMenu() {
+            document.getElementById("um-sidebar").style.display = "none";
+        }
+    </script>
+{% endblock %}
