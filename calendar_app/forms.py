@@ -5,18 +5,18 @@ from bootstrap_modal_forms.forms import BSModalModelForm
 from bootstrap_datepicker_plus import DatePickerInput, TimePickerInput
 from datetime import *
 from tasks.models import Task
-
+from .custom_variables import COLORS
 
 
 class EventModelForm(BSModalModelForm):
     description = forms.CharField(required=False, label="Opis")
     today = datetime.now().strftime("%d-%m-%Y")
 
-    COLORS = [('blue', 'blue'),
-            ('orange', 'orange'),
-            ('red', 'red'),
-            ('purple', 'purple'),
-            ('green', 'green')]
+    # COLORS = [('blue', 'blue'),
+    #         ('orange', 'orange'),
+    #         ('red', 'red'),
+    #         ('purple', 'purple'),
+    #         ('green', 'green')]
 
     cycle_intervals = (('d', 'dni'),
                     ('w', 'tygodni'),

@@ -7,13 +7,16 @@
 {% endblock %}
 
 {% block content %}
-<div class="um-sidebar navy">
+<div><button style="position: absolute; top: 15px; left: 15px;" id="um-sidebarCollapse" onclick="showMenu()" class="button add">MENU</button></div>
+<div id="um-sidebar" class="um-sidebar navy">
+    <div style="color: #fff; padding: 5px 15px; text-align:right; cursor: pointer;" onclick="hideMenu()" id="um-dismiss">x</div>
     <a href="{% url 'index' %}"><img id="um-logo" src="{% static 'image/logo.svg' %}"></a>
     <ul>
         <li><a href="#logowanie">Logowanie i rejestracja</a></li>
         <li><a href="#taski">Lista zadań</a></li>
         <li><a href="#wydarzenia">Kalendarz</a></li>
         <li><a href="#profil">Profil użytkownika</a></li>
+        <li><a href="{% url 'pwa_manual' %}">Instalacja aplikacji</a></li>
     </ul>
 </div>
 <div class="um-content">
@@ -92,15 +95,34 @@
             <li>Usuwanie konta</li>
         </ol>
 
-        <h3>Rozdział w budowie!</h3>
-        <p>Developerzy usilnie pracują, by dostarczyć ten rozdział jak najszybciej!</p>
+        <h2> Edycja profilu </h2>
+        <p>W każdej chwili można edytować dane w swoim profilu. W tym celu należy przejść do profilu klikając w awatar w prawym górnym rogu.</p>
+        <img class="big-scr" alt="Zrzut ekranu przedstawiajacy umiejscowienie guzika Edytuj profil" src="{% static 'image/manual/um-prof-1.png'%}">
+        <p>Następnie należy wcisnąć przycisk <strong>Edytuj profil</strong> na dole strony. Naszym oczom ukaże się formularz, w którym można zedytować nasze dane:</p>
+        <img class="small-scr" alt="Zrzut ekranu przedstawiający formularz edycji profilu" src="{% static 'image/manual/um-prof-2.png'%}">
+
+        <h2> Zmiana hasła </h2>
+        <p>By zmienić hasło należy wcisnąć przycisk <strong>Zmień hasło</strong> znajdujący się obok rubryki hasło w profilu użytkownika.</p>
+        <img class="big-scr" alt="Zrzut ekranu przedstawiajacy umiejscowienie guzika Zmień hasło" src="{% static 'image/manual/um-prof-3.png'%}">
+        <p>Po kliknięciu w przycisk naszym oczom okaże sie formularz zmiany hasła. Nowe hasło musi zawierać co najmniej 8 znaków w czym co najmniej jedną literę!</p>
+        <img class="small-scr" alt="Zrzut ekranu przedstawiający formularz rejestracji" src="{% static 'image/manual/um-prof-4.png'%}">
+
+        <h2> Usuwanie konta </h2>
+        <p>By zmienić usunąć konto należy wcisnąć przycisk <strong>Usuń konto</strong> znajdujący się pod przyciskiem edycji na dole strony.</p>
+        <p>Po jego wciśnięciu system poprosi o potwierdzenie operacji.</p>
+        <p><strong>Uwaga!</strong> Usunięcie konta jest <strong>nieowracalne!</strong></p>
+        <img class="small-scr" alt="Zrzut ekranu przedstawiajacy okienko z potwierdzeniem" src="{% static 'image/manual/um-prof-5.png'%}">
     </div>
 </div>
+
+<script type="text/javascript">
+
+        function showMenu() {
+            document.getElementById("um-sidebar").style.display = "block";
+        }
+
+        function hideMenu() {
+            document.getElementById("um-sidebar").style.display = "none";
+        }
+    </script>
 {% endblock %}
-
-<script>
-    function showContent() {
-        this.show()
-    }
-
-</script>
