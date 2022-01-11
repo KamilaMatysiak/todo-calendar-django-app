@@ -24,7 +24,8 @@ urlpatterns = [
     path('home/<str:pk>/reject', views.refuse_task, name='reject'),
     path('home/<str:pk>/confirm', views.accept_task, name='confirm'),
     path('send_push', views.send_push),
-    path('task-list/category/<str:pk>', views.categoryView, name="category"),
+    path('category/<str:pk>', views.categoryView, name="category"),
+    path('archive', views.archiveView, name="archive"),
     path('test', views.test, name="test"),
     path('serviceworker.js', TemplateView.as_view(template_name='serviceworker.js', content_type='application/x'
                                                                                                   '-javascript')),
