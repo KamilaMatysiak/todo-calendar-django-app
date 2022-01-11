@@ -484,23 +484,46 @@ def import_google_calendar_data(request):
     return JsonResponse(response)
 
 
+def is_google_event(obj, items):
+    for item in items:
+        date_start, time_start = parse_google_date(item['start'])
+        date_end, time_end = parse_google_date(item['end'])
+        if obj.title == item['summary'] and obj.description == item.get('description', '') \
+                and str(obj.date_start) == date_start and str(obj.date_end) == date_end:
+            return item['id']
+
+    return False
+
+
+def get_google_events(user):
+    service = construct_service(user)
+    events_items = service.events().list(calendarId='primary',
+                                         timeMin=datetime.utcnow().isoformat() + 'Z',
+                                         singleEvents=True,
+                                         orderBy='startTime').execute()['items']
+    return service, events_items
+
+
 def delete_event_from_google(user, obj):
     try:
-        service = construct_service(user)
-        events_items = service.events().list(calendarId='primary',
-                                             timeMin=datetime.utcnow().isoformat() + 'Z',
-                                             singleEvents=True,
-                                             orderBy='startTime').execute()['items']
-        for item in events_items:
-            date_start, time_start = parse_google_date(item['start'])
-            date_end, time_end = parse_google_date(item['end'])
-            if obj.title == item['summary'] and obj.description == item.get('description', '') \
-                    and str(obj.date_start) == date_start and str(obj.date_end) == date_end:
-                kwargs = {'calendarId': 'primary',
-                          'eventId': item['id'],
-                          'sendNotifications': False}
-                service.events().delete(**kwargs).execute()
-                break
+        service, events_items = get_google_events(user)
+
+        item_id = is_google_event(obj, events_items)
+        if item_id:
+            kwargs = {'calendarId': 'primary',
+                      'eventId': item_id,
+                      'sendNotifications': False}
+            service.events().delete(**kwargs).execute()
+        # for item in events_items:
+        #     date_start, time_start = parse_google_date(item['start'])
+        #     date_end, time_end = parse_google_date(item['end'])
+        #     if obj.title == item['summary'] and obj.description == item.get('description', '') \
+        #             and str(obj.date_start) == date_start and str(obj.date_end) == date_end:
+        #         kwargs = {'calendarId': 'primary',
+        #                   'eventId': item['id'],
+        #                   'sendNotifications': False}
+        #         service.events().delete(**kwargs).execute()
+        #         break
     except Exception as e:
         print(e)
 
