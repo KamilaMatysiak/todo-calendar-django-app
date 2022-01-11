@@ -33,7 +33,7 @@ class EventModelForm(BSModalModelForm):
 
     class Meta:
         model = Meeting
-        fields = ['color', 'title', 'description','localization', 'with_who', 'date_start', 'time_start', 'time_end', 'date_end', 'cycle_interval', 'cycle_number', 'is_cyclical']
+        fields = ['color', 'title', 'description', 'date_start', 'time_start', 'time_end', 'date_end', 'localization', 'with_who', 'cycle_interval', 'cycle_number', 'is_cyclical']
         widgets = {
             # 'x': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl"}),
             'date_start': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl", "useCurrent": False}),

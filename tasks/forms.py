@@ -50,7 +50,7 @@ class TaskModelForm(BSModalModelForm):
 
     class Meta:
         model = Task
-        fields = ['title', 'note', 'localization', 'with_who', 'date', 'time', 'estimated_time_number', 'estimated_time_interval', 'priority', 'category', 'is_cyclical', 'cycle_interval', 'cycle_number']
+        fields = ['title', 'localization', 'with_who', 'date', 'time', 'priority', 'estimated_time_number', 'estimated_time_interval', 'note', 'category', 'is_cyclical', 'cycle_interval', 'cycle_number']
         widgets = {
             'date': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl"}),
             'time': TimePickerInput()
@@ -61,6 +61,7 @@ class TaskModelForm(BSModalModelForm):
             'time': ('Czas'),
             'priority': ('Priorytet'),
             'category': ('Kategoria'),
+            'note': ('Uwagi'),
         }
         
         

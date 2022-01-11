@@ -27,7 +27,7 @@
     </div>
 
     {% for field in form %}
-      {% if field.name == "for_who" or field.name == 'cycle_number' or field.name == 'cycle_interval' %}
+      {% if field.name == "for_who" or field.name == 'cycle_number' or field.name == 'cycle_interval' or field.name == 'estimated_time_interval'  %}
 
       {% elif field.name == 'is_cyclical' %}
           {{field | as_crispy_field}}
@@ -36,6 +36,14 @@
               <div style="width: 33%;"> {{ form.cycle_number }}</div>
               <div style="width: 33%;">{{ form.cycle_interval }}</div>
           </div>
+
+      {% elif field.name == 'estimated_time_number' %}
+            <label>Oszacowanie czasowe zadania:</label>
+            <div style="display: flex; justify-content: space-between;">
+                <div style="width: 47%;"> {{ form.estimated_time_number }}</div>
+                <div style="width: 47%;">{{ form.estimated_time_interval }}</div>
+            </div>
+
     {% else %}
         <div class="form-group">
 
