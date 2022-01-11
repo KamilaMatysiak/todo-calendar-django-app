@@ -57,7 +57,7 @@ def location(request, pk=None):
             tasks_data.append([str(x.id), str(x.l_lat), str(x.l_lon), str(html), str(color[x.priority]), x.title])
 
     for x in events:
-        if x.date_end > datetime.now().date():
+        if x.date_end >= datetime.now().date():
             if x.l_lon and x.l_lat:
                 path = "/calendar/day/" + re.sub(r"-", "/", str(x.date_start))
                 html = f"<div><strong>{x.title}</strong> <br>{x.localization}<br>{x.date_start}<br><a style='color: #2F9CEB; width: 100%;' target='_blank' href='{path}'>Przejdź do kalendarza</a></div>"
