@@ -378,7 +378,8 @@ class AddEventView(BSModalCreateView):
                 service = construct_service(obj.user)
                 print("start: ", obj.date_start, "\n end: ", obj.date_end)
                 create_event(service=service,
-                             meeting_obj=obj)
+                             meeting_obj=obj,
+                             location=obj.localization)
             except Exception as e:
                 print("Error is", e)
         return super(AddEventView, self).form_valid(form)
