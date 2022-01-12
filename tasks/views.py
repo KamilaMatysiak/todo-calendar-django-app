@@ -355,18 +355,16 @@ def send_push(request):
         print("2")
         user_id = data['id']
         user = get_object_or_404(User, pk=user_id)
-        data_tasks = how_many_tasks(user, float(data['lat']), float(data['lon']))
-        print("DATA_TASKS", data_tasks)
-        if data_tasks[1] != None:
-            payload = {'head': 'Zadań w okolicy: ' + data_tasks[0],
-                       'body': 'Najbliższe zadanie: ' + data_tasks[1] + ' - ' +
-                               data_tasks[2] + 'km stąd'}
-        else:
-            payload = {'head': 'Brak zadań w okolicy'}
-        print(payload)
-        send_user_notification(user=user, payload=payload, ttl=1000)
+        data_task = is_any_task_close(user, float(data['lat']), float(data['lon']))
+        print("DATA_TASK", data_task)
+        if data_task != None:
+            print("weszło")
+            payload = {'head': 'Masz zadanie w okolicy!',
+                       'body': data_task}
+            print(payload)
+            send_user_notification(user=user, payload=payload, ttl=1000)
 
-        return JsonResponse(status=200, data={"message": "Web push successful"})
+            return JsonResponse(status=200, data={"message": "Web push successful"})
     except TypeError:
         return JsonResponse(status=500, data={"message": "An error occurred"})
 
