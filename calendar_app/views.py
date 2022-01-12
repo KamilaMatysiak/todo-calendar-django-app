@@ -292,7 +292,7 @@ def get_span(meeting):
     return height
 
 
-def create_event(service, location=None, attendees=None, meeting_obj=None):
+def create_update_event(service, method, location=None, attendees=None, meeting_obj=None, old_meeting=None):
     if meeting_obj:
         if attendees is None:
             attendees = []
@@ -332,7 +332,18 @@ def create_event(service, location=None, attendees=None, meeting_obj=None):
             },
         }
 
-        event = service.events().insert(calendarId=calendarId, body=event).execute()
+        event_kwargs = {
+            'calendarId': calendarId,
+            'body': event
+        }
+
+        if method == 'update':
+            events_items = get_google_events(service)
+            item_id = is_google_event(old_meeting, events_items)
+            if item_id:
+                event_kwargs['eventId'] = item_id
+
+        event = getattr(service.events(), method)(**event_kwargs).execute()
         print(event)
 
 
@@ -379,9 +390,10 @@ class AddEventView(BSModalCreateView):
             try:
                 service = construct_service(obj.user)
                 print("start: ", obj.date_start, "\n end: ", obj.date_end)
-                create_event(service=service,
-                             meeting_obj=obj,
-                             location=obj.localization)
+                create_update_event(service=service,
+                                    method='insert',
+                                    meeting_obj=obj,
+                                    location=obj.localization)
             except Exception as e:
                 print("Error is", e)
         return super(AddEventView, self).form_valid(form)
@@ -402,6 +414,20 @@ class AddNoteView(BSModalCreateView):
         obj.meeting = meeting
         self.success_url = reverse_lazy("edit_meeting", args=[obj.meeting.id])
         return super(AddNoteView, self).form_valid(form)
+
+
+def update_event_from_google(user, obj, old_meeting):
+    try:
+        service = construct_service(user)
+        create_update_event(service=service,
+                            method='update',
+                            meeting_obj=obj,
+                            location=obj.localization,
+                            old_meeting=old_meeting)
+        print('SUCCESSFUL')
+
+    except Exception as e:
+        print(e)
 
 
 class EditNoteView(BSModalUpdateView):
@@ -559,8 +585,14 @@ def edit_meeting(request, pk):
         raise Http404
 
     if request.method == 'POST':
+        from copy import deepcopy
+
+        old_meeting = deepcopy(meeting)
+
         form = EventModelForm(request.POST, instance=meeting, request=request)
         if form.is_valid():
+            if not request.is_ajax():
+                update_event_from_google(request.user, meeting, old_meeting)
             obj = form.save(commit=False)
             if obj.localization:
                 geolocator = Nominatim(user_agent='measurements')
