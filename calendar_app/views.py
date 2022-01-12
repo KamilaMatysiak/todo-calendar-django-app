@@ -34,6 +34,11 @@ def is_google_user(user):
     return True if resp else False
 
 
+def construct_response(msg, data):
+    return {'msg': msg,
+            'data': data}
+
+
 def get_meetings(dict, date):
     if date in dict:
         return dict[date]
@@ -258,12 +263,16 @@ def home(request, year, month, day):
     locale.setlocale(locale.LC_ALL, "pl_PL")
     user = request.user
     context = get_context(year, month, day, user)
+    if is_google_user(user=user):
+        _import_google_calendar(user)
     return render(request, 'calendar/home.html', context)
 
 
 @login_required
 def weekView(request, year, month, day):
     user = request.user
+    if is_google_user(user=user):
+        _import_google_calendar(user)
     context = get_context(year, month, day, user)
     return render(request, 'calendar/week.html', context)
 
@@ -271,6 +280,8 @@ def weekView(request, year, month, day):
 @login_required
 def monthView(request, year, month, day):
     user = request.user
+    if is_google_user(user=user):
+        _import_google_calendar(user)
     context = get_context(year, month, day, user)
     all_events = context["all_events"]
     days = context["days"]
@@ -465,59 +476,60 @@ def parse_google_date(data):
     return _date, _time
 
 
-@login_required
-def import_google_calendar_data(request):
-    def construct_response(msg, data):
-        return {'msg': msg,
-                'data': data}
+def _import_google_calendar(user):
+    try:
+        service = construct_service(user)
 
+        events_result = service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z',
+                                              singleEvents=True,
+                                              orderBy='startTime').execute()
+        events = events_result.get('items', [])
+        for event in events:
+            print(event)
+            date_start, time_start = parse_google_date(event['start']) \
+                if event['start'].get('dateTime') else (event['start']['date'], '00:00:00')
+            date_end, time_end = parse_google_date(event['end']) \
+                if event['end'].get('dateTime') else (event['end']['date'], '23:59:00')
+
+            location = event.get('location', '')
+            l_lat = None
+            l_lon = None
+            if location:
+                geolocator = Nominatim(user_agent='measurements')
+
+                destination = geolocator.geocode(location)
+                l_lat = destination.latitude
+                l_lon = destination.longitude
+
+            meeting_kwargs = {
+                'user': user,
+                'title': event.get('summary', 'brak tytułu'),
+                'description': event.get('description', 'brak opisu'),
+                'date_start': date_start,
+                'time_start': time_start,
+                'date_end': date_end,
+                'time_end': time_end,
+                'color': colors_event[event.get('colorId', '9')].get('name', 'blue'),
+                'localization': location,
+                'l_lat': l_lat,
+                'l_lon': l_lon,
+            }
+
+            Meeting.objects.get_or_create(**meeting_kwargs)
+
+        response = construct_response('success', events)
+    except Exception as e:
+        e = 'Got this exception: ' + str(e)
+        print(e)
+        response = construct_response('error', e)
+    return response
+
+
+@login_required
+def import_google_calendar_api(request):
     user = request.user
     if is_google_user(user):
-        try:
-            service = construct_service(user)
-
-            events_result = service.events().list(calendarId='primary', timeMin=datetime.utcnow().isoformat() + 'Z',
-                                                  singleEvents=True,
-                                                  orderBy='startTime').execute()
-            events = events_result.get('items', [])
-            for event in events:
-                print(event)
-                date_start, time_start = parse_google_date(event['start']) \
-                    if event['start'].get('dateTime') else (event['start']['date'], '00:00:00')
-                date_end, time_end = parse_google_date(event['end']) \
-                    if event['end'].get('dateTime') else (event['end']['date'], '23:59:00')
-
-                location = event.get('location', '')
-                l_lat = None
-                l_lon = None
-                if location:
-                    geolocator = Nominatim(user_agent='measurements')
-
-                    destination = geolocator.geocode(location)
-                    l_lat = destination.latitude
-                    l_lon = destination.longitude
-
-                meeting_kwargs = {
-                    'user': user,
-                    'title': event.get('summary', 'brak tytułu'),
-                    'description': event.get('description', 'brak opisu'),
-                    'date_start': date_start,
-                    'time_start': time_start,
-                    'date_end': date_end,
-                    'time_end': time_end,
-                    'color': colors_event[event.get('colorId', '9')].get('name', 'blue'),
-                    'localization': location,
-                    'l_lat': l_lat,
-                    'l_lon': l_lon,
-                }
-
-                Meeting.objects.get_or_create(**meeting_kwargs)
-
-            response = construct_response('success', events)
-        except Exception as e:
-            e = 'Got this exception: ' + str(e)
-            print(e)
-            response = construct_response('error', e)
+        response = _import_google_calendar(user)
     else:
         response = construct_response('issue', 'not google')
 
@@ -536,7 +548,6 @@ def is_google_event(obj, items):
 
 
 def get_google_events(service):
-
     events_items = service.events().list(calendarId='primary',
                                          timeMin=datetime.utcnow().isoformat() + 'Z',
                                          singleEvents=True,
