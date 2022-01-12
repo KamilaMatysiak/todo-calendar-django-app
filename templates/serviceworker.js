@@ -36,7 +36,7 @@ self.addEventListener('activate', event => {
 });
 
 // Serve from Cache
-self.addEventListener("fetch", event => {
+/* self.addEventListener("fetch", event => {
     event.respondWith(
         caches.match(event.request)
             .then(response => {
@@ -46,7 +46,7 @@ self.addEventListener("fetch", event => {
                 return caches.match('offline');
             })
     )
-});
+}); */
 
 self.addEventListener('push', function (event) {
     // Retrieve the textual payload from event.data (a PushMessageData object).
