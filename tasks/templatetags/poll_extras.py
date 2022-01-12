@@ -147,3 +147,10 @@ def get_contacts(list):
         message = f"{contacts[0]} + {count-1}"
     return message
 
+@register.filter
+def chooseSlide(radio):
+    print(radio)
+    if radio in ['id_color_0', 'id_color_1', 'id_color_2', 'id_color_3', 'id_color_4', 'id_color_5']:
+        return 1
+    elif radio in ['id_color_6', 'id_color_7', 'id_color_8', 'id_color_9', 'id_color_10']:
+        return 2

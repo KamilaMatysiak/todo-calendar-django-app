@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block headcontent %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-css.css' %}"/>
+<title>Instrukcja użytkownika - vToDo</title>
+{% endblock %}
+
+{% block content %}
+<nav style="width: 100%; box-shadow: 0 4px 4px rgba(0,0,0,0.2);"><a href="{% url 'index' %}"><img id="um-logo" src="{% static 'image/orange.svg' %}"></a></nav>
+
+    <div class="section" style="width: 100%" id="pwa">
+        <h1>Instalacja aplikacji</h1>
+        <ol class="contents">
+            <li>Google Chrome - Android</li>
+            <li>Google Chrome - Desktop</li>
+            <li>Safari - IOS</li>
+        </ol>
+
+        <h2> Google Chrome - Android </h2>
+        <p>By pobrać aplikację poprzez Google Chrome w systemie Android należy udać się na v-todo.com. Na dole ekranu pojawi się nam okienko z komunikatem <i>Dodaj do ekranu głównego.</i></p>
+        <img class="small-scr" alt="Zrzut ekranu przedstawiający umiejscowienie komunikatu" src="{% static 'image/manual/um-pwa-gc-1.png' %}">
+        <p>Następnie ukaże nam się okienko z przyciskiem <strong>Zainstaluj</strong></p>
+        <img class="small-scr" alt="Okienko instalacji PWA" src="{% static 'image/manual/um-pwa-gc-2.png' %}">
+        <p>Po zainstalowaniu aplikacja jest gotowa do użytku.</p>
+
+        <h2> Google Chrome - Desktop </h2>
+        <p>Google Chrome daje nam również możliwość zainstalowania aplikacji na nasz pulpit. W tym celu należy kliknąć ikonkę monitora w prawym górnym rogu.</p>
+        <img class="big-scr" alt="Zrzut ekranu przedstawiający umiejscowienie komunikatu" src="{% static 'image/manual/um-pwa-desc-1.png' %}">
+        <p>Następnie ukaże nam się okienko z przyciskiem <strong>Zainstaluj</strong></p>
+        <img class="small-scr" alt="Okienko instalacji PWA" src="{% static 'image/manual/um-pwa-desc-2.png' %}">
+        <p>Po zakończonej instalacji aplikacja jest gotowa do użytku.</p>
+        <img class="big-scr" alt="Zrzut ekranu przedstawiający umiejscowienie komunikatu" src="{% static 'image/manual/um-pwa-desc-3.png'%}">
+
+        <h2> Safari - IOS </h2>
+        <p>By pobrać aplikację na IOS poprzez Safari należy udać się na v-todo.com i wybrać opcję "Więcej"</p>
+        <img class="small-scr" alt="TODO: Zrzut ekranu przedstawiający środkowy przycisk." src="">
+        <p>Z dostępnego menu wybrać opcję <strong>Dodaj do ekranu głównego</strong></p>
+        <img class="small-scr" alt="Menu z opcją Dodaj do ekranu głównego" src="">
+        <p>Po zainstalowaniu aplikacja jest gotowa do użytku.</p>
+
+    </div>
+</div>
+{% endblock %}

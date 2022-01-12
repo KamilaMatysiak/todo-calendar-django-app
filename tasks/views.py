@@ -19,13 +19,12 @@ from django.views.decorators.http import require_GET, require_POST
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
+from dateutil import relativedelta
 from django.template import loader
 import datetime
-import folium
 import json
 from django.http import HttpResponse
 from django.views.decorators.clickjacking import xframe_options_exempt
-
 
 # Create your views here.
 
@@ -36,15 +35,27 @@ def homepage(request):
 def terms_of_service(request):
     return render(request, 'tasks/terms_of_service.html')
 
+def user_manual(request):
+    return render(request, 'tasks/manual/user_manual.html')
+
+def pwa_manual(request):
+    return render(request, 'tasks/manual/pwa_instruction.html')
 
 def test(request):
     return render(request, 'tasks/components.html')
 
 
+
 @login_required
 def task_list(request, pk=None):
     tasks = [x for x in Task.objects.all() if x.user == request.user and x.accepted == True]
-
+    tasks = []
+    for x in Task.objects.all():
+        if x.user == request.user and x.accepted == True:
+            if x.complete:
+                if (datetime.datetime.now(timezone.utc)-x.completed_date).days > 7:
+                    continue
+            tasks.append(x)
     categories = [x for x in Category.objects.all() if x.user == request.user]
     form = TaskModelForm(request.user)
 
@@ -63,8 +74,13 @@ def task_list(request, pk=None):
 def categoryView(request, pk):
     category = Category.objects.get(id=pk)
     categories = [x for x in Category.objects.all() if x.user == request.user]
-    tasks = [x for x in Task.objects.all() if
-             x.user == request.user and x.category is not None and x.category.id == category.id and x.accepted == True]
+    tasks = []
+    for x in Task.objects.all():
+        if x.user == request.user and x.category is not None and x.category.id == category.id and x.accepted == True:
+            if x.complete:
+                if (datetime.datetime.now(timezone.utc)-x.completed_date).days > 7:
+                    continue
+            tasks.append(x)
 
     form = TaskModelForm(request.user)
 
@@ -78,11 +94,29 @@ def categoryView(request, pk):
     context = {"categories": categories, "tasks": tasks, 'form': form, 'category': category}
     return render(request, 'tasks/category_template.html', context)
 
+def archiveView(request):
+    categories = [x for x in Category.objects.all() if x.user == request.user]
+    tasks = []
+    for x in Task.objects.all():
+        if x.user == request.user and x.accepted == True and x.completed_date:
+            if (datetime.datetime.now(timezone.utc)-x.completed_date).days > 7:
+                tasks.append(x)
+
+    form = TaskModelForm(request.user)
+
+    if request.method == 'POST':
+        form = TaskModelForm(request.user, request.POST)
+
+        if form.is_valid():
+            form.save()
+        return redirect('/')
+
+    context = {"categories": categories, "tasks": tasks, 'form': form}
+    return render(request, 'tasks/archive.html', context)
 
 def delegateView(request):
     categories = [x for x in Category.objects.all() if x.user == request.user]
     tasks = [x for x in Task.objects.all() if x.from_who is not None and x.from_who == request.user]
-
     form = TaskModelForm(request.user)
 
     if request.method == 'POST':
@@ -162,6 +196,10 @@ class AddTaskView(BSModalCreateView):
             obj.l_lon = destination.longitude
         with_who = self.request.POST.getlist("with_who")
         obj.with_who = "|".join(with_who)
+        if not form.cleaned_data['is_cyclical']:
+            obj.cycle_interval = None
+            obj.cycle_number = None
+        print(obj.cycle_interval)
         if form.cleaned_data.get('for_who') != "":
             for x in User.objects.all():
                 if x.username == form.cleaned_data.get('for_who'):
@@ -172,6 +210,8 @@ class AddTaskView(BSModalCreateView):
                     obj.accepted = False
                     return super(AddTaskView, self).form_valid(form)
             return Http404
+
+
         return super(AddTaskView, self).form_valid(form)
 
     def get_form_kwargs(self):
@@ -260,6 +300,17 @@ def updateTask(request, pk):
 
     return render(request, 'tasks/update_task.html', context)
 
+def add_days(date, interval, number):
+    if interval == 'd':
+        d = datetime.timedelta(days = number)
+    elif interval == 'w':
+        d = datetime.timedelta(weeks = number)
+    elif interval == 'm':
+        d = relativedelta.relativedelta(months = number)
+    elif interval == 'y':
+        d = relativedelta.relativedelta(years = number)
+    date += d
+    return(date)
 
 def finishTask(request):
     taskID = request.POST['taskID']
@@ -267,8 +318,21 @@ def finishTask(request):
     task = Task.objects.get(pk=taskID)
 
     if complete == 'true':
-        print("saving to true")
         task.complete = True
+        task.completed_date = datetime.datetime.now(timezone.utc)
+        print(task.completed_date)
+        if task.is_cyclical:
+            d = task.date
+            while datetime.datetime.combine(d, task.time) < datetime.datetime.now():
+                d = add_days(d, task.cycle_interval, task.cycle_number)
+            if d == task.date:
+                d = add_days(d, task.cycle_interval, task.cycle_number)
+            Task.objects.create(user = task.user, title = task.title,
+                localization = task.localization, with_who = task.with_who, date = d,
+                time = task.time, priority = task.priority, category = task.category,
+                is_cyclical = task.is_cyclical, cycle_interval = task.cycle_interval, cycle_number = task.cycle_number,
+                complete = False, created = datetime.datetime.now(),
+                from_who = task.from_who, accepted = True, meeting = task.meeting)
     else:
         print("saving to false")
         task.complete = False

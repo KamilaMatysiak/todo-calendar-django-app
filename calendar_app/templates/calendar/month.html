@@ -19,7 +19,7 @@
             <a href="{% url 'date' %}"><div class="sidebar-btn active"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
             <a href="{% url 'list' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div></a>
             <a href="{% url 'location' %}"><div class="sidebar-btn"><img id="map" src="{%static 'image/icons/map.svg' %}"></div></a>
-            <!--<div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>-->
+            <a href="{% url 'user_manual' %}"><div class="sidebar-btn help"><img src="{%static 'image/icons/help.svg' %}"></div></a>
         </nav>
     </nav>
         <nav class="sidebar menu">
@@ -104,7 +104,7 @@
                 <li>
                     <a href="{% url 'location' %}"><img src="{%static 'image/icons/mobile/map-icon-black.svg' %}"> Mapa</a>
                 </li>
-                <!--<div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>-->
+                <li><a href="{% url 'user_manual' %}"><img src="{%static 'image/icons/mobile/help-mobile.svg' %}"> Instrukcja użytkownika</a></li>
             </ul>
             <ul class="list-unstyled"><li><a href="{% url 'logout' %}"><img src="{%static 'image/icons/mobile/logout.svg' %}"> Wyloguj się</a></li></ul>
         </div>
@@ -173,6 +173,22 @@
             </table>
         </div>
     </div>
+    <div id="err_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Nie połączono z kontem Google!</h3>
+            </div>
+
+              <div class="modal-body">
+                <p class="delete-text">Żeby skorzystać z tej funkcji zaloguj się przez konto Google.</p>
+              </div>
+
+              <div class="modal-footer">
+                <button type="submit" data-dismiss="modal" class="btn btn-primary">OK</button>
+              </div>
+        </div>
+    </div>
 </div>
 
     <script type="text/javascript">
@@ -209,7 +225,11 @@
               console.log(body);
               if(body.msg == "success"){
                   location.reload();
-              }
+              } else {
+                if(body.data == "not google") {
+                        $('#err_modal').modal('show');
+                    }
+                }
             })
         });
 

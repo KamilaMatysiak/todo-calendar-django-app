@@ -31,9 +31,26 @@ class TaskModelForm(BSModalModelForm):
     localization = forms.CharField(required=False, label="Lokalizacja")
     for_who = forms.CharField(required=False, label="Zlecenie", validators=[temporary_user_validation])
 
+    cycle_intervals = (('d', 'dni'),
+                    ('w', 'tygodni'),
+                    ('m', 'miesięcy'),
+                    ('y', 'lat'))
+
+    estimated_time_intervals = (('', '------'),
+                    ('m', 'minut'),
+                    ('h', 'godzin'),
+                    ('d', 'dni'))
+
+    is_cyclical = forms.BooleanField(required=False, label="Powtarzanie zadania")
+    cycle_interval = forms.ChoiceField(choices=cycle_intervals, required=False, widget=forms.Select(attrs={'class': 'select form-control'}))
+    cycle_number = forms.CharField(required=False, initial='1', widget=forms.TextInput(attrs={'class': 'textinput textInput form-control'}))
+    estimated_time_interval = forms.ChoiceField(choices=estimated_time_intervals, required=False, widget=forms.Select(attrs={'class': 'select form-control'}))
+    estimated_time_number = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'textinput textInput form-control'}))
+
+
     class Meta:
         model = Task
-        fields = ['title', 'localization', 'with_who', 'date', 'time', 'priority', 'category']
+        fields = ['title', 'localization', 'with_who', 'date', 'time', 'priority', 'estimated_time_number', 'estimated_time_interval', 'note', 'category', 'is_cyclical', 'cycle_interval', 'cycle_number']
         widgets = {
             'date': DatePickerInput(format="%d-%m-%Y", options={"locale": "pl"}),
             'time': TimePickerInput()
@@ -44,7 +61,10 @@ class TaskModelForm(BSModalModelForm):
             'time': ('Czas'),
             'priority': ('Priorytet'),
             'category': ('Kategoria'),
+            'note': ('Uwagi'),
         }
+        
+        
 
 class CategoryModelForm(BSModalModelForm):
 
@@ -52,3 +72,5 @@ class CategoryModelForm(BSModalModelForm):
         model = Category
         fields = ['title']
         labels = {'title': ('Nazwa kategorii:')}
+
+    
