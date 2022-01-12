@@ -47,6 +47,16 @@ self.addEventListener('activate', event => {
             })
     )
 }); */
+self.addEventListener("fetch", event => {
+    event.respondWith(
+        fetch(event.request)
+    );
+});
+
+
+
+
+
 
 self.addEventListener('push', function (event) {
     // Retrieve the textual payload from event.data (a PushMessageData object).
