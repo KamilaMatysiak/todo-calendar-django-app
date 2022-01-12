@@ -102,7 +102,7 @@ def is_any_task_close(user, lat, lon):
     for x in Task.objects.all():
         if x.user == user and x.l_lat and x.l_lon:
             distance = geodesic((lat, lon), (x.l_lat, x.l_lon)).km
-            if distance <= 1:
+            if distance <= 0.4:
                 nearest_task = x.title
                 return (nearest_task)
     else:
