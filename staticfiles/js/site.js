@@ -1,15 +1,15 @@
-async function sendNotification(lat, lon) {
-    const meta = document.querySelector('meta[name="user_id"]');
-    const id = meta ? meta.content : null;
-    const res = await fetch('send_push', {
-            method: 'POST',
-            body: JSON.stringify({lat, lon, id}),
-            headers: {
-                'content-type': 'application/json'
-            }
-        });
+// async function sendNotification(lat, lon) {
+//     const meta = document.querySelector('meta[name="user_id"]');
+//     const id = meta ? meta.content : null;
+//     const res = await fetch('send_push', {
+//             method: 'POST',
+//             body: JSON.stringify({lat, lon, id}),
+//             headers: {
+//                 'content-type': 'application/json'
+//             }
+//         });
 
-};
+// };
 
 /*
 pushForm.addEventListener('submit', async function (e) {

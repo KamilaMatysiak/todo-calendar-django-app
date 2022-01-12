@@ -319,6 +319,7 @@
                 };
 
                 function success(pos) {
+                    alert("Zmiana")
                     var crd = pos.coords;
 
                     console.log(`Latitude : ${crd.latitude}`);
@@ -340,9 +341,7 @@
                         success: function (data) {
                             var lati = crd.latitude;
                             var long = crd.longitude;
-                            console.log("it worked!");
-                            sendNotification(lati, long);
-
+                            console.log("it worked! Notifics");
                         },
                         error: function (data) {
                             console.log("it didnt work");

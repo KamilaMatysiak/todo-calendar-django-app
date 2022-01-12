@@ -166,6 +166,7 @@ def index(request):
             data = json.load(request)
             lat = data.get('lat')
             lon = data.get('lon')
+            send_push(request, user, lat, lon)
 
     context = {"tasks": tasks,
                "today": today,
@@ -343,19 +344,19 @@ def finishTask(request):
 
 @require_POST
 @csrf_exempt
-def send_push(request):
+def send_push(request, user, lat, lon):
     print("Inicjuję probę!")
     try:
-        print("1")
-        body = request.body
-        data = json.loads(body)
-        print("data: ", data)
-        if 'lat' not in data or 'lon' not in data or 'id' not in data:
-            return JsonResponse(status=400, data={"message": "Invalid data format"})
-        print("2")
-        user_id = data['id']
-        user = get_object_or_404(User, pk=user_id)
-        data_task = is_any_task_close(user, float(data['lat']), float(data['lon']))
+        # print("1")
+        # body = request.body
+        # data = json.loads(body)
+        # print("data: ", data)
+        # if 'lat' not in data or 'lon' not in data or 'id' not in data:
+        #     return JsonResponse(status=400, data={"message": "Invalid data format"})
+        # print("2")
+        # user_id = data['id']
+        # user = get_object_or_404(User, pk=user_id)
+        data_task = is_any_task_close(user, lat, lon)
         print("DATA_TASK", data_task)
         if data_task != None:
             print("weszło")
@@ -422,3 +423,15 @@ def accept_task(request, pk):
         obj.accepted = True
         obj.save()
     return redirect('vtodo')
+
+def is_any_task_close(user, lat, lon):
+    print('is any task close')
+    nearest_task = None
+    for x in Task.objects.all():
+        if x.user == user and x.l_lat and x.l_lon:
+            distance = geodesic((lat, lon), (x.l_lat, x.l_lon)).km
+            if distance <= 1:
+                nearest_task = x.title
+                return (nearest_task)
+    else:
+        return None

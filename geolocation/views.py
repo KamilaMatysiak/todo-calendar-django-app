@@ -97,13 +97,3 @@ def location(request, pk=None):
 #         nearest_task = None
 #     return (str(a), nearest_task, str(round(y, 1)))
 
-def is_any_task_close(user, lat, lon):
-    nearest_task = None
-    for x in Task.objects.all():
-        if x.user == user and x.l_lat and x.l_lon:
-            distance = geodesic((lat, lon), (x.l_lat, x.l_lon)).km
-            if distance <= 1:
-                nearest_task = x.title
-                return (nearest_task)
-    else:
-        return None
