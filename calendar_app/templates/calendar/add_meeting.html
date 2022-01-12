@@ -2,6 +2,7 @@
 {% load crispy_forms_tags %}
 {{form.media}}
 {%load static%}
+{% load poll_extras %}
 
 <form method="post" action="">
       {% csrf_token %}
@@ -14,9 +15,9 @@
 
       <div class="modal-body">
         {% for field in form %}
-            {%  if field.name == 'color' %}
-                <label>{{field.label}}</label>
-                <div class="center" style="justify-content: space-around; margin-bottom: 25px;">
+          {%  if field.name == 'color' %}
+                                <label>{{field.label}}</label>
+                                <div class="center" style="justify-content: space-between; margin-bottom: 25px;">
 
                     {% for radio in field %}
 

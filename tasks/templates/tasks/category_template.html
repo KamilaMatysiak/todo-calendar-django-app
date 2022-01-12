@@ -18,7 +18,7 @@
             <a href="{% url 'date' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
             <div class="sidebar-btn active"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div>
             <a href="{% url 'location' %}"><div class="sidebar-btn"><img id="map" src="{%static 'image/icons/map.svg' %}"></div></a>
-            <!--<div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>-->
+            <a href="{% url 'user_manual' %}"><div class="sidebar-btn help"><img src="{%static 'image/icons/help.svg' %}"></div></a>
         </nav>
         <nav class="sidebar menu">
                         <div class="scroll">
@@ -34,6 +34,7 @@
                     {% endif %}
                     {% endfor %}
                     <li class="add-category"><a>+ Dodaj kategorię</a></li>
+                    <li><a href="{% url 'archive' %}"> Archiwum zadań </a></li>
 
             </ul>
                             </div>
@@ -62,10 +63,11 @@
                         {% endif %}
                         {% endfor %}
                         <li class="add-category"><a>+ Dodaj kategorię</a></li>
+                        <li><a href="{% url 'archive' %}"> Archiwum zadań </a></li>
                     </ul>
                 </li>
                 <li><a href="{% url 'location' %}"><img src="{%static 'image/icons/mobile/map-icon-black.svg' %}"> Mapa</a></li>
-                <li><a href="#"><img src="{%static 'image/icons/mobile/set-icon-black.svg' %}"> Ustawienia</a></li>
+                <li><a href="{% url 'user_manual' %}"><img src="{%static 'image/icons/mobile/help-mobile.svg' %}"> Instrukcja użytkownika</a></li>
             </ul>
             <ul class="list-unstyled"><li><a href="{% url 'logout' %}"><img src="{%static 'image/icons/mobile/logout.svg' %}"> Wyloguj się</a></li></ul>
         </div>
