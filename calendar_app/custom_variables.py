@@ -66,5 +66,4 @@ vtodo_colors_event = {
 }
 
 COLORS = [(c, c) for c in vtodo_colors_event.keys()]
-print(COLORS)
 timezone = 'Europe/Warsaw'
