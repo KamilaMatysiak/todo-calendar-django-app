@@ -137,6 +137,7 @@ def index(request):
     priority = []
     here = []
     late = []
+    notifications = []
 
     events = [x for x in Meeting.objects.all() if x.user == request.user]
     not_accepted_tasks = [x for x in Task.objects.all() if x.user == request.user and x.accepted == False]
@@ -154,6 +155,14 @@ def index(request):
                     late.append(x)
             if x.priority == "H":
                 priority.append(x)
+    
+    for x in Meeting.objects.all():
+        if x.user == request.user and Notification.objects.filter(meeting = x).exists() and not Notification.objects.filter(meeting = x).exists() and (datetime.datetime.now()-datetime.timedelta(days=7)) < datetime.datetime.combine(x.date_end, x.time_end) < datetime.datetime.now():
+                    Notification.objects.create(created = datetime.datetime.now(), meeting = x, user = request.user)
+
+    notifications = [x for x in Notification.objects.all() if x.user == request.user and x.declined == False]
+    print('NOTYFIKACJE')
+    print(notifications)
 
     webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
     vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
@@ -175,7 +184,8 @@ def index(request):
                "events": today_events[:5],
                user: user,
                'vapid_key': vapid_key,
-               "to_accept": not_accepted_tasks}
+               "to_accept": not_accepted_tasks,
+               "notifications": notifications}
     return render(request, 'tasks/vtodo.html', context)
 
 
@@ -414,9 +424,15 @@ def refuse_task(request, pk):
     obj = get_object_or_404(Task, pk=pk)  # Get your current cat
 
     if request.method == 'POST':  # If method is POST,
-        obj.delete()  # delete the cat.
+        obj.delete()  
     return redirect('vtodo')  # Finally, redirect to the homepage.
 
+def reject_notification(request, pk):
+    obj = get_object_or_404(Notification, pk=pk)
+
+    if request.method == 'POST':  # If method is POST,
+        obj.declined = True
+    return redirect('vtodo')
 
 def accept_task(request, pk):
     obj = get_object_or_404(Task, pk=pk)

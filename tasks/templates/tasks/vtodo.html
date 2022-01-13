@@ -70,43 +70,60 @@
         <div class="task-panel">
              <h2>Witaj, {{user.username}}!</h2>
             <br>
-            {% if to_accept %}
-                <div class="task_order"><h5>Zlecone zadania:</h5>
+            {% if to_accept or notifications %}
+                <div class="task_order"><h5>Notyfikacje:</h5>
                 <div class="event-carousel">
                 
                 {% for x in to_accept %}
-                                        <div class="task">
-                                <div class="task-content">
-                                    <h1><b>{{x}}</b></h1><div class="task-info"><p id="date">
-                                    {% if x|to_datetime|is_expired and not x.complete %}
-                                        <p class="warning"><b>Spóźnienie</b></p>
-                                    {% elif x.complete %}
-                                        <p><b>Zakończone</b></p>
-                                    {% else %}
-                                        {{x |to_datetime |timeuntil}}
-                                    {% endif %}
+                    <div class="task">
+                            <div class="task-content">
+                                <h1><b>{{x}}</b></h1><div class="task-info"><p id="date">
+                                {% if x|to_datetime|is_expired and not x.complete %}
+                                    <p class="warning"><b>Spóźnienie</b></p>
+                                {% elif x.complete %}
+                                    <p><b>Zakończone</b></p>
+                                {% else %}
+                                    {{x |to_datetime |timeuntil}}
+                                {% endif %}
                                     </p>
-                                    {% if x.localization %}<p>∙</p><p>{{x.localization}}</p>{% endif %}
-                                    {% if x.with_who %}<p>∙</p><p>{{x.with_who}}</p></div>{% endif %}
-                                    {% if x.from_who %}<p>∙</p><p>od <strong>{{x.from_who}}</strong></p></div>{% endif %}
-                                </div>
-                                <div class="buttons">
-                                     <form action="{% url 'confirm' x.id %}" method="post">
-                                        {% csrf_token %}
-                                         <button type="submit" class="button add green">✓</button>
-                                    </form>
+                                {% if x.localization %}<p>∙</p><p>{{x.localization}}</p>{% endif %}
+                                {% if x.with_who %}<p>∙</p><p>{{x.with_who}}</p></div>{% endif %}
+                                {% if x.from_who %}<p>∙</p><p>od <strong>{{x.from_who}}</strong></p></div>{% endif %}
+                            </div>
+                            <div class="buttons">
+                                <form action="{% url 'confirm' x.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button add green">✓</button>
+                                </form>
 
-                                    <form action="{% url 'reject' x.id %}" method="post">
-                                        {% csrf_token %}
-                                        <button type="submit" class="button add red">✗</button>
-                                    </form>
-                                </div>
+                                <form action="{% url 'reject' x.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button add red">✗</button>
+                                </form>
+                            </div>
                     </div>
-
                 {% endfor %}
+                {% for x in notifications %}
+                    <div class="task">
+                            <div class="task-content">
+                                <h1><b>Niedawno odbyłeś spotkanie {{x.meeting}}! Chcesz utworzyć nowe zadania?</b></h1><div class="task-info"><p id ="date"></p>
+                            </div></div>
+                            <div class="buttons">
+                                <form action="{% url 'list' %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button add green">✓</button>
+                                </form>
+
+                                <form action="{% url 'reject_notification' x.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button add red">✗</button>
+                                </form>
+                            </div>
                     </div>
-                   </div>
-                {% endif %}
+                {% endfor %}
+                </div>
+            </div>
+            {% endif %}
 
 
              <div class="heading"><h5>Wydarzenia na dziś:</h5>
