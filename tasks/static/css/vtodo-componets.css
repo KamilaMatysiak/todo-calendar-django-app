@@ -518,6 +518,7 @@ text-decoration: none;
     position: fixed;
     top: 0;
     left: 0;
+    z-index: 9999999;
 }
 
 .small {
@@ -532,6 +533,7 @@ text-decoration: none;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+
 }
 
 .main img {
@@ -568,6 +570,7 @@ text-decoration: none;
     position:fixed;
     left: 75px;
     height: 100vh;
+    z-index: 9999999;
 }
 
 .header {
@@ -948,8 +951,13 @@ margin: 0 auto;}
 .month-view {
     min-height: 80vh;
     width: 98%;
-    margin: auto auto 20px auto;
-    border: 1px solid rgba(0,0,0,0.12);
+    margin: auto 0 20px 0;
+    z-index: 1;
+}
+
+.month-view .week-label {
+    width: 98%;
+    z-index: 1;
 }
 
 .month-view th {
@@ -957,12 +965,14 @@ margin: 0 auto;}
     vertical-align: center;
     font-size: 1.2rem;
     height: 40px;
+    z-index: 1;
 }
 
 .month-view td {
     border: 1px solid rgba(0,0,0,0.12);
     width: 14%;
     vertical-align: top;
+    z-index: 1;
 }
 
 .month-view td .pointer {
@@ -970,12 +980,14 @@ margin: 0 auto;}
     margin: 0;
     color: #222;
     font-weight: bold;
+    z-index: 1;
 }
 
 .month-view td .container {
    height: 145px;
    overflow-y: auto;
    width: 100%;
+   z-index: 1;
 }
 
 .month-event {
@@ -986,14 +998,16 @@ margin: 0 auto;}
     margin: 4px 0;
     min-height: 1.6rem;
     overflow-x: visible;
+    z-index: 1;
 }
 
 .month-event span {
       display: block;
-      width: 100px;
+      min-width: 100%;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
+      z-index: 1;
 }
 
 /* ---------------------------------------------------
@@ -1583,9 +1597,14 @@ PROFILE
 .month-list-mobile h1 {margin-top: 15px;}
 .month-view{ display: block;}
 
+
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
+@media (max-width: 1244px) {
+.month-event span {width: 60px;}
+}
+
 @media (max-width: 1024px) {
 
     .profile-panel {
@@ -1603,6 +1622,7 @@ PROFILE
 
     .bigscr {display: none;}
     .smallscr {display: block;}
+    .month-event span {width: 35px;}
 }
 
 @media (max-width: 768px) {
