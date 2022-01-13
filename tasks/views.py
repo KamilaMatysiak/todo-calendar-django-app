@@ -1,3 +1,4 @@
+import operator
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.conf import settings
@@ -129,7 +130,7 @@ def delegateView(request):
     context = {"categories": categories, "tasks": tasks, 'form': form}
     return render(request, 'tasks/delegate.html', context)
 
-
+@login_required
 def index(request):
     count = 0
     today = []
@@ -155,15 +156,23 @@ def index(request):
                     late.append(x)
             if x.priority == "H":
                 priority.append(x)
-    
+    try:
+        Notification.objects.all().delete
+    except:
+        print('huh')
+    Notification.objects.filter(created__gte=(datetime.datetime.now(timezone.utc)-datetime.timedelta(days=7))).delete
     for x in Meeting.objects.all():
-        if x.user == request.user and Notification.objects.filter(meeting = x).exists() and not Notification.objects.filter(meeting = x).exists() and (datetime.datetime.now()-datetime.timedelta(days=7)) < datetime.datetime.combine(x.date_end, x.time_end) < datetime.datetime.now():
-                    Notification.objects.create(created = datetime.datetime.now(), meeting = x, user = request.user)
+        if x.user == request.user and not Notification.objects.filter(user=request.user, meeting = x).exists() and (datetime.datetime.now()-datetime.timedelta(days=7)) < datetime.datetime.combine(x.date_end, x.time_end) <= datetime.datetime.now():
+            Notification.objects.create(created = datetime.datetime.combine(x.date_end, x.time_end), meeting = x, user = request.user)
+        if x.user == request.user and x.is_cyclical:
+            d = x.date_end
+            while datetime.datetime.combine(d, x.time_end) <= datetime.datetime.now():
+                if (datetime.datetime.now()-datetime.timedelta(days=7)) < datetime.datetime.combine(d, x.time_end) and not Notification.objects.filter(user=request.user, meeting=x, created=datetime.datetime.combine(d, x.time_end)).exists():
+                    Notification.objects.create(created = datetime.datetime.combine(d, x.time_end), meeting = x, user = request.user)
+                d = add_days(d, x.cycle_interval, x.cycle_number)
 
-    notifications = [x for x in Notification.objects.all() if x.user == request.user and x.declined == False]
-    print('NOTYFIKACJE')
-    print(notifications)
-
+    notifications = [x for x in Notification.objects.filter(user=request.user, is_deleted=False)]
+    notifications = sorted(notifications, key=operator.attrgetter('created'))
     webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
     vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
     user = request.user
@@ -427,16 +436,23 @@ def refuse_task(request, pk):
         obj.delete()  
     return redirect('vtodo')  # Finally, redirect to the homepage.
 
-def reject_notification(request, pk):
-    obj = get_object_or_404(Notification, pk=pk)
-
-    if request.method == 'POST':  # If method is POST,
-        obj.declined = True
-    return redirect('vtodo')
-
 def accept_task(request, pk):
     obj = get_object_or_404(Task, pk=pk)
     if request.method == 'POST':
         obj.accepted = True
         obj.save()
     return redirect('vtodo')
+
+def reject_notification(request, pk):
+    obj = get_object_or_404(Notification, pk=pk)
+    if request.method == 'POST':  # If method is POST,
+        obj.is_deleted = True
+        obj.save()
+    return redirect('vtodo')
+
+def accept_notification(request, pk):
+    obj = get_object_or_404(Notification, pk=pk)
+    if request.method == 'POST':  # If method is POST,
+        obj.is_deleted = True
+        obj.save()
+    return redirect('list')

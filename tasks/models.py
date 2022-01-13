@@ -72,4 +72,4 @@ class Notification(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, default=1)
     created = models.DateTimeField(blank=True, null=True)
     meeting = models.ForeignKey(Meeting, on_delete=models.CASCADE, blank=True, null=True, default=None)
-    declined = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)

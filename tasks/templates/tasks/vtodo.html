@@ -77,7 +77,7 @@
                 {% for x in to_accept %}
                     <div class="task">
                             <div class="task-content">
-                                <h1><b>{{x}}</b></h1><div class="task-info"><p id="date">
+                                <h1>Nowe zlecone zadanie: <b>{{x}}</b>. Czy chcesz je przyjąć?</h1><div class="task-info"><p id="date">
                                 {% if x|to_datetime|is_expired and not x.complete %}
                                     <p class="warning"><b>Spóźnienie</b></p>
                                 {% elif x.complete %}
@@ -106,10 +106,12 @@
                 {% for x in notifications %}
                     <div class="task">
                             <div class="task-content">
-                                <h1><b>Niedawno odbyłeś spotkanie {{x.meeting}}! Chcesz utworzyć nowe zadania?</b></h1><div class="task-info"><p id ="date"></p>
+                                <h1>Niedawno odbyłeś spotkanie <b>{{x.meeting}}</b>! Chcesz utworzyć nowe zadania?</h1><div class="task-info"><p id ="date">
+                                    Odbyło się {{x.created}}
+                                </p>
                             </div></div>
                             <div class="buttons">
-                                <form action="{% url 'list' %}" method="post">
+                                <form action="{% url 'accept_notification' x.id %}" method="post">
                                     {% csrf_token %}
                                     <button type="submit" class="button add green">✓</button>
                                 </form>
