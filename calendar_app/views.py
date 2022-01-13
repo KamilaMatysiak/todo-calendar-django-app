@@ -395,8 +395,10 @@ class AddEventView(BSModalCreateView):
         with_who = self.request.POST.getlist("with_who")
         obj.with_who = "|".join(with_who)
         if not form.cleaned_data['is_cyclical']:
-            obj.cycle_interval = None
-            obj.cycle_number = None
+            obj.cycle_interval = 'd'
+            obj.cycle_number = 1
+        if obj.is_cyclical and obj.cycle_number == None:
+            obj.cycle_number = 1
         if self.request.is_ajax():
             try:
                 service = construct_service(obj.user)
@@ -614,8 +616,10 @@ def edit_meeting(request, pk):
             with_who = request.POST.getlist("with_who")
             obj.with_who = "|".join(with_who)
             if not obj.is_cyclical:
-                obj.cycle_interval = None
-                obj.cycle_number = None
+                obj.cycle_interval = 'd'
+                obj.cycle_number = 1
+            if obj.is_cyclical and obj.cycle_number == None:
+                obj.cycle_number = 1
             obj.save()
             form.save()
             return redirect('/calendar')

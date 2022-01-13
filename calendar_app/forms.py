@@ -29,7 +29,7 @@ class EventModelForm(BSModalModelForm):
 
     is_cyclical = forms.BooleanField(required=False, label="Powtarzanie wydarzenia")
     cycle_interval = forms.ChoiceField(choices=cycle_intervals, required=False, widget=forms.Select(attrs={'class': 'select form-control'}))
-    cycle_number = forms.CharField(required=False, initial='1', widget=forms.TextInput(attrs={'class': 'textinput textInput form-control'}))
+    cycle_number = forms.IntegerField(required=False, initial='1')
 
     class Meta:
         model = Meeting

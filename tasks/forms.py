@@ -36,17 +36,15 @@ class TaskModelForm(BSModalModelForm):
                     ('m', 'miesięcy'),
                     ('y', 'lat'))
 
-    estimated_time_intervals = (('', '------'),
-                    ('m', 'minut'),
+    estimated_time_intervals = (('m', 'minut'),
                     ('h', 'godzin'),
                     ('d', 'dni'))
 
     is_cyclical = forms.BooleanField(required=False, label="Powtarzanie zadania")
     cycle_interval = forms.ChoiceField(choices=cycle_intervals, required=False, widget=forms.Select(attrs={'class': 'select form-control'}))
-    cycle_number = forms.CharField(required=False, initial='1', widget=forms.TextInput(attrs={'class': 'textinput textInput form-control'}))
+    cycle_number = forms.IntegerField(required=False, initial=1)
     estimated_time_interval = forms.ChoiceField(choices=estimated_time_intervals, required=False, widget=forms.Select(attrs={'class': 'select form-control'}))
-    estimated_time_number = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'textinput textInput form-control'}))
-
+    estimated_time_number = forms.IntegerField(required=False, initial=1)
 
     class Meta:
         model = Task
