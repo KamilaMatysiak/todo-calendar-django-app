@@ -31,7 +31,7 @@ SECRET_KEY = '@&ivg06$5v6#yo+^*y9ixt^^a(7bncddv$p2p7k2d#+@iaoc)i'
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = getenv("IS_DEVELOPMENT", True)
 DEBUG = True
-# DEBUG = False
+#DEBUG = False
 # ALLOWED_HOSTS = ['127.0.0.1', '192.168.100.100', 'localhost', '192.168.100.24', '192.168.18.191', 'vtodo.pl', 'vitodo.pl', 'h22.seohost.pl']
 # ALLOWED_HOSTS = getenv("APP_HOST")
 
@@ -120,21 +120,21 @@ TEMPLATES = [
 WSGI_APPLICATION = 'todo.wsgi.application'
 
 # DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': str(os.path.join(BASE_DIR, "db.sqlite3")),
-#     }
-# }
+#      'default': {
+#          'ENGINE': 'django.db.backends.sqlite3',
+#          'NAME': str(os.path.join(BASE_DIR, "db.sqlite3")),
+#      }
+#  }
 
 DATABASES = {
-  'default': {
-      'ENGINE': 'django.db.backends.postgresql',
-      'NAME': 'postgres',
-      "USER": 'vtodo',
-      "PASSWORD": 'ZXC#$mnu4321',
-      "HOST": 'v-todo.c7619xurnc1g.eu-central-1.rds.amazonaws.com',
-      "PORT": '5432',
-  }
+ 'default': {
+     'ENGINE': 'django.db.backends.postgresql',
+     'NAME': 'postgres',
+     "USER": 'vtodo',
+     "PASSWORD": 'ZXC#$mnu4321',
+     "HOST": 'v-todo.c7619xurnc1g.eu-central-1.rds.amazonaws.com',
+     "PORT": '5432',
+ }
 }
 
 # Password validation
