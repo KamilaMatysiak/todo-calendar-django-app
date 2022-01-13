@@ -1,6 +1,6 @@
 var staticCacheName = "django-pwa-v" + new Date().getTime();
 var filesToCache = [
-    // '/offline',
+     '/offline/',
     // '/css/django-pwa-app.css',
     '/static/image/icon-192.png',
     '/static/image/icon-512.png',
@@ -48,9 +48,9 @@ self.addEventListener('activate', event => {
     )
 }); */
 self.addEventListener("fetch", event => {
-    event.respondWith(
-        fetch(event.request)
-    );
+    event.respondWith(fetch(event.request)
+        .then(res=>{console.log(res); return res;})
+    .catch(err=>{console.error(err);return err;}));
 });
 
 
