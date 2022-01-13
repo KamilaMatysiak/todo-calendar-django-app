@@ -28,6 +28,9 @@ from django.views.decorators.clickjacking import xframe_options_exempt
 
 # Create your views here.
 
+def error_404(request, exception):
+    return render(request, 'offline.html')
+
 def homepage(request):
     return render(request, 'tasks/index.html')
 

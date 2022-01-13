@@ -33,23 +33,21 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-self.addEventListener("fetch", async (event) => {
+self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
-
-  try {
-    const res = await fetch(event.request);
-    console.log(res);
-    event.respondWith(res);
-    return;
-  }
-  catch (err) {
-    console.error(err);
-
-    const staticCache = await caches.open(staticCacheName);
-    if (event.request.headers.get("accept").includes("text/html")) {
-      event.respondWith(staticCache.match("/offline/"));
-    }
-  }
+  event.respondWith(
+    fetch(event.request)
+      .then((res) => {
+        console.log(res);
+        return res;
+      })
+      .catch((err) => {
+        console.log(err);
+        return caches
+          .open(staticCacheName)
+          .then((cache) => cache.match("/offline/"));
+      })
+  );
 });
 
 self.addEventListener("push", function (event) {
