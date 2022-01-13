@@ -129,7 +129,7 @@ def delegateView(request):
     context = {"categories": categories, "tasks": tasks, 'form': form}
     return render(request, 'tasks/delegate.html', context)
 
-
+@login_required
 def index(request):
     count = 0
     today = []
