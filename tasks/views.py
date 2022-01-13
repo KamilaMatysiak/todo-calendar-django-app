@@ -24,6 +24,7 @@ from dateutil import relativedelta
 from django.template import loader
 import datetime
 import json
+import pytz
 from django.http import HttpResponse
 from django.views.decorators.clickjacking import xframe_options_exempt
 
@@ -163,12 +164,12 @@ def index(request):
     Notification.objects.filter(created__gte=(datetime.datetime.now(timezone.utc)-datetime.timedelta(days=7))).delete
     for x in Meeting.objects.all():
         if x.user == request.user and not Notification.objects.filter(user=request.user, meeting = x).exists() and (datetime.datetime.now()-datetime.timedelta(days=7)) < datetime.datetime.combine(x.date_end, x.time_end) <= datetime.datetime.now():
-            Notification.objects.create(created = datetime.datetime.combine(x.date_end, x.time_end), meeting = x, user = request.user)
+            Notification.objects.create(created = pytz.utc.localize(datetime.datetime.combine(x.date_end, x.time_end)), meeting = x, user = request.user)
         if x.user == request.user and x.is_cyclical:
             d = x.date_end
             while datetime.datetime.combine(d, x.time_end) <= datetime.datetime.now():
                 if (datetime.datetime.now()-datetime.timedelta(days=7)) < datetime.datetime.combine(d, x.time_end) and not Notification.objects.filter(user=request.user, meeting=x, created=datetime.datetime.combine(d, x.time_end)).exists():
-                    Notification.objects.create(created = datetime.datetime.combine(d, x.time_end), meeting = x, user = request.user)
+                    Notification.objects.create(created = pytz.utc.localize(datetime.datetime.combine(d, x.time_end)), meeting = x, user = request.user)
                 d = add_days(d, x.cycle_interval, x.cycle_number)
 
     notifications = [x for x in Notification.objects.filter(user=request.user, is_deleted=False)]
