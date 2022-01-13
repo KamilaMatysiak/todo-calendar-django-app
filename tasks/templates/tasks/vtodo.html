@@ -116,8 +116,12 @@
                 <div class="task"><h4 class="center">Wygląda na to, że masz dzisiaj wolne!</h4></div>
                   {% else %}
             {% for meeting in events %}
-                        <a href="{% url 'edit_meeting' meeting.id %}">
-            <div class="event {{meeting.color}} {% if meeting.time_end < now %} passed {% endif%} small-event"><div class="info"><h1>{{meeting.title}}</h1></div><div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div></div>                    </a>
+                <a href="{% url 'edit_meeting' meeting.id %}">
+                    <div class="event event-mainpage {{meeting.color}} {% if meeting.time_end < now %} passed {% endif%} small-event">
+                        <div class="info"><h1>{{meeting.title}}</h1></div>
+                        <div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div>
+                    </div>
+                </a>
 
             {% endfor %}
                 {%endif%}

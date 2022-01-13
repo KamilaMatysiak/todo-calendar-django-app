@@ -518,7 +518,6 @@ text-decoration: none;
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 9999999;
 }
 
 .small {
@@ -570,8 +569,10 @@ text-decoration: none;
     position:fixed;
     left: 75px;
     height: 100vh;
-    z-index: 9999999;
+    z-index: 999;
 }
+
+.event-mainpage {z-index: 9999;}
 
 .header {
     width: 100%;
