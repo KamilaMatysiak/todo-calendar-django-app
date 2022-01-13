@@ -62,8 +62,21 @@ h2 {
     box-shadow: 0 0 4px rgba(0,0,0,0.2);
 }
 
+.smaller-scr {
+    width: 30%;
+    margin: 50px 35%;
+    box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
 @media (max-width: 768px) {
     #um-sidebar {display: none; width: 70%;}
     .um-content { width: 90%; margin: 0;}
     .section {width: 95%; margin: 25px;}
+
+    .big-scr,
+    .small-scr,
+    .smaller-scr {
+        margin: 50px 0;
+        width: 100%;
+    }
 }
