@@ -9,7 +9,7 @@ from datetime import datetime, date, timedelta
 import requests as api_reqs
 from django.http import HttpResponseRedirect
 from .models import *
-from tasks.models import Task
+from tasks.models import Notification, Task
 from .forms import *
 from django.urls import reverse_lazy
 from bootstrap_modal_forms.generic import BSModalCreateView, BSModalDeleteView, BSModalUpdateView
