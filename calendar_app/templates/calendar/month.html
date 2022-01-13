@@ -171,8 +171,23 @@
                     {% if d.1 == 6 %}<tr>{% endif %}
                 {% endfor %}
             </table>
+
+            <div class="month-list-mobile">
+                {% for d, meetings_day in month_days %}
+                    {% if meetings_day %}
+                        <h1>{{d.0}}</h1>
+                        <hr>
+                        {% for meeting in meetings_day %}
+                            <a href="{% url 'edit_meeting' meeting.id %}"><div class="month-event {{meeting.color}}"><span>{{meeting.title}}, {{meeting.time_start |date:"H:i"}} </span></div></a>
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+
         </div>
     </div>
+
+
     <div id="err_modal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">

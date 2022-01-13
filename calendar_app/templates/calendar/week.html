@@ -146,7 +146,11 @@
             <div style="width: 42px; height: 40px;"></div>
             {% for day, meetings in week %}
                 <a style="width: 14%;" href="{% url 'home' day|get_year day|get_month day|get_day %}">
-                    <div class="weekdays"><h3>{{day|get_day}}</h3><p>{{day|get_dayname}}</p></div>
+                    <div class="weekdays">
+                        <h3>{{day|get_day}}</h3>
+                        <p class="bigscr">{{day|get_dayname}}</p>
+                        <p class="smallscr">{{day|get_dayname_short}}</p>
+                    </div>
                 </a>
             {% endfor %}
         </div>

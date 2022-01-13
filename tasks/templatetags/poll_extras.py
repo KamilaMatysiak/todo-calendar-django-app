@@ -130,6 +130,28 @@ def get_dayname(date):
     }
     return days[date.strftime("%A")]
 
+@register.filter
+def get_dayname_short(date):
+    days = {
+        "Monday": "Pn",
+        "Tuesday": "Wt",
+        "Wednesday": "Śr",
+        "Thursday": "Czw",
+        "Friday": "Pt",
+        "Saturday": "Sob",
+        "Sunday": "Nd",
+
+        "poniedziałek": "Pon",
+        "wtorek": "Wt",
+        "środa": "Śr",
+        "czwartek": "Czw",
+        "piątek": "Pt",
+        "sobota": "Sob",
+        "niedziela": "Nd"
+    }
+    return days[date.strftime("%A")]
+
+
 @register.simple_tag
 def get_meetings(dict, date):
     if date in dict:
