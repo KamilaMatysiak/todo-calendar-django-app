@@ -1113,7 +1113,7 @@ margin: 0 auto;}
 
 
 .nav-pills .nav-item {
-    width: 15%;
+    width: 25%;
     max-width: 200px;
     border-radius: 0;
 }
@@ -1125,8 +1125,22 @@ margin: 0 auto;}
 
 .nav-pills .nav-item img {
     width: 25px;
-    padding: 4px;
-    margin: 0 10px;
+    margin: 0 5px;
+    padding: 2px;
+}
+
+.nav-pills .nav-item p {
+    width: auto;
+    height: 25px;
+    margin: 0;
+}
+
+.wrap-button {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: no-wrap;
+    align-items: center;
+    justify-items: center;
 }
 
 .active-icon {
@@ -1782,11 +1796,26 @@ td {
     display: flex;
 }
 
-
 .nav-pills .nav-item {
     width: 30vw;
     max-width: auto;
     margin: 0;
+    padding: 0px;
+}
+
+.nav-pills .nav-item p{
+    width: 100%;
+    text-align: center;
+    margin: 0;
+}
+
+.wrap-button {
+    max-width: 100%;
+    flex-wrap: wrap;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding-left: 10%;
 }
 
 .user-info .labels {

@@ -131,24 +131,32 @@
               <li class="nav-item">
                 <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab"
                    aria-controls="pills-home" aria-selected="true">
-                    <img class="icon" src="{% static 'image/icons/mainpage-calendar.svg' %}">
-                    <img class="active-icon" src="{% static 'image/icons/active-calendar.svg' %}">
-                    Na dziś
+                    <div class="wrap-button">
+                        <img class="icon" src="{% static 'image/icons/mainpage-calendar.svg' %}">
+                        <img class="active-icon" src="{% static 'image/icons/active-calendar.svg' %}">
+                        <p>Na dziś</p>
+                    </div>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab"
                    aria-controls="pills-profile" aria-selected="false">
-                    <img class="icon" src="{% static 'image/icons/mainpage-fire.svg' %}">
-                    <img class="active-icon" src="{% static 'image/icons/active-fire.svg' %}">
-                    Ważne</a>
+                    <div class="wrap-button">
+                        <img class="icon" src="{% static 'image/icons/mainpage-fire.svg' %}">
+                        <img class="active-icon" src="{% static 'image/icons/active-fire.svg' %}">
+                    <p>Ważne</p>
+                    </div>
+                </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab"
                    aria-controls="pills-contact" aria-selected="false">
-                    <img class="icon" src="{% static 'image/icons/mainpage-late.svg' %}">
-                    <img class="active-icon" src="{% static 'image/icons/active-late.svg' %}">
-                    Spóźnione</a>
+                    <div class="wrap-button">
+                        <img class="icon" src="{% static 'image/icons/mainpage-late.svg' %}">
+                        <img class="active-icon" src="{% static 'image/icons/active-late.svg' %}">
+                        <p>Spóźnione</p>
+                    </div>
+                </a>
               </li>
 
             </ul>
