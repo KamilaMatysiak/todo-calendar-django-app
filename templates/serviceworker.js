@@ -37,11 +37,13 @@ self.addEventListener("fetch", async (event) => {
   if (event.request.method !== "GET") return;
 
   try {
-    const res = fetch(event.request);
+    const res = await fetch(event.request);
     console.log(res);
     event.respondWith(res);
-  } catch (err) {
-    console.error(error);
+    return;
+  }
+  catch (err) {
+    console.error(err);
 
     const staticCache = await caches.open(staticCacheName);
     if (event.request.headers.get("accept").includes("text/html")) {
