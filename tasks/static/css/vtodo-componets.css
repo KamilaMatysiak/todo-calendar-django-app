@@ -1004,7 +1004,7 @@ margin: 0 auto;}
 
 .month-event span {
       display: block;
-      min-width: 100%;
+      width: 100px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -1662,11 +1662,16 @@ PROFILE
 
     .task-content h1 {
         font-size: 0.9rem;
+        width: 85%;
         }
 
     .task-info {
+        width: 80%;
         font-size: 0.6rem;
+        flex-wrap: wrap;
+        height: auto;
     }
+    .task-info p {margin-top: 0; margin-bottom: 0; padding-top: 0; padding-bottom: 0; line-height: 0.7rem;git}
 
 .edit {
     display: none;

@@ -77,8 +77,10 @@
                 {% for x in to_accept %}
                     <div class="task">
                             <div class="task-content">
-                                <h1>Nowe zlecone zadanie: <b>{{x}}</b>. Czy chcesz je przyjąć?</h1><div class="task-info"><p id="date">
-                                {% if x|to_datetime|is_expired and not x.complete %}
+                                <h1>Nowe zlecone zadanie: <b>{{x}}</b>. Czy chcesz je przyjąć?</h1>
+                                <div class="task-info">
+                                    <p id="date">
+                                        {% if x|to_datetime|is_expired and not x.complete %}
                                     <p class="warning"><b>Spóźnienie</b></p>
                                 {% elif x.complete %}
                                     <p><b>Zakończone</b></p>
@@ -87,8 +89,12 @@
                                 {% endif %}
                                     </p>
                                 {% if x.localization %}<p>∙</p><p>{{x.localization}}</p>{% endif %}
-                                {% if x.with_who %}<p>∙</p><p>{{x.with_who}}</p></div>{% endif %}
-                                {% if x.from_who %}<p>∙</p><p>od <strong>{{x.from_who}}</strong></p></div>{% endif %}
+                                {% if x.with_who %}<p>∙</p><p>{{x.with_who}}</p>{% endif %}
+                                    {% if x.from_who %}
+                                    <p>∙</p>
+                                    <p>od <strong>{{x.from_who}}</strong></p>
+                                    {% endif %}
+                                </div>
                             </div>
                             <div class="buttons">
                                 <form action="{% url 'confirm' x.id %}" method="post">
