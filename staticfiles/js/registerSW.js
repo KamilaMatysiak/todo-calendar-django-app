@@ -8,27 +8,27 @@ const registerSw = async () => {
     }
 };
 
-const initialiseState = (reg) => {
-    if (!reg.showNotification) {
-        showNotAllowed('Powiadiomienia nie są wspierane przez przeglądarkę');
-        return
-    }
-    if (Notification.permission === 'denied') {
-        showNotAllowed('Zablokowano przesyłanie powiadomień');
-        return
-    }
-    if (!'PushManager' in window) {
-        showNotAllowed("Powiadiomienia są zablokowane przez przeglądarkę");
-        return
-    }
-    subscribe(reg);
-}
+// const initialiseState = (reg) => {
+//     if (!reg.showNotification) {
+//         showNotAllowed('Powiadiomienia nie są wspierane przez przeglądarkę');
+//         return
+//     }
+//     if (Notification.permission === 'denied') {
+//         showNotAllowed('Zablokowano przesyłanie powiadomień');
+//         return
+//     }
+//     if (!'PushManager' in window) {
+//         showNotAllowed("Powiadiomienia są zablokowane przez przeglądarkę");
+//         return
+//     }
+//     subscribe(reg);
+// }
 
-const showNotAllowed = (message) => {
-    const button = document.querySelector('form>button');
-    button.innerHTML = `${message}`;
-    button.setAttribute('disabled', 'true');
-};
+// const showNotAllowed = (message) => {
+//     const button = document.querySelector('form>button');
+//     button.innerHTML = `${message}`;
+//     button.setAttribute('disabled', 'true');
+// };
 
 function urlB64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);

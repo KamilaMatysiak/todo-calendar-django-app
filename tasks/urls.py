@@ -23,6 +23,8 @@ urlpatterns = [
     path('user_manual/pwa', views.pwa_manual, name="pwa_manual"),
     path('home/<str:pk>/reject', views.refuse_task, name='reject'),
     path('home/<str:pk>/confirm', views.accept_task, name='confirm'),
+    path('home/notification/<str:pk>/reject', views.reject_notification, name='reject_notification'),
+    path('home/notification/<str:pk>/confirm', views.accept_notification, name='accept_notification'),
     path('send_push', views.send_push),
     path('category/<str:pk>', views.categoryView, name="category"),
     path('archive', views.archiveView, name="archive"),
