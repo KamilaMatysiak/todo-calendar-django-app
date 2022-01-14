@@ -134,6 +134,20 @@ def delegateView(request):
     context = {"categories": categories, "tasks": tasks, 'form': form}
     return render(request, 'tasks/delegate.html', context)
 
+@require_POST
+@csrf_exempt
+def send_push(request):
+    user = request.user
+    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
+    print(is_ajax)
+    if is_ajax:
+        if request.method == 'POST':
+            data = json.load(request)
+            lat = data.get('lat')
+            lon = data.get('lon')
+            return send_push_inner(request, user, (lat, lon), (data.get("oldLat"), data.get("oldLon")))
+    return None
+
 @login_required
 def index(request):
     count = 0
@@ -177,17 +191,6 @@ def index(request):
 
     notifications = [x for x in Notification.objects.filter(user=request.user, is_deleted=False)]
     notifications = sorted(notifications, key=operator.attrgetter('created'))
-    webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
-    vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
-    user = request.user
-
-    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-    print(is_ajax)
-    if is_ajax:
-        if request.method == 'POST':
-            data = json.load(request)
-            lat = data.get('lat')
-            lon = data.get('lon')
 
     context = {"tasks": tasks,
                "today": today,
@@ -195,8 +198,7 @@ def index(request):
                "late": late,
                "here": here,
                "events": today_events[:5],
-               user: user,
-               'vapid_key': vapid_key,
+               "user": request.user,
                "to_accept": not_accepted_tasks,
                "notifications": notifications}
     return render(request, 'tasks/vtodo.html', context)
@@ -369,32 +371,23 @@ def finishTask(request):
     return HttpResponse('')
 
 
-@require_POST
-@csrf_exempt
-def send_push(request):
-    print("Inicjuję probę!")
-    try:
-        print("1")
-        body = request.body
-        data = json.loads(body)
-        print("data: ", data)
-        if 'lat' not in data or 'lon' not in data or 'id' not in data:
-            return JsonResponse(status=400, data={"message": "Invalid data format"})
-        print("2")
-        user_id = data['id']
-        user = get_object_or_404(User, pk=user_id)
-        data_tasks = how_many_tasks(user, float(data['lat']), float(data['lon']))
-        print("DATA_TASKS", data_tasks)
-        if data_tasks[1] != None:
-            payload = {'head': 'Zadań w okolicy: ' + data_tasks[0],
-                       'body': 'Najbliższe zadanie: ' + data_tasks[1] + ' - ' +
-                               data_tasks[2] + 'km stąd'}
-        else:
-            payload = {'head': 'Brak zadań w okolicy'}
-        print(payload)
-        send_user_notification(user=user, payload=payload, ttl=1000)
+def send_push_inner(request, user, new, old):
+    lat, lon = new
+    oldLat, oldLon = old
 
-        return JsonResponse(status=200, data={"message": "Web push successful"})
+    print(f"lat {lat} lon {lon} oldLat {oldLat} oldLon {oldLon}")
+    try:
+        old_data_task = is_any_task_close(user, oldLat, oldLon)
+        data_task = is_any_task_close(user, lat, lon)
+        print("old_data_task", old_data_task)
+        print("data_task", data_task)
+        if data_task is not None and old_data_task != data_task:
+            payload = {'head': 'Masz zadanie w okolicy!',
+                       'body': data_task}
+            print(payload)
+            send_user_notification(user=user, payload=payload, ttl=1000)
+            return JsonResponse(status=200, data={"message": "Web push successful"})
+        return JsonResponse(status=200, data={"message": "Nothing happened"})
     except TypeError:
         return JsonResponse(status=500, data={"message": "An error occurred"})
 
@@ -442,7 +435,7 @@ def refuse_task(request, pk):
     obj = get_object_or_404(Task, pk=pk)  # Get your current cat
 
     if request.method == 'POST':  # If method is POST,
-        obj.delete()  
+        obj.delete()
     return redirect('vtodo')  # Finally, redirect to the homepage.
 
 def accept_task(request, pk):
@@ -452,6 +445,16 @@ def accept_task(request, pk):
         obj.save()
     return redirect('vtodo')
 
+def is_any_task_close(user, lat, lon):
+    nearest_task = None
+    for x in Task.objects.all():
+        if x.user == user and x.l_lat and x.l_lon:
+            distance = geodesic((lat, lon), (x.l_lat, x.l_lon)).km
+            if distance <= 5:
+                nearest_task = x.title
+                return (nearest_task)
+    else:
+        return None
 def reject_notification(request, pk):
     obj = get_object_or_404(Notification, pk=pk)
     if request.method == 'POST':  # If method is POST,

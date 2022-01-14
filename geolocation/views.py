@@ -75,24 +75,3 @@ def location(request, pk=None):
     return HttpResponse(t.render(context, request))
 
 
-# def send_push(request):
-#    payload = {"head": "Welcome!", "body": "Hello World"}
-#    user = request.user
-#    print(user)
-#    send_user_notification(user=user, payload=payload, ttl=1000)
-
-def how_many_tasks(user, lat, lon):
-    a = 0
-    y = 5
-    nearest_task = None
-    for x in Task.objects.all():
-        if x.user == user and x.l_lat and x.l_lon:
-            distance = geodesic((lat, lon), (x.l_lat, x.l_lon)).km
-            if distance <= 5:
-                a += 1
-                if distance < y:
-                    y = distance
-                    nearest_task = x.title
-    if not nearest_task:
-        nearest_task = None
-    return (str(a), nearest_task, str(round(y, 1)))
