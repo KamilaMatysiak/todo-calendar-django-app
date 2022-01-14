@@ -188,7 +188,7 @@ background: #222433;
     width: 100%;
     display: flex;
     justify-content: space-around;
-    height: 75px;
+    min-height: 75px;
     align-items: center;
 }
 
