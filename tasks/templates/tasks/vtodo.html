@@ -318,8 +318,11 @@
                     maximumAge: 0
                 };
 
+                var oldLon=0;
+                var oldLat=0;
+
+
                 function success(pos) {
-                    alert("Zmiana")
                     var crd = pos.coords;
 
                     console.log(`Latitude : ${crd.latitude}`);
@@ -327,20 +330,22 @@
 
                     $.ajax({
                         method: 'POST',
-                        url: "{% url 'vtodo' %}",
+                        url: "{% url 'send_push' %}",
                         contentType: 'application/json; charset=utf-8',
                         data:
                             JSON.stringify({
                                 'lon': crd.longitude,
                                 'lat': crd.latitude,
+                                'oldLon': oldLon,
+                                'oldLat': oldLat,
                             }),
                         headers: {
                             "X-Requested-With": "XMLHttpRequest",
                             "X-CSRFToken": getCookie("csrftoken"),
                         },
                         success: function (data) {
-                            var lati = crd.latitude;
-                            var long = crd.longitude;
+                            oldLon = crd.longitude;
+                            oldLat = crd.latitude;
                             console.log("it worked! Notifics");
                         },
                         error: function (data) {
@@ -354,7 +359,7 @@
                 console.warn(`ERROR(${err.code}): ${err.message}`);
                 }
 
-                const watchPosition = navigator.geolocation.getCurrentPosition(success, error, options);
+                const watchPosition = navigator.geolocation.watchPosition(success, error, options);
 
             </script>
 
