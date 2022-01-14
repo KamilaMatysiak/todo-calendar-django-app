@@ -13,7 +13,7 @@ urlpatterns = [
     path('edit_note/<str:pk>/', views.EditNoteView.as_view(), name="edit_note"),
     path('edit_note/<str:pk>/delete_note', views.DeleteNoteView.as_view(), name="delete_note"),
     #path('retrieve_google_contacts', views.retrieve_google_contacts, name="retrieve_contacts"),
-    path('import_google_calendar_data', views.import_google_calendar_data, name="import_calendar"),
+    path('import_google_calendar_data', views.import_google_calendar_api, name="import_calendar"),
     path('edit/<int:pk>', views.edit_meeting, name='edit_meeting'),
     path('delete/<int:pk>', views.DeleteEventView.as_view(), name="delete_meeting")
 ]

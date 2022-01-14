@@ -21,7 +21,7 @@
             <a href="{% url 'date' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/calendar-icon.svg' %}"></div></a>
             <a href="{% url 'list' %}"><div class="sidebar-btn"><img src="{%static 'image/icons/todolist-icon.svg' %}"></div></a>
             <a href="{% url 'location' %}"><div class="sidebar-btn"><img id="map" src="{%static 'image/icons/map.svg' %}"></div></a>
-            <!--<div class="sidebar-btn"><img src="{%static 'image/icons/settings-icon.svg' %}"></div>-->
+            <a href="{% url 'user_manual' %}"><div class="sidebar-btn help"><img src="{%static 'image/icons/help.svg' %}"></div></a>
         </nav>
     </nav>
 
@@ -36,7 +36,7 @@
                 <li><a href="{% url 'date' %}"><img src="{%static 'image/icons/mobile/cal-icon-black.svg' %}"> Kalendarz</a></li>
                 <li><a href="{% url 'list' %}"><img src="{%static 'image/icons/mobile/list-icon-black.svg' %}"> Lista zadań</a></li>
                 <li><a href="{% url 'location' %}"><img src="{%static 'image/icons/mobile/map-icon-black.svg' %}"> Mapa</a></li>
-                <!--<li><a href="#"><img src="{%static 'image/icons/mobile/set-icon-black.svg' %}"> Ustawienia</a></li>-->
+                <li><a href="{% url 'user_manual' %}"><img src="{%static 'image/icons/mobile/help-mobile.svg' %}"> Instrukcja użytkownika</a></li>
             </ul>
             <ul class="list-unstyled"><li><a href="{% url 'logout' %}"><img src="{%static 'image/icons/mobile/logout.svg' %}"> Wyloguj się</a></li></ul>
         </div>
@@ -70,43 +70,62 @@
         <div class="task-panel">
              <h2>Witaj, {{user.username}}!</h2>
             <br>
-            {% if to_accept %}
-                <div class="task_order"><h5>Zlecone zadania:</h5>
+            {% if to_accept or notifications %}
+                <div class="task_order"><h5>Notyfikacje:</h5>
                 <div class="event-carousel">
                 
                 {% for x in to_accept %}
-                                        <div class="task">
-                                <div class="task-content">
-                                    <h1><b>{{x}}</b></h1><div class="task-info"><p id="date">
-                                    {% if x|to_datetime|is_expired and not x.complete %}
-                                        <p class="warning"><b>Spóźnienie</b></p>
-                                    {% elif x.complete %}
-                                        <p><b>Zakończone</b></p>
-                                    {% else %}
-                                        {{x |to_datetime |timeuntil}}
-                                    {% endif %}
+                    <div class="task">
+                            <div class="task-content">
+                                <h1>Nowe zlecone zadanie: <b>{{x}}</b>. Czy chcesz je przyjąć?</h1><div class="task-info"><p id="date">
+                                {% if x|to_datetime|is_expired and not x.complete %}
+                                    <p class="warning"><b>Spóźnienie</b></p>
+                                {% elif x.complete %}
+                                    <p><b>Zakończone</b></p>
+                                {% else %}
+                                    {{x |to_datetime |timeuntil}}
+                                {% endif %}
                                     </p>
-                                    {% if x.localization %}<p>∙</p><p>{{x.localization}}</p>{% endif %}
-                                    {% if x.with_who %}<p>∙</p><p>{{x.with_who}}</p></div>{% endif %}
-                                    {% if x.from_who %}<p>∙</p><p>od <strong>{{x.from_who}}</strong></p></div>{% endif %}
-                                </div>
-                                <div class="buttons">
-                                     <form action="{% url 'confirm' x.id %}" method="post">
-                                        {% csrf_token %}
-                                         <button type="submit" class="button add green">✓</button>
-                                    </form>
+                                {% if x.localization %}<p>∙</p><p>{{x.localization}}</p>{% endif %}
+                                {% if x.with_who %}<p>∙</p><p>{{x.with_who}}</p></div>{% endif %}
+                                {% if x.from_who %}<p>∙</p><p>od <strong>{{x.from_who}}</strong></p></div>{% endif %}
+                            </div>
+                            <div class="buttons">
+                                <form action="{% url 'confirm' x.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button add green">✓</button>
+                                </form>
 
-                                    <form action="{% url 'reject' x.id %}" method="post">
-                                        {% csrf_token %}
-                                        <button type="submit" class="button add red">✗</button>
-                                    </form>
-                                </div>
+                                <form action="{% url 'reject' x.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button add red">✗</button>
+                                </form>
+                            </div>
                     </div>
-
                 {% endfor %}
+                {% for x in notifications %}
+                    <div class="task">
+                            <div class="task-content">
+                                <h1>Niedawno odbyłeś spotkanie <b>{{x.meeting}}</b>! Chcesz utworzyć nowe zadania?</h1><div class="task-info"><p id ="date">
+                                    Odbyło się {{x.created}}
+                                </p>
+                            </div></div>
+                            <div class="buttons">
+                                <form action="{% url 'accept_notification' x.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button add green">✓</button>
+                                </form>
+
+                                <form action="{% url 'reject_notification' x.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="button add red">✗</button>
+                                </form>
+                            </div>
                     </div>
-                   </div>
-                {% endif %}
+                {% endfor %}
+                </div>
+            </div>
+            {% endif %}
 
 
              <div class="heading"><h5>Wydarzenia na dziś:</h5>
@@ -116,8 +135,12 @@
                 <div class="task"><h4 class="center">Wygląda na to, że masz dzisiaj wolne!</h4></div>
                   {% else %}
             {% for meeting in events %}
-                        <a href="{% url 'edit_meeting' meeting.id %}">
-            <div class="event {{meeting.color}} {% if meeting.time_end < now %} passed {% endif%} small-event"><div class="info"><h1>{{meeting.title}}</h1></div><div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div></div>                    </a>
+                <a href="{% url 'edit_meeting' meeting.id %}">
+                    <div class="event event-mainpage {{meeting.color}} {% if meeting.time_end < now %} passed {% endif%} small-event">
+                        <div class="info"><h1>{{meeting.title}}</h1></div>
+                        <div class="date">{{meeting.time_start |date:"H:i"}} - {{meeting.time_end |date:"H:i"}}</div>
+                    </div>
+                </a>
 
             {% endfor %}
                 {%endif%}
@@ -131,24 +154,32 @@
               <li class="nav-item">
                 <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab"
                    aria-controls="pills-home" aria-selected="true">
-                    <img class="icon" src="{% static 'image/icons/mainpage-calendar.svg' %}">
-                    <img class="active-icon" src="{% static 'image/icons/active-calendar.svg' %}">
-                    Na dziś
+                    <div class="wrap-button">
+                        <img class="icon" src="{% static 'image/icons/mainpage-calendar.svg' %}">
+                        <img class="active-icon" src="{% static 'image/icons/active-calendar.svg' %}">
+                        <p>Na dziś</p>
+                    </div>
                 </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab"
                    aria-controls="pills-profile" aria-selected="false">
-                    <img class="icon" src="{% static 'image/icons/mainpage-fire.svg' %}">
-                    <img class="active-icon" src="{% static 'image/icons/active-fire.svg' %}">
-                    Ważne</a>
+                    <div class="wrap-button">
+                        <img class="icon" src="{% static 'image/icons/mainpage-fire.svg' %}">
+                        <img class="active-icon" src="{% static 'image/icons/active-fire.svg' %}">
+                    <p>Ważne</p>
+                    </div>
+                </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab"
                    aria-controls="pills-contact" aria-selected="false">
-                    <img class="icon" src="{% static 'image/icons/mainpage-late.svg' %}">
-                    <img class="active-icon" src="{% static 'image/icons/active-late.svg' %}">
-                    Spóźnione</a>
+                    <div class="wrap-button">
+                        <img class="icon" src="{% static 'image/icons/mainpage-late.svg' %}">
+                        <img class="active-icon" src="{% static 'image/icons/active-late.svg' %}">
+                        <p>Spóźnione</p>
+                    </div>
+                </a>
               </li>
 
             </ul>
