@@ -218,11 +218,9 @@ class AddTaskView(BSModalCreateView):
             obj.l_lat = destination.latitude
             obj.l_lon = destination.longitude
         with_who = self.request.POST.getlist("with_who")
+        if obj.is_cyclical and obj.cycle_number == None:
+            obj.cycle_number = 1
         obj.with_who = "|".join(with_who)
-        if not form.cleaned_data['is_cyclical']:
-            obj.cycle_interval = None
-            obj.cycle_number = None
-        print(obj.cycle_interval)
         if form.cleaned_data.get('for_who') != "":
             for x in User.objects.all():
                 if x.username == form.cleaned_data.get('for_who'):
@@ -260,6 +258,13 @@ class EditTaskView(BSModalUpdateView):
             destination = geolocator.geocode(destination_)
             obj.l_lat = destination.latitude
             obj.l_lon = destination.longitude
+        if not obj.is_cyclical:
+                obj.cycle_interval = 'd'
+                obj.cycle_number = 1
+        print('cycle number')
+        print(obj.cycle_number)
+        if obj.is_cyclical and obj.cycle_number == None:
+            obj.cycle_number = 1
         with_who = self.request.POST.getlist("with_who")
         obj.with_who = "|".join(with_who)
         return super(EditTaskView, self).form_valid(form)

@@ -33,6 +33,9 @@
           {{field | as_crispy_field}}
           <div class="cyclical-form" style="display: flex; justify-content: space-between;">
               <p style="width: 33%;">Powtarzaj co:</p>
+              {% if form_error %}
+                $(#offerModalForm).modal("show");
+              {% endif %}
               <div style="width: 33%;"> {{ form.cycle_number }}</div>
               <div style="width: 33%;">{{ form.cycle_interval }}</div>
           </div>
