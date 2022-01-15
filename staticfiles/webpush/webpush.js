@@ -126,7 +126,6 @@ function subscribe(reg) {
           })
         .catch(
           function() {
-            console.log('Subscription error.', arguments)
           })
     }
   );

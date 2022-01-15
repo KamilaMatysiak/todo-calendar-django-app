@@ -83,7 +83,6 @@
                   fetch(fetchURL)
                   .then((response) => {return response.json();})
                   .then((body) => {
-                    console.log(body);
                     if(body.message == 'error') {
                         usr.classList.add("is-invalid");
                         document.getElementById("usr_lbl").style.display = "block";

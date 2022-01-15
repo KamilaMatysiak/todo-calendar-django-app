@@ -72,10 +72,7 @@
             fetch(fetchURL)
                   .then((response) => {return response.json();})
                   .then((body) => {
-                    console.log(body);
                     const words = "{{ object.with_who }}".split("|");
-                    console.log("{{ object.with_who }}")
-                    console.log(words)
 
                     var selector = document.getElementsByName('with_who')[0];
                     var arr = [];

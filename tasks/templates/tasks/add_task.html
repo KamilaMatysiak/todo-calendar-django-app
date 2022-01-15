@@ -58,7 +58,6 @@
             fetch(fetchURL)
                   .then((response) => {return response.json();})
                   .then((body) => {
-                    console.log(body);
                     if(body.msg == 'success') {
                         var selector = document.getElementsByName('with_who')[0];
                         for(let contact of body.data){

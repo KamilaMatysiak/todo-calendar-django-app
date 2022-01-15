@@ -50,9 +50,7 @@ const subscribe = async (reg) => {
         return;
     }
     const vapidMeta = document.querySelector('meta[name="vapid-key"]');
-    console.log(vapidMeta);
     const key = vapidMeta.content;
-    console.log(key);
     const options = {
         userVisibleOnly: true,
         // if key exists, create applicationServerKey property
@@ -84,7 +82,6 @@ const sendSubData = async (subscription) => {
 };
 
 const handleResponse = (res) => {
-    console.log(res.status);
 };
 
 registerSw();

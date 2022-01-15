@@ -38,11 +38,9 @@ self.addEventListener("fetch", (event) => {
   event.respondWith(
     fetch(event.request)
       .then((res) => {
-        console.log(res);
         return res;
       })
       .catch((err) => {
-        console.log(err);
         return caches
           .open(staticCacheName)
           .then((cache) => cache.match("/offline/"));

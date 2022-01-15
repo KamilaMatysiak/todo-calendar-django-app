@@ -151,7 +151,6 @@
         function zoomIn() {
             {% if marker_id %}
             var mi = {{marker_id}};
-            console.log(mi);
             if(mi) {
                 for (var i=0; i < tasks.length; ++i ){
                     var markerID = tasks[i][0];
@@ -228,7 +227,6 @@
                     map = L.map('map-div').setView([0, 0], 13);
                 }
                 else {
-                    console.log(crd.latitude, crd.longitude);
                     map = L.map('map-div').setView([crd.latitude, crd.longitude], 13);
                 }
 
@@ -258,16 +256,12 @@
                         "X-CSRFToken": getCookie("csrftoken"),
                     },
                     success: function (data) {
-                        console.log("Old");
                         oldLon = crd.longitude;
                         oldLat = crd.latitude;
                     },
                     error: function (data) {
-                        console.log("error");
                     }
                 });
-            console.log(`Latitude : ${crd.latitude}`);
-            console.log(`Longitude: ${crd.longitude}`);
             update_position(crd.latitude, crd.longitude)
 
         };

@@ -256,7 +256,6 @@
             fetch(fetchURL)
             .then((response) => {return response.json();})
             .then((body) => {
-              console.log(body);
               if(body.msg == "success"){
                   location.reload();
               } else {

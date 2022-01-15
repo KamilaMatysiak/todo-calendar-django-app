@@ -362,9 +362,6 @@
                 function success(pos) {
                     var crd = pos.coords;
 
-                    console.log(`Latitude : ${crd.latitude}`);
-                    console.log(`Longitude: ${crd.longitude}`);
-
                     $.ajax({
                         method: 'POST',
                         url: "{% url 'send_push' %}",
@@ -383,10 +380,8 @@
                         success: function (data) {
                             oldLon = crd.longitude;
                             oldLat = crd.latitude;
-                            console.log("it worked! Notifics");
                         },
                         error: function (data) {
-                            console.log("it didnt work");
                         }
                     });
 

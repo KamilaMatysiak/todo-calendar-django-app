@@ -169,7 +169,6 @@
 
             var time = "23:59";
             var maxTime = moment(time, 'HH:mm');
-            console.log(maxTime);
 
             end.minDate(start.date());
 
@@ -245,10 +244,7 @@
             fetch(fetchURL)
                   .then((response) => {return response.json();})
                   .then((body) => {
-                    console.log(body);
                     const words = "{{ meeting.with_who }}".split("|");
-                    console.log("{{ meeting.with_who }}")
-                    console.log(words)
 
                     var selector = document.getElementsByName('with_who')[0];
                     var arr = [];
