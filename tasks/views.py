@@ -134,19 +134,6 @@ def delegateView(request):
     context = {"categories": categories, "tasks": tasks, 'form': form}
     return render(request, 'tasks/delegate.html', context)
 
-@require_POST
-@csrf_exempt
-def send_push(request):
-    user = request.user
-    is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
-    print(is_ajax)
-    if is_ajax:
-        if request.method == 'POST':
-            data = json.load(request)
-            lat = data.get('lat')
-            lon = data.get('lon')
-            return send_push_inner(request, user, (lat, lon), (data.get("oldLat"), data.get("oldLon")))
-    return None
 
 @login_required
 def index(request):
@@ -188,7 +175,8 @@ def index(request):
                 if (datetime.datetime.now()-datetime.timedelta(days=7)) < datetime.datetime.combine(d, x.time_end) and not Notification.objects.filter(user=request.user, meeting=x, created=datetime.datetime.combine(d, x.time_end)).exists():
                     Notification.objects.create(created = pytz.utc.localize(datetime.datetime.combine(d, x.time_end)), meeting = x, user = request.user)
                 d = add_days(d, x.cycle_interval, x.cycle_number)
-
+    webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
+    vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
     notifications = [x for x in Notification.objects.filter(user=request.user, is_deleted=False)]
     notifications = sorted(notifications, key=operator.attrgetter('created'))
 
@@ -200,6 +188,7 @@ def index(request):
                "events": today_events[:5],
                "user": request.user,
                "to_accept": not_accepted_tasks,
+               'vapid_key': vapid_key,
                "notifications": notifications}
     return render(request, 'tasks/vtodo.html', context)
 
@@ -370,7 +359,7 @@ def finishTask(request):
     task.save()
     return HttpResponse('')
 
-
+@csrf_exempt
 def send_push_inner(request, user, new, old):
     lat, lon = new
     oldLat, oldLon = old
@@ -391,6 +380,44 @@ def send_push_inner(request, user, new, old):
     except TypeError:
         return JsonResponse(status=500, data={"message": "An error occurred"})
 
+@require_POST
+@csrf_exempt
+def send_push(request):
+    try:
+        user = request.user
+        body = request.body
+        data = json.loads(body)
+        #return send_push_inner(request, user, (lat, lon), (data.get("oldLat"), data.get("oldLon")))
+        lat = data['lat'] 
+        lon = data['lon']
+        oldLat = data['oldLat'] 
+        oldLon = data['oldLon']
+        print(f"lat {lat} lon {lon} oldLat {oldLat} oldLon {oldLon}")
+        old_data_task = is_any_task_close(user, oldLat, oldLon)
+        data_task = is_any_task_close(user, lat, lon)
+        print("old_data_task", old_data_task)
+        print("data_task", data_task)
+        if data_task is not None and old_data_task != data_task:
+            payload = {'head': 'Masz zadanie w okolicy!',
+                    'body': data_task}
+            print(payload)
+            send_user_notification(user=user, payload=payload, ttl=1000)
+            return JsonResponse(status=200, data={"message": "Web push successful"})
+        return JsonResponse(status=200, data={"message": "Nothing happened"})
+    except TypeError:
+        return JsonResponse(status=500, data={"message": "An error occurred"})
+
+def is_any_task_close(user, lat, lon):
+    nearest_task = None
+    for x in Task.objects.all():
+        if x.user == user and x.l_lat and x.l_lon:
+            print('duh')
+            distance = geodesic((lat, lon), (x.l_lat, x.l_lon)).km
+            if distance <= 5:
+                nearest_task = x.title
+                return (nearest_task)
+    else:
+        return None
 
 class AddCategoryView(BSModalCreateView):
     template_name = 'tasks/add_category.html'
@@ -445,16 +472,7 @@ def accept_task(request, pk):
         obj.save()
     return redirect('vtodo')
 
-def is_any_task_close(user, lat, lon):
-    nearest_task = None
-    for x in Task.objects.all():
-        if x.user == user and x.l_lat and x.l_lon:
-            distance = geodesic((lat, lon), (x.l_lat, x.l_lon)).km
-            if distance <= 5:
-                nearest_task = x.title
-                return (nearest_task)
-    else:
-        return None
+
 def reject_notification(request, pk):
     obj = get_object_or_404(Notification, pk=pk)
     if request.method == 'POST':  # If method is POST,

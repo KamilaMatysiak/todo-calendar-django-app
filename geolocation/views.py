@@ -38,7 +38,8 @@ def location(request, pk=None):
     """
 
 
-
+    webpush_settings = getattr(settings, 'WEBPUSH_SETTINGS', {})
+    vapid_key = webpush_settings.get('VAPID_PUBLIC_KEY')
     tasks = (x for x in Task.objects.all() if x.user == request.user)
     events = (x for x in Meeting.objects.all() if x.user == request.user)
 
@@ -66,7 +67,8 @@ def location(request, pk=None):
     context = {
         'tasks': tasks,
         'tasks_data': tasks_data,
-        'event_data': event_data
+        'event_data': event_data,
+        'vapid_key': vapid_key
     }
     if pk is not None:
         context["marker_id"] = pk

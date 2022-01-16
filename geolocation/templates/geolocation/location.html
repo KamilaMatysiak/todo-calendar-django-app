@@ -2,9 +2,10 @@
 {% load avatar_tags %}
 {% load poll_extras %}
 {% load static %}
-
+{% csrf_token %}
 {% block headcontent %}
     <title>Lokalizacja - vToDo</title>
+    <meta name="vapid-key" content="{{ vapid_key }}">
     <link rel="stylesheet" type="text/css" href="{% static 'css/vtodo-componets.css' %}"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
@@ -101,6 +102,7 @@
             });
         });
     </script>
+    <script src="{% static '/js/site.js' %}"></script>
     <script>
 
 
@@ -240,28 +242,14 @@
                 load_events();
                 zoomIn();
             }
-            $.ajax({
-                    method: 'POST',
-                    url: "{% url 'send_push' %}",
-                    contentType: 'application/json; charset=utf-8',
-                    data:
-                        JSON.stringify({
-                            'lon': crd.longitude,
-                            'lat': crd.latitude,
-                            'oldLon': oldLon,
-                            'oldLat': oldLat,
-                        }),
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest",
-                        "X-CSRFToken": getCookie("csrftoken"),
-                    },
-                    success: function (data) {
-                        oldLon = crd.longitude;
-                        oldLat = crd.latitude;
-                    },
-                    error: function (data) {
-                    }
-                });
+            var crd = pos.coords;
+
+            lon = crd.longitude,
+            lat = crd.latitude,
+            url = "{% url 'send_push' %}";
+            sendNotification(lat, lon, oldLat, oldLon, url),
+            oldLon = crd.longitude,
+            oldLat = crd.latitude;
             update_position(crd.latitude, crd.longitude)
 
         };

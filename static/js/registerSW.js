@@ -8,7 +8,7 @@ const registerSw = async () => {
     }
 };
 
-// const initialiseState = (reg) => {
+const initialiseState = (reg) => {
 //     if (!reg.showNotification) {
 //         showNotAllowed('Powiadiomienia nie są wspierane przez przeglądarkę');
 //         return
@@ -21,8 +21,8 @@ const registerSw = async () => {
 //         showNotAllowed("Powiadiomienia są zablokowane przez przeglądarkę");
 //         return
 //     }
-//     subscribe(reg);
-// }
+    subscribe(reg);
+}
 
 // const showNotAllowed = (message) => {
 //     const button = document.querySelector('form>button');

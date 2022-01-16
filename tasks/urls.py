@@ -26,7 +26,6 @@ urlpatterns = [
     path('send_push', views.send_push, name='send_push'),
     path('home/notification/<str:pk>/reject', views.reject_notification, name='reject_notification'),
     path('home/notification/<str:pk>/confirm', views.accept_notification, name='accept_notification'),
-    path('send_push', views.send_push),
     path('category/<str:pk>', views.categoryView, name="category"),
     path('archive', views.archiveView, name="archive"),
     path('test', views.test, name="test"),

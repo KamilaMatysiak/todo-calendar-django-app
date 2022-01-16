@@ -1,15 +1,20 @@
-async function sendNotification(lat, lon) {
-    const meta = document.querySelector('meta[name="user_id"]');
-    const id = meta ? meta.content : null;
-    const res = await fetch('send_push', {
+async function sendNotification(lat, lon, oldLat, oldLon, url) {
+    // const meta = document.querySelector('meta[name="user_id"]');
+    // const id = meta ? meta.content : null;
+    console.log(lon)
+    console.log(lat)
+    console.log(oldLon)
+    console.log(oldLat)
+    const res = await fetch(url, {
             method: 'POST',
-            body: JSON.stringify({lat, lon, id}),
+            body: JSON.stringify({lat, lon, oldLat, oldLon}),
             headers: {
                 'content-type': 'application/json'
             }
         });
 
 };
+
 
 /*
 pushForm.addEventListener('submit', async function (e) {

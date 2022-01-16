@@ -7,9 +7,9 @@
 {% block headcontent %}
     <title>Strona Główna - vToDo</title>
     <meta name="vapid-key" content="{{ vapid_key }}">
-    {% if user.id %}
+    {% comment %} {% if user.id %}
         <meta name="user_id" content="{{ user.id }}">
-    {% endif %}
+    {% endif %} {% endcomment %}
 {% endblock%}
 
 {% block content %}
@@ -362,29 +362,12 @@
                 function success(pos) {
                     var crd = pos.coords;
 
-                    $.ajax({
-                        method: 'POST',
-                        url: "{% url 'send_push' %}",
-                        contentType: 'application/json; charset=utf-8',
-                        data:
-                            JSON.stringify({
-                                'lon': crd.longitude,
-                                'lat': crd.latitude,
-                                'oldLon': oldLon,
-                                'oldLat': oldLat,
-                            }),
-                        headers: {
-                            "X-Requested-With": "XMLHttpRequest",
-                            "X-CSRFToken": getCookie("csrftoken"),
-                        },
-                        success: function (data) {
-                            oldLon = crd.longitude;
-                            oldLat = crd.latitude;
-                        },
-                        error: function (data) {
-                        }
-                    });
-
+                    lon = crd.longitude,
+                    lat = crd.latitude,
+                    url = "{% url 'send_push' %}";
+                    sendNotification(lat, lon, oldLat, oldLon, url),
+                    oldLon = crd.longitude,
+                    oldLat = crd.latitude;
                 }
 
                 function error(err) {
